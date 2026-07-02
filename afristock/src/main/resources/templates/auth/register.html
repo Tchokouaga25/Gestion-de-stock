@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              fontFamily: {
+                display: ['Sora', 'sans-serif'],
+                body: ['DM Sans', 'sans-serif'],
+              },
+              colors: {
+                navy: {
+                  950: '#030d1f', 900: '#071530', 800: '#0c2347',
+                  600: '#1a4a8a', 500: '#2563d4', 400: '#3b82f6', 100: '#dbeafe',
+                },
+                accent: { DEFAULT: '#00d4a0', dark: '#00a37c' },
+              },
+            }
+          }
+        }
+    </script>
+    <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .font-display, h1, h2, h3, h4, label { font-family: 'Sora', sans-serif; }
+        .bg-grid-anim {
+          background-image: linear-gradient(rgba(37,99,212,.06) 1px,transparent 1px),
+                            linear-gradient(90deg,rgba(37,99,212,.06) 1px,transparent 1px);
+          background-size: 48px 48px;
+          animation: gridSlide 22s linear infinite;
+        }
+        @keyframes gridSlide { 0%{transform:translate(0,0)} 100%{transform:translate(48px,48px)} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .anim-fadeup   { animation: fadeUp .6s ease both; }
+        .anim-fadeup-1 { animation: fadeUp .6s .15s ease both; }
+        .anim-fadeup-2 { animation: fadeUp .6s .3s ease both; }
+        /* Input */
+        .af-input { transition: border-color .2s, box-shadow .2s; }
+        .af-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.12); outline: none; }
+        /* Button */
+        .btn-dark { position:relative; overflow:hidden; transition:transform .2s,box-shadow .2s; }
+        .btn-dark::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#1a4a8a,#2563d4); opacity:0; transition:opacity .22s; }
+        .btn-dark:hover::before { opacity:1; }
+        .btn-dark:hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(3,13,31,.3); }
+        /* Checkbox */
+        .af-check input:checked ~ .af-box { background:#2563d4; border-color:#2563d4; }
+        .af-check input:checked ~ .af-box::after { content:'✓'; font-size:9px; color:white; font-weight:700; }
+        .af-box { display:flex; align-items:center; justify-content:center; }
+        /* Step connector */
+        .step-connector { position:absolute; left:13px; top:32px; bottom:-6px; width:1px; background:rgba(255,255,255,.08); }
+        /* Strength bars */
+        .strength-bar { transition: background .3s; }
+    </style>
+</head>
+
+<body class="bg-[#030d1f] min-h-screen flex">
+
+<div class="w-full min-h-screen grid lg:grid-cols-2">
+
+    <!-- ════════════════════════════════════════
+         LEFT — Brand panel
+    ════════════════════════════════════════ -->
+    <aside class="relative hidden lg:flex flex-col justify-between p-12 bg-[#030d1f] overflow-hidden">
+
+        <div class="absolute inset-0 bg-grid-anim"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(0,212,160,.15),transparent 70%);filter:blur(80px)"></div>
+        <div class="absolute top-16 -left-16 w-64 h-64 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(37,99,212,.2),transparent 70%);filter:blur(80px)"></div>
+
+        <!-- Logo -->
+        <a href="afristock.html" class="relative z-10 inline-flex items-center gap-3 no-underline anim-fadeup">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-[#030d1f] font-display font-black text-lg" style="background:linear-gradient(135deg,#00d4a0,#3b82f6)">A</div>
+            <span class="font-display text-2xl font-extrabold text-white tracking-tight">Afristock</span>
+        </a>
+
+        <!-- Center -->
+        <div class="relative z-10 flex-1 flex flex-col justify-center py-8 anim-fadeup-1">
+
+            <!-- Onboarding steps -->
+            <div class="rounded-2xl p-6 mb-6" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">
+                <div class="font-display text-[10px] font-semibold tracking-[.08em] uppercase text-white/35 mb-5">Votre parcours d'inscription</div>
+                <div class="flex flex-col gap-0">
+
+                    <div class="flex items-start gap-3.5 py-3 relative">
+                        <div class="step-connector"></div>
+                        <div class="w-7 h-7 rounded-full bg-[#2563d4] flex items-center justify-center font-display text-xs font-bold text-white flex-shrink-0 relative z-10" style="box-shadow:0 0 0 4px rgba(37,99,212,.2)">1</div>
+                        <div class="pt-0.5">
+                            <div class="font-display text-[13px] font-semibold text-white/75">Créer votre compte</div>
+                            <div class="text-xs text-white/35 mt-0.5 leading-relaxed">Email, mot de passe et informations</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3.5 py-3 relative">
+                        <div class="step-connector"></div>
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10 text-white/30" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)">2</div>
+                        <div class="pt-0.5">
+                            <div class="font-display text-[13px] font-semibold text-white/40">Configurer votre entreprise</div>
+                            <div class="text-xs text-white/25 mt-0.5">Secteur, taille, localisation</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3.5 py-3 relative">
+                        <div class="step-connector"></div>
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10 text-white/30" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)">3</div>
+                        <div class="pt-0.5">
+                            <div class="font-display text-[13px] font-semibold text-white/40">Ajouter vos premiers produits</div>
+                            <div class="text-xs text-white/25 mt-0.5">Import Excel ou saisie manuelle</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3.5 pt-3">
+                        <div class="w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 text-white/30" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1)">4</div>
+                        <div class="pt-0.5">
+                            <div class="font-display text-[13px] font-semibold text-white/40">Inviter votre équipe</div>
+                            <div class="text-xs text-white/25 mt-0.5">Collaborez dès le premier jour</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Plans mini -->
+            <div class="rounded-2xl p-5 anim-fadeup-2" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">
+                <div class="font-display text-[10px] font-semibold tracking-[.08em] uppercase text-white/35 mb-4">Plan inclus gratuitement</div>
+                <div class="flex items-center gap-3 rounded-xl px-3 py-2.5 mb-2" style="background:rgba(0,212,160,.08);border:1px solid rgba(0,212,160,.18)">
+                    <span class="font-display text-sm font-semibold text-[#00d4a0] flex-1">Plan Gratuit</span>
+                    <span class="text-xs text-[#00d4a0]/70">100 produits · 1 entrepôt</span>
+                    <span class="font-display text-[10px] font-bold text-[#030d1f] bg-[#00d4a0] px-2 py-0.5 rounded-full">GRATUIT</span>
+                </div>
+                <div class="flex items-center gap-3 rounded-xl px-3 py-2 mb-1.5" style="background:rgba(255,255,255,.02)">
+                    <span class="font-display text-sm font-semibold text-white/50 flex-1">Standard</span>
+                    <span class="text-xs text-white/30">29 900 XAF/mois</span>
+                </div>
+                <div class="flex items-center gap-3 rounded-xl px-3 py-2" style="background:rgba(255,255,255,.02)">
+                    <span class="font-display text-sm font-semibold text-white/50 flex-1">Pro</span>
+                    <span class="text-xs text-white/30">79 900 XAF/mois</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="relative z-10 flex flex-wrap gap-x-5 gap-y-2 anim-fadeup-2">
+            <div class="flex items-center gap-1.5 text-xs text-white/35"><span>🔒</span> Données chiffrées SSL</div>
+            <div class="flex items-center gap-1.5 text-xs text-white/35"><span>🌍</span> 14 pays africains</div>
+            <div class="flex items-center gap-1.5 text-xs text-white/35"><span>⭐</span> 2 400+ entreprises</div>
+            <div class="flex items-center gap-1.5 text-xs text-white/35"><span>🚫</span> Sans carte bancaire</div>
+        </div>
+    </aside>
+
+    <!-- ════════════════════════════════════════
+         RIGHT — Form panel
+    ════════════════════════════════════════ -->
+    <main class="bg-white flex items-start justify-center px-6 py-10 lg:px-12 overflow-y-auto relative">
+
+        <div class="absolute top-0 left-0 bottom-0 w-px hidden lg:block" style="background:linear-gradient(to bottom,transparent,#e2e8f0 20%,#e2e8f0 80%,transparent)"></div>
+
+        <div class="w-full max-w-md anim-fadeup">
+
+            <!-- Mobile logo -->
+            <div class="lg:hidden flex justify-center mb-8">
+                <a href="afristock.html" class="inline-flex items-center gap-3 no-underline">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center text-[#030d1f] font-display font-black" style="background:linear-gradient(135deg,#00d4a0,#3b82f6)">A</div>
+                    <span class="font-display text-xl font-extrabold text-[#030d1f] tracking-tight">Afristock</span>
+                </a>
+            </div>
+
+            <!-- Header -->
+            <div class="mb-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-5 h-0.5 rounded-full bg-[#00d4a0]"></div>
+                    <span class="font-display text-[10px] font-semibold tracking-[.08em] uppercase text-[#00a37c]">Inscription gratuite</span>
+                </div>
+                <h1 class="font-display text-[26px] font-extrabold text-[#030d1f] tracking-tight leading-tight mb-2">Commencez dès aujourd'hui 🚀</h1>
+                <p class="text-sm text-slate-500">
+                    Déjà inscrit ?
+                    <a th:href="@{/auth/login}" href="login.html" class="text-blue-600 font-semibold hover:underline">Se connecter →</a>
+                </p>
+            </div>
+
+            <!-- Free plan banner -->
+            <div class="flex items-center gap-3 rounded-xl px-4 py-3.5 mb-6" style="background:linear-gradient(135deg,rgba(0,212,160,.06),rgba(37,99,212,.06));border:1.5px solid rgba(0,212,160,.2)">
+                <span class="text-xl flex-shrink-0">🎁</span>
+                <div>
+                    <strong class="font-display text-sm font-bold text-[#030d1f] block">Plan Gratuit activé automatiquement</strong>
+                    <span class="text-xs text-slate-500">Aucune carte bancaire requise · Annulation en 1 clic</span>
+                </div>
+            </div>
+
+            <!-- Thymeleaf alerts -->
+            <div th:if="${success}" class="mb-5 flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl">
+                <span>✓</span> <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="mb-5 flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-200 px-4 py-3 rounded-xl">
+                <span>⚠</span> <span th:text="${error}"></span>
+            </div>
+
+            <!-- Form -->
+            <form th:object="${registerRequest}" th:action="@{/auth/register}" method="post" class="space-y-4" novalidate>
+
+                <!-- ── ENTREPRISE ── -->
+                <div>
+                    <p class="font-display text-xs font-bold text-blue-500 tracking-widest uppercase mb-3">Entreprise</p>
+
+                    <div class="flex flex-col gap-1.5 mb-3">
+                        <label class="font-display text-xs font-semibold text-slate-700" for="companyName">Nom de l'entreprise</label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">🏢</span>
+                            <input type="text" id="companyName" th:field="*{companyName}"
+                                   placeholder="Mon Entreprise SARL"
+                                   class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="font-display text-xs font-semibold text-slate-700" for="companyCity">Ville</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">📍</span>
+                                <input type="text" id="companyCity" th:field="*{companyCity}"
+                                       placeholder="Douala"
+                                       class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="font-display text-xs font-semibold text-slate-700" for="companyPhone">Téléphone</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">📱</span>
+                                <input type="text" id="companyPhone" th:field="*{companyPhone}"
+                                       placeholder="+237 6XX XX XX"
+                                       class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="font-display text-xs font-semibold text-slate-700" for="companyEmail">Email de l'entreprise</label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">✉</span>
+                            <input type="email" id="companyEmail" th:field="*{companyEmail}"
+                                   placeholder="contact@entreprise.com"
+                                   class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Separator -->
+                <div class="h-px bg-slate-100 my-1"></div>
+
+                <!-- ── ADMINISTRATEUR ── -->
+                <div>
+                    <p class="font-display text-xs font-bold text-blue-500 tracking-widest uppercase mb-3">Administrateur</p>
+
+                    <div class="flex flex-col gap-1.5 mb-3">
+                        <label class="font-display text-xs font-semibold text-slate-700" for="email">Email de connexion</label>
+                        <div class="relative">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">✉</span>
+                            <input type="email" id="email" th:field="*{email}"
+                                   placeholder="vous@entreprise.com"
+                                   autocomplete="email"
+                                   class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="font-display text-xs font-semibold text-slate-700" for="firstName">Prénom</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">👤</span>
+                                <input type="text" id="firstName" th:field="*{firstName}"
+                                       placeholder="Jean" autocomplete="given-name"
+                                       class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="font-display text-xs font-semibold text-slate-700" for="lastName">Nom</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">👤</span>
+                                <input type="text" id="lastName" th:field="*{lastName}"
+                                       placeholder="Dupont" autocomplete="family-name"
+                                       class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="font-display text-xs font-semibold text-slate-700" for="password">Mot de passe</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">🔒</span>
+                                <input type="password" id="password" th:field="*{password}"
+                                       placeholder="Min. 8 caractères" autocomplete="new-password"
+                                       oninput="checkStrength(this.value)"
+                                       class="af-input w-full pl-9 pr-8 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                <button type="button" onclick="togglePwd('password',this)"
+                                        class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors bg-transparent border-none cursor-pointer text-xs p-1">👁</button>
+                            </div>
+                            <!-- Strength -->
+                            <div class="flex gap-1 mt-1">
+                                <div id="s1" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                                <div id="s2" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                                <div id="s3" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                                <div id="s4" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                            </div>
+                            <span id="strengthLabel" class="text-[10px] text-slate-400"></span>
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="font-display text-xs font-semibold text-slate-700" for="passwordConfirm">Confirmer</label>
+                            <div class="relative">
+                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">🔒</span>
+                                <input type="password" id="passwordConfirm" th:field="*{passwordConfirm}"
+                                       placeholder="Répétez" autocomplete="new-password"
+                                       class="af-input w-full pl-9 pr-8 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                <button type="button" onclick="togglePwd('passwordConfirm',this)"
+                                        class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors bg-transparent border-none cursor-pointer text-xs p-1">👁</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <label class="af-check flex items-start gap-2.5 cursor-pointer select-none mt-1">
+                    <input type="checkbox" name="terms" required class="hidden">
+                    <span class="af-box w-[17px] h-[17px] rounded-[5px] border border-slate-300 bg-white transition-all duration-200 text-[9px] flex-shrink-0 mt-0.5"></span>
+                    <span class="text-xs text-slate-500 leading-relaxed">
+            J'accepte les
+            <a href="#" class="text-blue-600 hover:underline font-medium">Conditions d'utilisation</a>
+            et la
+            <a href="#" class="text-blue-600 hover:underline font-medium">Politique de confidentialité</a>
+            d'Afristock.
+          </span>
+                </label>
+
+                <!-- Submit -->
+                <button type="submit"
+                        class="btn-dark w-full py-3.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer mt-1">
+                    <span class="relative z-10 flex items-center justify-center gap-2">Créer mon compte gratuitement →</span>
+                </button>
+
+            </form>
+
+            <!-- Login link -->
+            <p class="text-center text-sm text-slate-500 mt-6 pt-5 border-t border-slate-100">
+                Déjà un compte ?
+                <a th:href="@{/auth/login}" href="login.html" class="text-blue-600 font-display font-semibold hover:underline">Se connecter</a>
+            </p>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    function togglePwd(id, btn) {
+      const el = document.getElementById(id);
+      el.type = el.type === 'text' ? 'password' : 'text';
+      btn.textContent = el.type === 'text' ? '🙈' : '👁';
+    }
+
+    function checkStrength(val) {
+      let score = 0;
+      if (val.length >= 8) score++;
+      if (/[A-Z]/.test(val)) score++;
+      if (/[0-9]/.test(val)) score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const colors = ['#ef4444','#f59e0b','#3b82f6','#00d4a0'];
+      const labels = ['Faible','Moyen','Bon','Excellent'];
+      const ids = ['s1','s2','s3','s4'];
+
+      ids.forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.style.background = i < score ? colors[score-1] : '#e2e8f0';
+      });
+
+      const lbl = document.getElementById('strengthLabel');
+      if (!val) { lbl.textContent = ''; return; }
+      lbl.textContent = labels[score-1] || 'Faible';
+      lbl.style.color = colors[score-1] || '#ef4444';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouvement de stock — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-2xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Mouvement de stock</h1>
+            <p class="text-sm text-gray-500 mt-1">Entrée, sortie ou ajustement d'inventaire sur un site.</p>
+        </header>
+
+        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+
+        <form th:action="@{/movements/save}" method="post"
+              class="bg-white rounded-2xl border border-gray-100 p-8 space-y-5">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Produit</label>
+                    <select name="productId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">Produit</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Site</label>
+                    <select name="siteId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}">Site</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Type</label>
+                    <select name="type" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="t : ${types}" th:value="${t}"
+                                th:text="${t.name() == 'ENTRY'} ? 'Entrée' : (${t.name() == 'EXIT'} ? 'Sortie' : 'Ajustement (inventaire)')">Type</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Quantité</label>
+                    <input type="number" name="quantity" min="1" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Motif (optionnel)</label>
+                <input type="text" name="reason" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+            </div>
+
+            <p class="text-xs text-gray-400">Astuce : « Ajustement » remplace la quantité du site par la valeur saisie (correction d'inventaire).</p>
+
+            <div class="flex gap-3 pt-2">
+                <button type="submit" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Enregistrer</button>
+                <a th:href="@{/stock}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">Annuler</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

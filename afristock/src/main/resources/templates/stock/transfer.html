@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfert de stock — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-2xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Transfert de stock</h1>
+            <p class="text-sm text-gray-500 mt-1">Déplacer un produit d'un site vers un autre (ex: entrepôt → boutique).</p>
+        </header>
+
+        <form th:action="@{/stock/transfer}" method="post"
+              class="bg-white rounded-2xl border border-gray-100 p-8 space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Produit</label>
+                <select name="productId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">Produit</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Site source</label>
+                    <select name="fromSiteId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}">Site</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Site destination</label>
+                    <select name="toSiteId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}">Site</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Quantité</label>
+                    <input type="number" name="quantity" min="1" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Motif (optionnel)</label>
+                    <input type="text" name="reason" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <button type="submit" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Transférer</button>
+                <a th:href="@{/stock}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">Annuler</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

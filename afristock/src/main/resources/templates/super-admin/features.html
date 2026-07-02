@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fonctionnalités — Super Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Fonctionnalités</h1>
+                <p class="text-sm text-gray-500 mt-1">Activez ou désactivez une fonctionnalité pour toutes les entreprises clientes.</p>
+            </div>
+            <div class="flex gap-3">
+                <a th:href="@{/super-admin/companies}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Entreprises</a>
+                <form th:action="@{/logout}" method="post">
+                    <button class="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-medium">Déconnexion</button>
+                </form>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div th:each="f : ${features}" class="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col">
+                <div class="flex justify-between items-start mb-3">
+                    <span class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold" th:text="${f.category}">Catégorie</span>
+                    <span th:if="${f.enabled}" class="text-xs font-bold text-green-600">ACTIVÉE</span>
+                    <span th:unless="${f.enabled}" class="text-xs font-bold text-gray-400">DÉSACTIVÉE</span>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900" th:text="${f.name}">Nom</h3>
+                <p class="text-sm text-gray-500 mt-1 flex-1" th:text="${f.description}">Description</p>
+
+                <form th:action="@{/super-admin/features/{id}/toggle(id=${f.id})}" method="post" class="mt-5">
+                    <input type="hidden" name="enabled" th:value="${!f.enabled}"/>
+                    <button th:if="${f.enabled}" class="w-full px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-medium">Désactiver</button>
+                    <button th:unless="${f.enabled}" class="w-full px-4 py-2 bg-green-50 text-green-600 rounded-xl text-sm font-medium">Activer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

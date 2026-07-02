@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${site.id == null} ? 'Nouveau site — Afristock' : 'Modifier le site — Afristock'">Site — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-2xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900"
+                th:text="${site.id == null} ? 'Nouveau site' : 'Modifier le site'">Site</h1>
+            <p class="text-sm text-gray-500 mt-1">Renseignez les informations de la boutique ou de l'entrepôt.</p>
+        </header>
+
+        <form th:action="@{/sites/save}" th:object="${site}" method="post"
+              class="bg-white rounded-2xl border border-gray-100 p-8 space-y-5">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nom</label>
+                <input type="text" th:field="*{name}" required
+                       class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Type</label>
+                <select th:field="*{type}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <option th:each="t : ${types}" th:value="${t}"
+                            th:text="${t.name() == 'ENTREPOT'} ? 'Entrepôt' : 'Boutique'">Type</option>
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Ville</label>
+                    <input type="text" th:field="*{city}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Téléphone</label>
+                    <input type="text" th:field="*{phone}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Adresse</label>
+                <input type="text" th:field="*{address}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+            </div>
+
+            <label class="flex items-center gap-2 text-sm text-gray-700">
+                <input type="checkbox" th:field="*{active}"/> Site actif
+            </label>
+
+            <div class="flex gap-3 pt-2">
+                <button type="submit" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Enregistrer</button>
+                <a th:href="@{/sites}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">Annuler</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

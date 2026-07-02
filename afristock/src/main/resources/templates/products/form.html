@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.id == null} ? 'Nouveau produit — Afristock' : 'Modifier le produit — Afristock'">Produit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-3xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900"
+                th:text="${product.id == null} ? 'Nouveau produit' : 'Modifier le produit'">Produit</h1>
+        </header>
+
+        <form th:action="@{/products/save}" th:object="${product}" method="post"
+              class="bg-white rounded-2xl border border-gray-100 p-8 space-y-5">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Référence</label>
+                    <input type="text" th:field="*{reference}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nom</label>
+                    <input type="text" th:field="*{name}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Description</label>
+                <input type="text" th:field="*{description}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Catégorie</label>
+                    <select name="categoryId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option value="">— Choisir —</option>
+                        <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"
+                                th:selected="${product.category != null and product.category.id == c.id}">Cat</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Marque (optionnel)</label>
+                    <select name="brandId" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option value="">— Aucune —</option>
+                        <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}"
+                                th:selected="${product.brand != null and product.brand.id == b.id}">Marque</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Prix d'achat</label>
+                    <input type="number" step="0.01" th:field="*{purchasePrice}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Prix de vente</label>
+                    <input type="number" step="0.01" th:field="*{salePrice}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Unité</label>
+                    <select th:field="*{unit}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="u : ${units}" th:value="${u}" th:text="${u}">Unité</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Quantité initiale</label>
+                    <input type="number" th:field="*{currentQuantity}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Seuil d'alerte</label>
+                    <input type="number" th:field="*{minThreshold}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Code-barres</label>
+                    <input type="text" th:field="*{barcode}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">URL de l'image</label>
+                    <input type="text" th:field="*{imageUrl}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <button type="submit" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Enregistrer</button>
+                <a th:href="@{/products}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">Annuler</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
