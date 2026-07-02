@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employés — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Employés</h1>
+                <p class="text-sm text-gray-500 mt-1">Gestion du personnel.</p>
+            </div>
+            <div class="flex gap-3">
+                <a th:href="@{/hr/leaves}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Congés</a>
+                <a th:href="@{/hr/attendance}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Pointage</a>
+                <a th:href="@{/hr/employees/add}" sec:authorize="hasAuthority('HR_WRITE')"
+                   class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">+ Nouvel employé</a>
+            </div>
+        </header>
+
+        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
+        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
+                    <tr><th class="px-6 py-4">Nom</th><th class="px-6 py-4">Poste</th><th class="px-6 py-4">Contrat</th><th class="px-6 py-4">Téléphone</th><th class="px-6 py-4 text-right">Salaire</th><th class="px-6 py-4 text-right">Actions</th></tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr th:each="e : ${employees}">
+                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${e.fullName}">Nom</td>
+                        <td class="px-6 py-4 text-gray-600" th:text="${e.position}">Poste</td>
+                        <td class="px-6 py-4 text-gray-600" th:text="${e.contractType}">Contrat</td>
+                        <td class="px-6 py-4 text-gray-600" th:text="${e.phone}">Téléphone</td>
+                        <td class="px-6 py-4 text-right text-gray-700" th:text="${e.baseSalary != null ? #numbers.formatDecimal(e.baseSalary, 0, 0) : '—'}">0</td>
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a th:href="@{/hr/employees/edit/{id}(id=${e.id})}" sec:authorize="hasAuthority('HR_WRITE')" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">Modifier</a>
+                            <form th:action="@{/hr/employees/delete/{id}(id=${e.id})}" method="post" class="inline" sec:authorize="hasAuthority('HR_WRITE')" onsubmit="return confirm('Supprimer cet employé ?');">
+                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(employees)}"><td colspan="6" class="px-6 py-10 text-center text-gray-400">Aucun employé.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -66,6 +66,18 @@
                 <span>📦</span> Inventaire
             </a>
 
+            <a th:href="@{/sales}" class="sidebar-item"
+               th:if="${@featureService.isEnabled('SALES')}"
+               sec:authorize="hasAuthority('SALE_READ')">
+                <span>🧾</span> Ventes
+            </a>
+
+            <a th:href="@{/purchases}" class="sidebar-item"
+               th:if="${@featureService.isEnabled('PURCHASES')}"
+               sec:authorize="hasAuthority('PURCHASE_READ')">
+                <span>🛒</span> Achats
+            </a>
+
             <a th:href="@{/stock}" class="sidebar-item"
                th:if="${@featureService.isEnabled('STOCK')}"
                sec:authorize="hasAuthority('STOCK_READ')">
@@ -91,7 +103,28 @@
                 <a th:href="@{/products/categories}" class="sidebar-item">
                     <span>📂</span> Catégories
                 </a>
+                <a th:href="@{/subscription}" class="sidebar-item">
+                    <span>💳</span> Mon abonnement
+                </a>
             </div>
+
+            <a th:href="@{/accounting}" class="sidebar-item"
+               th:if="${@featureService.isEnabled('ACCOUNTING')}"
+               sec:authorize="hasAuthority('ACCOUNTING_READ')">
+                <span>💰</span> Comptabilité
+            </a>
+
+            <a th:href="@{/hr/employees}" class="sidebar-item"
+               th:if="${@featureService.isEnabled('HR')}"
+               sec:authorize="hasAuthority('HR_READ')">
+                <span>👔</span> RH
+            </a>
+
+            <a th:href="@{/reports}" class="sidebar-item"
+               th:if="${@featureService.isEnabled('REPORTS')}"
+               sec:authorize="hasAuthority('REPORT_READ')">
+                <span>📈</span> Rapports
+            </a>
 
             <div sec:authorize="hasRole('SUPER_ADMIN')" class="pt-2">
                 <div class="text-gray-500 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>

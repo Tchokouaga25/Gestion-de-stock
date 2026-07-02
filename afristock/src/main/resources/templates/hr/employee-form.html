@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${employee.id == null} ? 'Nouvel employé' : 'Modifier employé'">Employé</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-2xl mx-auto">
+        <header class="mb-8"><h1 class="text-2xl font-bold text-gray-900"
+            th:text="${employee.id == null} ? 'Nouvel employé' : 'Modifier employé'">Employé</h1></header>
+
+        <form th:action="@{/hr/employees/save}" th:object="${employee}" method="post"
+              class="bg-white rounded-2xl border border-gray-100 p-8 space-y-5">
+            <input type="hidden" th:field="*{id}"/>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Prénom</label>
+                    <input type="text" th:field="*{firstName}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nom</label>
+                    <input type="text" th:field="*{lastName}" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Poste</label>
+                    <input type="text" th:field="*{position}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Contrat</label>
+                    <select th:field="*{contractType}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="c : ${contractTypes}" th:value="${c}" th:text="${c}">Contrat</option>
+                    </select></div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Date d'embauche</label>
+                    <input type="date" th:field="*{hireDate}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Salaire de base</label>
+                    <input type="number" step="1" th:field="*{baseSalary}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Téléphone</label>
+                    <input type="text" th:field="*{phone}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
+                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Email</label>
+                    <input type="email" th:field="*{email}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
+            </div>
+            <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" th:field="*{active}"/> Employé actif</label>
+            <div class="flex gap-3 pt-2">
+                <button type="submit" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Enregistrer</button>
+                <a th:href="@{/hr/employees}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">Annuler</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

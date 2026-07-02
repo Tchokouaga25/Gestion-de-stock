@@ -33,7 +33,12 @@ public enum Role {
             SUPPLIER_READ, SUPPLIER_WRITE, SUPPLIER_DELETE,
             CUSTOMER_READ, CUSTOMER_WRITE, CUSTOMER_DELETE,
             PRODUCT_READ, PRODUCT_WRITE, PRODUCT_DELETE,
-            STOCK_READ, STOCK_WRITE
+            STOCK_READ, STOCK_WRITE,
+            SALE_READ, SALE_WRITE,
+            PURCHASE_READ, PURCHASE_WRITE,
+            ACCOUNTING_READ, ACCOUNTING_WRITE,
+            HR_READ, HR_WRITE,
+            REPORT_READ
     )),
 
     USER_PME(Set.of(
@@ -41,7 +46,8 @@ public enum Role {
             SUPPLIER_READ,
             CUSTOMER_READ, CUSTOMER_WRITE,
             PRODUCT_READ,
-            STOCK_READ, STOCK_WRITE
+            STOCK_READ, STOCK_WRITE,
+            SALE_READ, SALE_WRITE
     ));
 
     private final Set<Permission> permissions;

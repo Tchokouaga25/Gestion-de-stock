@@ -24,6 +24,7 @@ public class RegistrationService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SubscriptionService subscriptionService;
 
     public RegisterResponse registerCompanyAndAdmin(RegisterRequest request) {
 
@@ -69,6 +70,9 @@ public class RegistrationService {
 
         User savedUser = userRepository.saveAndFlush(admin);
         log.info("Utilisateur administrateur créé avec succès. ID: {}, Email: {}", savedUser.getId(), savedUser.getEmail());
+
+        // 5b. Démarrer la période d'essai gratuit
+        subscriptionService.startTrial(savedCompany.getId());
 
         // 6. Réponse
         return new RegisterResponse(

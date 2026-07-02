@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointage — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Pointage</h1>
+                <p class="text-sm text-gray-500 mt-1" th:text="'Journée du ' + ${#temporals.format(date, 'dd/MM/yyyy')}">Date</p>
+            </div>
+            <form th:action="@{/hr/attendance}" method="get" class="flex gap-2 items-center">
+                <input type="date" name="date" th:value="${date}" class="px-3 py-2 border border-gray-200 rounded-xl text-sm"/>
+                <button class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Voir</button>
+            </form>
+        </header>
+
+        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
+
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
+                    <tr><th class="px-6 py-4">Employé</th><th class="px-6 py-4">État</th><th class="px-6 py-4 text-right">Pointer</th></tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr th:each="e : ${employees}">
+                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${e.fullName}">Employé</td>
+                        <td class="px-6 py-4">
+                            <th:block th:each="a : ${attendances}" th:if="${a.employee.id == e.id}">
+                                <span th:if="${a.present}" class="text-green-600 text-xs font-bold">Présent</span>
+                                <span th:unless="${a.present}" class="text-red-600 text-xs font-bold">Absent</span>
+                            </th:block>
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2" sec:authorize="hasAuthority('HR_WRITE')">
+                            <form th:action="@{/hr/attendance}" method="post" class="inline">
+                                <input type="hidden" name="employeeId" th:value="${e.id}"/>
+                                <input type="hidden" name="date" th:value="${date}"/>
+                                <input type="hidden" name="present" value="true"/>
+                                <button class="px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-xs font-medium">Présent</button>
+                            </form>
+                            <form th:action="@{/hr/attendance}" method="post" class="inline">
+                                <input type="hidden" name="employeeId" th:value="${e.id}"/>
+                                <input type="hidden" name="date" th:value="${date}"/>
+                                <input type="hidden" name="present" value="false"/>
+                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Absent</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(employees)}"><td colspan="3" class="px-6 py-10 text-center text-gray-400">Aucun employé.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

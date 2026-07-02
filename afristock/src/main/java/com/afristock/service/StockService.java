@@ -4,7 +4,6 @@ import com.afristock.model.entity.Product;
 import com.afristock.model.entity.StockLevel;
 import com.afristock.model.entity.StockMovement;
 import com.afristock.model.enums.MovementType;
-import com.afristock.repository.ProductRepository;
 import com.afristock.repository.StockLevelRepository;
 import com.afristock.repository.StockMovementRepository;
 import com.afristock.security.TenantContext;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StockService {
 
-    private final ProductRepository productRepository;
     private final StockMovementRepository movementRepository;
     private final StockLevelRepository stockLevelRepository;
     private final StockLevelService stockLevelService;

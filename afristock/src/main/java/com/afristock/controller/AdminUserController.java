@@ -3,7 +3,6 @@ package com.afristock.controller;
 import com.afristock.model.entity.User;
 import com.afristock.model.enums.Role;
 import com.afristock.repository.UserRepository;
-import com.afristock.security.TenantContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

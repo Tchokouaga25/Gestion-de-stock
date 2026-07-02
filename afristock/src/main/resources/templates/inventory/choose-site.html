@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvel inventaire — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-lg mx-auto">
+        <header class="mb-8"><h1 class="text-2xl font-bold text-gray-900">Nouvel inventaire</h1>
+            <p class="text-sm text-gray-500 mt-1">Choisissez le site à inventorier.</p></header>
+
+        <form th:action="@{/inventory/count}" method="get" class="bg-white rounded-2xl border border-gray-100 p-8 space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Site</label>
+                <select name="siteId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}">Site</option>
+                </select>
+            </div>
+            <div class="flex gap-3">
+                <button type="submit" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Commencer le comptage</button>
+                <a th:href="@{/inventory}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">Annuler</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

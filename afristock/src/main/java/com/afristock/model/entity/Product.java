@@ -24,7 +24,10 @@ public class Product implements TenantAware {
     private String description;
 
     private Double purchasePrice;
+    /** Prix de vente au détail. */
     private Double salePrice;
+    /** Prix de vente en gros (utilisé pour les ventes de type GROS ; à défaut, le prix détail). */
+    private Double wholesalePrice;
     private Integer currentQuantity = 0;
     private Integer minThreshold = 10;
 

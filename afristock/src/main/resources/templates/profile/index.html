@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+<div class="max-w-2xl mx-auto">
+
+    <header class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Mon Profil</h1>
+            <p class="text-sm text-gray-500 mt-1">Gérez vos informations personnelles.</p>
+        </div>
+        <a th:href="@{/dashboard}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">
+            ← Tableau de bord
+        </a>
+    </header>
+
+    <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
+    <div th:if="${error}"   class="mb-4 px-4 py-3 rounded-xl bg-red-50   text-red-700   text-sm" th:text="${error}"></div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+
+        <!-- Avatar -->
+        <div class="flex items-center gap-5 mb-8 pb-8 border-b border-gray-100">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold"
+                 style="background-color: #3341ff;"
+                 th:text="${#strings.substring(profileUser.firstName, 0, 1)}">U</div>
+            <div>
+                <p class="text-lg font-bold text-gray-900"
+                   th:text="${profileUser.firstName + ' ' + profileUser.lastName}">Prénom Nom</p>
+                <p class="text-sm text-gray-400" th:text="${profileUser.email}">email@example.com</p>
+                <span class="inline-block mt-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600"
+                      th:text="${profileUser.role}">ROLE</span>
+            </div>
+        </div>
+
+        <!-- Formulaire -->
+        <form th:action="@{/profile/update}" method="post" th:object="${profileUser}">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="space-y-5">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">Prénom</label>
+                        <input type="text" th:field="*{firstName}"
+                               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">Nom</label>
+                        <input type="text" th:field="*{lastName}"
+                               class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">Adresse email</label>
+                    <input type="email" th:field="*{email}"
+                           class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-100">
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button type="submit"
+                        class="px-6 py-2.5 text-white text-sm font-semibold rounded-xl transition-colors"
+                        style="background-color: #3341ff;">
+                    Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

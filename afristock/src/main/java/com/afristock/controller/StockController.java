@@ -79,4 +79,11 @@ public class StockController {
         model.addAttribute("transfers", stockTransferService.getHistory());
         return "stock/transfers";
     }
+
+    @GetMapping("/alerts")
+    @PreAuthorize("hasAuthority('STOCK_READ')")
+    public String alerts(Model model) {
+        model.addAttribute("levels", stockLevelService.getLowStock());
+        return "stock/alerts";
+    }
 }

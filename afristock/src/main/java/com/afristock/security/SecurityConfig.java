@@ -1,7 +1,5 @@
 package com.afristock.security;
 
-import com.afristock.service.CustomUserDetailsService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,20 +15,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // active @PreAuthorize (sinon les annotations existantes sont ignorées !)
-@RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/login", "/register",
-                                "/css/**", "/js/**", "/images/**",
-                                "/*.jpg", "/*.png", "/*.svg", "/*.jpeg", "/favicon.ico").permitAll()
-                        .requestMatchers("/super-admin/**").hasRole("SUPER_ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login")

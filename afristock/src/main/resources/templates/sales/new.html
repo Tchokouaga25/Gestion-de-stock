@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle vente — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-4xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Nouvelle vente</h1>
+            <a th:href="@{/sales}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Historique</a>
+        </header>
+
+        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+
+        <form th:action="@{/sales}" method="post" class="space-y-6">
+            <div class="bg-white rounded-2xl border border-gray-100 p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Site</label>
+                    <select name="siteId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}">Site</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Client</label>
+                    <select name="customerId" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option value="">Comptoir (anonyme)</option>
+                        <option th:each="c : ${customers}" th:value="${c.id}" th:text="${c.name}">Client</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Type</label>
+                    <select name="saleType" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="t : ${saleTypes}" th:value="${t}"
+                                th:text="${t.name() == 'GROS'} ? 'Gros' : 'Détail'">Type</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Paiement</label>
+                    <select name="paymentMethod" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                        <option th:each="m : ${paymentMethods}" th:value="${m}" th:text="${m}">Paiement</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold text-gray-900">Articles</h2>
+                    <button type="button" onclick="addLine()" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">+ Ligne</button>
+                </div>
+                <table class="w-full text-sm">
+                    <thead class="text-gray-500 text-left text-xs uppercase tracking-widest">
+                        <tr><th class="py-2">Produit</th><th class="py-2 w-32">Quantité</th><th class="py-2 w-32 text-right">Prix U.</th><th class="py-2 w-8"></th></tr>
+                    </thead>
+                    <tbody id="lines"></tbody>
+                </table>
+                <div class="text-right mt-4">
+                    <span class="text-sm text-gray-500">Total : </span>
+                    <span id="totalDisplay" class="text-xl font-bold text-gray-900">0</span>
+                    <span class="text-sm text-gray-500"> FCFA</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 p-6 flex items-end gap-4">
+                <div class="flex-1">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Montant encaissé (FCFA)</label>
+                    <input type="number" name="amountPaid" min="0" step="1" id="amountPaid" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                </div>
+                <button type="submit" class="px-6 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Valider la vente</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Modèle de ligne + logique -->
+    <script th:inline="javascript">
+        const products = /*[[${products}]]*/ [];
+        // On extrait id, nom, prix des produits injectés par Thymeleaf.
+        const productData = products.map(p => ({ id: p.id, name: p.name, price: p.salePrice || 0 }));
+
+        function optionsHtml() {
+            return productData.map(p => `<option value="${p.id}" data-price="${p.price}">${p.name}</option>`).join('');
+        }
+
+        function addLine() {
+            const tr = document.createElement('tr');
+            tr.className = 'border-t border-gray-100';
+            tr.innerHTML = `
+                <td class="py-2"><select name="productId" onchange="recompute()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">${optionsHtml()}</select></td>
+                <td class="py-2"><input type="number" name="quantity" min="1" value="1" oninput="recompute()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"/></td>
+                <td class="py-2 text-right price-cell text-gray-600">0</td>
+                <td class="py-2 text-right"><button type="button" onclick="this.closest('tr').remove(); recompute();" class="text-red-500">✕</button></td>`;
+            document.getElementById('lines').appendChild(tr);
+            recompute();
+        }
+
+        function recompute() {
+            let total = 0;
+            document.querySelectorAll('#lines tr').forEach(tr => {
+                const sel = tr.querySelector('select[name="productId"]');
+                const qty = parseInt(tr.querySelector('input[name="quantity"]').value) || 0;
+                const price = parseFloat(sel.selectedOptions[0]?.dataset.price) || 0;
+                const line = price * qty;
+                tr.querySelector('.price-cell').textContent = line.toLocaleString('fr-FR');
+                total += line;
+            });
+            document.getElementById('totalDisplay').textContent = total.toLocaleString('fr-FR');
+            const paid = document.getElementById('amountPaid');
+            if (!paid.dataset.touched) paid.value = total;
+        }
+
+        document.getElementById('amountPaid').addEventListener('input', function () { this.dataset.touched = '1'; });
+        addLine(); // première ligne
+    </script>
+</body>
+</html>

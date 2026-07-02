@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comptage — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-3xl mx-auto">
+        <header class="mb-8"><h1 class="text-2xl font-bold text-gray-900" th:text="'Comptage — ' + ${site.name}">Comptage</h1>
+            <p class="text-sm text-gray-500 mt-1">Saisissez la quantité réelle comptée. Elle remplacera le stock théorique.</p></header>
+
+        <form th:action="@{/inventory/save}" method="post" class="bg-white rounded-2xl border border-gray-100 p-6">
+            <input type="hidden" name="siteId" th:value="${site.id}"/>
+            <div class="mb-4">
+                <input type="text" name="note" placeholder="Note (optionnel)" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+            </div>
+            <table class="w-full text-sm mb-4">
+                <thead class="text-gray-500 text-left text-xs uppercase tracking-widest border-b border-gray-200">
+                    <tr><th class="py-2">Produit</th><th class="py-2 text-right w-32">Stock théorique</th><th class="py-2 text-right w-40">Compté</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="l : ${levels}" class="border-b border-gray-100">
+                        <td class="py-2 text-gray-900" th:text="${l.product.name}">Produit
+                            <input type="hidden" name="productId" th:value="${l.product.id}"/>
+                        </td>
+                        <td class="py-2 text-right text-gray-500" th:text="${l.quantity}">0</td>
+                        <td class="py-2 text-right">
+                            <input type="number" name="counted" min="0" th:value="${l.quantity}" class="w-28 px-3 py-2 border border-gray-200 rounded-lg text-sm text-right"/>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(levels)}"><td colspan="3" class="py-8 text-center text-gray-400">Aucun stock défini pour ce site. Définissez d'abord des quantités via « Stock par site ».</td></tr>
+                </tbody>
+            </table>
+            <div class="flex gap-3">
+                <button type="submit" th:disabled="${#lists.isEmpty(levels)}" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium disabled:opacity-40" style="background-color:#3341ff">Valider l'inventaire</button>
+                <a th:href="@{/inventory}" class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-xl text-sm font-medium">Annuler</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

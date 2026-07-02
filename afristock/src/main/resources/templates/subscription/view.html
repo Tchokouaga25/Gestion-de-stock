@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon abonnement — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-2xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Mon abonnement</h1>
+            <a th:href="@{/dashboard}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Tableau de bord</a>
+        </header>
+
+        <div th:if="${subscription == null}" class="bg-white rounded-2xl border border-gray-100 p-10 text-center text-gray-400">
+            Aucun abonnement actif. Contactez l'administrateur de la plateforme.
+        </div>
+
+        <div th:if="${subscription != null}" class="bg-white rounded-2xl border border-gray-100 p-8">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <div class="text-xs text-gray-400 uppercase tracking-widest">Offre</div>
+                    <div class="text-2xl font-bold text-gray-900" th:text="${subscription.planName}">Offre</div>
+                </div>
+                <span th:switch="${subscription.effectiveStatus.name()}">
+                    <span th:case="'ACTIF'" class="px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold">Actif</span>
+                    <span th:case="'ESSAI'" class="px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-xs font-bold">Essai gratuit</span>
+                    <span th:case="'EXPIRE'" class="px-3 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">Expiré</span>
+                </span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div><div class="text-gray-400">Début</div><div class="font-medium text-gray-900" th:text="${#temporals.format(subscription.startDate, 'dd/MM/yyyy')}">Date</div></div>
+                <div><div class="text-gray-400">Échéance</div><div class="font-medium text-gray-900" th:text="${#temporals.format(subscription.endDate, 'dd/MM/yyyy')}">Date</div></div>
+            </div>
+            <p th:if="${subscription.expired}" class="mt-6 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm">
+                Votre abonnement a expiré. Veuillez le renouveler auprès de l'administrateur de la plateforme.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -18,4 +18,12 @@ public interface StockLevelRepository extends JpaRepository<StockLevel, Long> {
     @Query("SELECT COALESCE(SUM(sl.quantity), 0) FROM StockLevel sl " +
             "WHERE sl.product.id = :productId AND sl.tenantId = :tenantId")
     int sumQuantityForProduct(Long productId, Long tenantId);
+
+    List<StockLevel> findBySiteIdAndTenantId(Long siteId, Long tenantId);
+
+    /** Lignes de stock en rupture ou sous le seuil d'alerte du produit. */
+    @Query("SELECT sl FROM StockLevel sl JOIN FETCH sl.product p JOIN FETCH sl.site " +
+            "WHERE sl.tenantId = :tenantId AND p.minThreshold IS NOT NULL " +
+            "AND sl.quantity <= p.minThreshold ORDER BY sl.site.name, p.name")
+    List<StockLevel> findLowStock(Long tenantId);
 }

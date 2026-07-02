@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertes de rupture — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-5xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Alertes de rupture</h1>
+                <p class="text-sm text-gray-500 mt-1">Produits au niveau ou sous le seuil d'alerte, par site.</p>
+            </div>
+            <a th:href="@{/stock}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Stock par site</a>
+        </header>
+
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
+                    <tr><th class="px-6 py-4">Site</th><th class="px-6 py-4">Produit</th><th class="px-6 py-4 text-right">Stock</th><th class="px-6 py-4 text-right">Seuil</th><th class="px-6 py-4">État</th></tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr th:each="l : ${levels}">
+                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${l.site.name}">Site</td>
+                        <td class="px-6 py-4 text-gray-700" th:text="${l.product.name}">Produit</td>
+                        <td class="px-6 py-4 text-right font-bold" th:classappend="${l.quantity == 0} ? 'text-red-600' : 'text-orange-500'" th:text="${l.quantity}">0</td>
+                        <td class="px-6 py-4 text-right text-gray-500" th:text="${l.product.minThreshold}">0</td>
+                        <td class="px-6 py-4">
+                            <span th:if="${l.quantity == 0}" class="px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">Rupture</span>
+                            <span th:unless="${l.quantity == 0}" class="px-2.5 py-1 rounded-full bg-orange-50 text-orange-600 text-xs font-bold">Stock bas</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(levels)}"><td colspan="5" class="px-6 py-10 text-center text-gray-400">Aucune alerte : tous les stocks sont au-dessus du seuil. 🎉</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

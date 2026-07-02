@@ -40,5 +40,24 @@ public enum Permission {
 
     // --- Stock ---
     STOCK_READ,
-    STOCK_WRITE
+    STOCK_WRITE,
+
+    // --- Ventes & caisse ---
+    SALE_READ,
+    SALE_WRITE,
+
+    // --- Achats ---
+    PURCHASE_READ,
+    PURCHASE_WRITE,
+
+    // --- Comptabilité / trésorerie ---
+    ACCOUNTING_READ,
+    ACCOUNTING_WRITE,
+
+    // --- Ressources humaines ---
+    HR_READ,
+    HR_WRITE,
+
+    // --- Rapports ---
+    REPORT_READ
 }

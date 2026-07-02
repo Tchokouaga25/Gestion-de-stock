@@ -16,11 +16,15 @@
             </div>
             <div class="flex gap-3">
                 <a th:href="@{/super-admin/features}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Fonctionnalités</a>
+                <a th:href="@{/super-admin/plans}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Offres</a>
                 <form th:action="@{/logout}" method="post">
                     <button class="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-medium">Déconnexion</button>
                 </form>
             </div>
         </header>
+
+        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
+        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
 
         <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <table class="w-full text-sm">
@@ -30,7 +34,8 @@
                         <th class="px-6 py-4">Email</th>
                         <th class="px-6 py-4">Ville</th>
                         <th class="px-6 py-4">Statut</th>
-                        <th class="px-6 py-4 text-right">Action</th>
+                        <th class="px-6 py-4">Abonnement</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -42,17 +47,38 @@
                             <span th:if="${c.active}" class="px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold">Active</span>
                             <span th:unless="${c.active}" class="px-3 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">Suspendue</span>
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <form th:if="${c.active}" th:action="@{/super-admin/companies/{id}/suspend(id=${c.id})}" method="post" class="inline">
-                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Suspendre</button>
-                            </form>
-                            <form th:unless="${c.active}" th:action="@{/super-admin/companies/{id}/activate(id=${c.id})}" method="post" class="inline">
-                                <button class="px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-xs font-medium">Réactiver</button>
-                            </form>
+                        <td class="px-6 py-4 text-xs" th:with="sub=${subscriptions.get(c.id)}">
+                            <th:block th:if="${sub != null}">
+                                <span th:text="${sub.planName}">Offre</span>
+                                <span th:if="${sub.effectiveStatus.name() == 'EXPIRE'}" class="text-red-600 font-bold">(Expiré)</span>
+                                <span th:if="${sub.effectiveStatus.name() == 'ESSAI'}" class="text-orange-500 font-bold">(Essai)</span>
+                                <span th:if="${sub.effectiveStatus.name() == 'ACTIF'}" class="text-green-600 font-bold">(Actif)</span>
+                                <div class="text-gray-400" th:text="'jusqu\'au ' + ${#temporals.format(sub.endDate, 'dd/MM/yyyy')}">fin</div>
+                            </th:block>
+                            <span th:unless="${sub != null}" class="text-gray-400">—</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col gap-2 items-end">
+                                <div class="flex gap-2">
+                                    <form th:if="${c.active}" th:action="@{/super-admin/companies/{id}/suspend(id=${c.id})}" method="post" class="inline">
+                                        <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Suspendre</button>
+                                    </form>
+                                    <form th:unless="${c.active}" th:action="@{/super-admin/companies/{id}/activate(id=${c.id})}" method="post" class="inline">
+                                        <button class="px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-xs font-medium">Réactiver</button>
+                                    </form>
+                                </div>
+                                <form th:action="@{/super-admin/companies/{id}/subscribe(id=${c.id})}" method="post" class="flex gap-1 items-center">
+                                    <select name="planId" class="px-2 py-1 border border-gray-200 rounded text-xs">
+                                        <option th:each="p : ${plans}" th:value="${p.id}" th:text="${p.name}">Offre</option>
+                                    </select>
+                                    <input type="number" name="months" value="1" min="1" class="w-14 px-2 py-1 border border-gray-200 rounded text-xs"/>
+                                    <button class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded text-xs font-medium">Abonner</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(companies)}">
-                        <td colspan="5" class="px-6 py-10 text-center text-gray-400">Aucune entreprise pour le moment.</td>
+                        <td colspan="6" class="px-6 py-10 text-center text-gray-400">Aucune entreprise pour le moment.</td>
                     </tr>
                 </tbody>
             </table>

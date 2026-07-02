@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congés — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style> body { background-color: #F8F9FD; } </style>
+</head>
+<body class="p-10">
+    <div class="max-w-5xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Congés & absences</h1>
+            <a th:href="@{/hr/employees}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Employés</a>
+        </header>
+
+        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
+        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+
+        <form th:action="@{/hr/leaves}" method="post" sec:authorize="hasAuthority('HR_WRITE')"
+              class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 grid grid-cols-2 md:grid-cols-5 gap-3 items-end">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Employé</label>
+                <select name="employeeId" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <option th:each="e : ${employees}" th:value="${e.id}" th:text="${e.fullName}">Employé</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Type</label>
+                <select name="type" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <option th:each="t : ${types}" th:value="${t}" th:text="${t}">Type</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Du</label>
+                <input type="date" name="startDate" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Au</label>
+                <input type="date" name="endDate" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+            </div>
+            <button type="submit" class="px-4 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Demander</button>
+        </form>
+
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
+                    <tr><th class="px-6 py-4">Employé</th><th class="px-6 py-4">Type</th><th class="px-6 py-4">Période</th><th class="px-6 py-4">Statut</th><th class="px-6 py-4 text-right">Action</th></tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr th:each="l : ${leaves}">
+                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${l.employee.fullName}">Employé</td>
+                        <td class="px-6 py-4 text-gray-600" th:text="${l.type}">Type</td>
+                        <td class="px-6 py-4 text-gray-600" th:text="${#temporals.format(l.startDate,'dd/MM/yyyy')} + ' → ' + ${#temporals.format(l.endDate,'dd/MM/yyyy')}">Période</td>
+                        <td class="px-6 py-4">
+                            <span th:if="${l.status.name() == 'APPROUVE'}" class="text-green-600 text-xs font-bold">Approuvé</span>
+                            <span th:if="${l.status.name() == 'REFUSE'}" class="text-red-600 text-xs font-bold">Refusé</span>
+                            <span th:if="${l.status.name() == 'EN_ATTENTE'}" class="text-orange-500 text-xs font-bold">En attente</span>
+                        </td>
+                        <td class="px-6 py-4 text-right space-x-2" sec:authorize="hasAuthority('HR_WRITE')" th:if="${l.status.name() == 'EN_ATTENTE'}">
+                            <form th:action="@{/hr/leaves/{id}/status(id=${l.id})}" method="post" class="inline">
+                                <input type="hidden" name="status" value="APPROUVE"/>
+                                <button class="px-3 py-1.5 bg-green-50 text-green-600 rounded-lg text-xs font-medium">Approuver</button>
+                            </form>
+                            <form th:action="@{/hr/leaves/{id}/status(id=${l.id})}" method="post" class="inline">
+                                <input type="hidden" name="status" value="REFUSE"/>
+                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Refuser</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(leaves)}"><td colspan="5" class="px-6 py-10 text-center text-gray-400">Aucune demande.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

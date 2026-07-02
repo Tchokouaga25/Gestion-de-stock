@@ -30,6 +30,17 @@ public class StockLevelService {
         return stockLevelRepository.findAllForTenant(TenantContext.getCurrentTenant());
     }
 
+    /** Stocks en rupture ou sous le seuil d'alerte, par site. */
+    @Transactional(readOnly = true)
+    public List<StockLevel> getLowStock() {
+        return stockLevelRepository.findLowStock(TenantContext.getCurrentTenant());
+    }
+
+    @Transactional(readOnly = true)
+    public List<StockLevel> getBySite(Long siteId) {
+        return stockLevelRepository.findBySiteIdAndTenantId(siteId, TenantContext.getCurrentTenant());
+    }
+
     /**
      * Définit (écrase) la quantité d'un produit dans un site. Crée la ligne de stock si absente.
      */
