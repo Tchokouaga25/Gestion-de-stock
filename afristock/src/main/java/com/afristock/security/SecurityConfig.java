@@ -21,7 +21,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/", "/auth/**", "/login", "/register",
+                                "/css/**", "/js/**", "/images/**", "/public/**",
+                                "/*.jpg", "/*.png", "/*.svg", "/*.jpeg", "/favicon.ico").permitAll()
+                        .requestMatchers("/super-admin/**").hasRole("SUPER_ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login")

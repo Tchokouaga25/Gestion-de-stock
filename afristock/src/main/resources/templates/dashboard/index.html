@@ -12,134 +12,129 @@
                 extend: {
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
-                        brand: { 600: '#3341ff', 700: '#252eff' },
-                        surface: '#0B0F19'
+                        brand: { 600: '#3341ff', 700: '#252eff' }
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #F8F9FD; }
+        body { background-color: #F8FAFC; }
         .text-10 { font-size: 10px; }
         .text-12 { font-size: 12px; }
-        .sidebar-item { @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-400 hover:text-white hover:bg-white/5; }
-        .sidebar-item-active { @apply bg-brand-600 text-white shadow-lg shadow-brand-600/20; }
-        .stat-card { @apply bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]; }
     </style>
 </head>
 <body class="flex">
 
     <!-- SIDEBAR -->
-    <aside class="w-[260px] bg-surface text-white flex flex-col fixed inset-y-0 left-0 z-50 p-8">
-        <div class="flex items-center gap-3 mb-10">
-            <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center font-bold text-lg">A</div>
-            <span class="font-bold text-xl tracking-tight">Afristock</span>
+    <aside class="w-[260px] bg-white text-gray-900 flex flex-col fixed inset-y-0 left-0 z-50 p-6 border-r border-gray-100">
+        <div class="mb-8 px-2">
+            <span class="font-bold text-xl tracking-tight text-gray-900">StockPro</span>
+            <p class="text-12 text-gray-400">Gestion de Stock</p>
         </div>
-        <nav class="flex-1 space-y-2">
-            <div class="text-gray-500 text-10 font-bold uppercase tracking-widest px-4 mb-4">Menu</div>
+        <nav class="flex-1 space-y-1 overflow-y-auto">
 
-            <a th:href="@{/dashboard}" class="sidebar-item sidebar-item-active">
+            <a th:href="@{/dashboard}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20">
                 <span>📊</span> Dashboard
             </a>
 
-            <a th:href="@{/sites}" class="sidebar-item"
+            <a th:href="@{/sites}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('SITES')}"
                sec:authorize="hasAuthority('SITE_READ')">
                 <span>🏬</span> Sites
             </a>
 
-            <a th:href="@{/suppliers}" class="sidebar-item"
+            <a th:href="@{/suppliers}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('SUPPLIERS')}"
                sec:authorize="hasAuthority('SUPPLIER_READ')">
                 <span>🚚</span> Fournisseurs
             </a>
 
-            <a th:href="@{/customers}" class="sidebar-item"
+            <a th:href="@{/customers}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('CUSTOMERS')}"
                sec:authorize="hasAuthority('CUSTOMER_READ')">
                 <span>🧑‍🤝‍🧑</span> Clients
             </a>
 
-            <a th:href="@{/products}" class="sidebar-item"
+            <a th:href="@{/products}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('PRODUCTS')}">
                 <span>📦</span> Inventaire
             </a>
 
-            <a th:href="@{/sales}" class="sidebar-item"
+            <a th:href="@{/sales}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('SALES')}"
                sec:authorize="hasAuthority('SALE_READ')">
                 <span>🧾</span> Ventes
             </a>
 
-            <a th:href="@{/purchases}" class="sidebar-item"
+            <a th:href="@{/purchases}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('PURCHASES')}"
                sec:authorize="hasAuthority('PURCHASE_READ')">
                 <span>🛒</span> Achats
             </a>
 
-            <a th:href="@{/stock}" class="sidebar-item"
+            <a th:href="@{/stock}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('STOCK')}"
                sec:authorize="hasAuthority('STOCK_READ')">
                 <span>🏷️</span> Stock par site
             </a>
 
-            <a th:href="@{/movements/new}" class="sidebar-item"
+            <a th:href="@{/movements/new}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('STOCK')}">
                 <span>🔄</span> Mouvements
             </a>
 
-            <div class="pt-8">
-                <a th:href="@{/profile}" class="sidebar-item">
+            <div class="pt-6">
+                <a th:href="@{/profile}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                     <span>👤</span> Mon Profil
                 </a>
             </div>
 
             <div sec:authorize="hasAuthority('ADMIN_PME')" class="pt-2">
-                <div class="text-gray-500 text-10 font-bold uppercase tracking-widest px-4 mb-2">Administration</div>
-                <a th:href="@{/admin/users}" class="sidebar-item">
+                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Administration</div>
+                <a th:href="@{/admin/users}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                     <span>👥</span> Collaborateurs
                 </a>
-                <a th:href="@{/products/categories}" class="sidebar-item">
+                <a th:href="@{/products/categories}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                     <span>📂</span> Catégories
                 </a>
-                <a th:href="@{/subscription}" class="sidebar-item">
+                <a th:href="@{/subscription}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                     <span>💳</span> Mon abonnement
                 </a>
             </div>
 
-            <a th:href="@{/accounting}" class="sidebar-item"
+            <a th:href="@{/accounting}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('ACCOUNTING')}"
                sec:authorize="hasAuthority('ACCOUNTING_READ')">
                 <span>💰</span> Comptabilité
             </a>
 
-            <a th:href="@{/hr/employees}" class="sidebar-item"
+            <a th:href="@{/hr/employees}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('HR')}"
                sec:authorize="hasAuthority('HR_READ')">
                 <span>👔</span> RH
             </a>
 
-            <a th:href="@{/reports}" class="sidebar-item"
+            <a th:href="@{/reports}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                th:if="${@featureService.isEnabled('REPORTS')}"
                sec:authorize="hasAuthority('REPORT_READ')">
                 <span>📈</span> Rapports
             </a>
 
             <div sec:authorize="hasRole('SUPER_ADMIN')" class="pt-2">
-                <div class="text-gray-500 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>
-                <a th:href="@{/super-admin/companies}" class="sidebar-item">
+                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>
+                <a th:href="@{/super-admin/companies}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                     <span>🏢</span> Entreprises
                 </a>
-                <a th:href="@{/super-admin/features}" class="sidebar-item">
+                <a th:href="@{/super-admin/features}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
                     <span>🧩</span> Fonctionnalités
                 </a>
             </div>
         </nav>
 
-        <div class="pt-4 border-t border-white/5">
+        <div class="pt-4 border-t border-gray-100">
             <form th:action="@{/logout}" method="post">
-                <button type="submit" class="w-full sidebar-item text-red-400 hover:bg-red-400/10">
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-red-500 hover:bg-red-50">
                     <span>🚪</span> Déconnexion
                 </button>
             </form>
@@ -150,10 +145,10 @@
     <main class="ml-[260px] flex-1 p-10">
 
         <!-- HEADER -->
-        <header class="flex justify-between items-center mb-10">
+        <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900" th:text="${welcomeMessage}">Bienvenue</h1>
-                <p class="text-12 text-gray-500 mt-1">Gérez votre stock et collaborez avec votre équipe en temps réel.</p>
+                <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                <p class="text-12 text-gray-500 mt-1">Vue d'ensemble de votre gestion de stock</p>
             </div>
             <div class="flex items-center gap-4">
                 <div class="bg-white px-4 py-2 rounded-xl border border-gray-100 flex items-center gap-2">
@@ -164,29 +159,82 @@
         </header>
 
         <!-- STATS GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-            <div class="stat-card">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
                 <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-4">📦</div>
-                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Total Produits</p>
+                <p class="text-12 text-gray-500 mb-1">Produits</p>
                 <p class="text-2xl font-bold text-gray-900" th:text="${totalProducts}">0</p>
+                <p class="text-12 text-gray-400 mt-1"><span th:text="${totalStockUnits}">0</span> unités en stock</p>
             </div>
 
-            <div class="stat-card opacity-50">
-                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4">🔄</div>
-                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Mouvements (24h)</p>
-                <p class="text-2xl font-bold text-gray-900">--</p>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4">👥</div>
+                <p class="text-12 text-gray-500 mb-1">Clients</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${totalActiveCustomers}">0</p>
+                <p class="text-12 text-gray-400 mt-1">Clients actifs</p>
             </div>
 
-            <div class="stat-card opacity-50">
-                <div class="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center text-xl mb-4">⚠</div>
-                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Alertes Stock</p>
-                <p class="text-2xl font-bold text-gray-900">--</p>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl mb-4">🛒</div>
+                <p class="text-12 text-gray-500 mb-1">Commandes</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${totalOrders}">0</p>
+                <p class="text-12 text-gray-400 mt-1"><span th:text="${ordersEnCours}">0</span> en cours</p>
             </div>
 
-            <div class="stat-card opacity-50">
-                <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl mb-4">👥</div>
-                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Collaborateurs</p>
-                <p class="text-2xl font-bold text-gray-900">--</p>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div class="w-10 h-10 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-xl mb-4">📈</div>
+                <p class="text-12 text-gray-500 mb-1">Chiffre d'affaires</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)} + ' €'">0 €</p>
+                <p class="text-12 text-gray-400 mt-1"><span th:text="${invoiceCount}">0</span> factures</p>
+            </div>
+        </div>
+
+        <!-- ALERTES + COMMANDES RECENTES -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+
+            <!-- COLONNE GAUCHE : ALERTES -->
+            <div class="space-y-6">
+                <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-red-500">⚠</span>
+                        <h3 class="text-[14px] font-bold text-gray-900">Stock faible</h3>
+                    </div>
+                    <p class="text-12 text-gray-600 mb-3" th:text="${lowStockLevels.size()} + ' produit(s) sous le seuil minimum'">0 produit(s) sous le seuil minimum</p>
+                    <ul class="space-y-1" th:if="${!lowStockLevels.isEmpty()}">
+                        <li class="text-12 text-gray-700" th:each="sl : ${lowStockLevels}">
+                            • <span th:text="${sl.product.name}">Produit</span>
+                            (<span th:text="${sl.quantity}">0</span>/<span th:text="${sl.product.minThreshold}">0</span>)
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-100 rounded-2xl p-6">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-amber-600">📄</span>
+                        <h3 class="text-[14px] font-bold text-gray-900">Factures impayées</h3>
+                    </div>
+                    <p class="text-12 text-gray-600" th:text="${unpaidSales.size()} + ' facture(s) en attente de paiement'">0 facture(s) en attente de paiement</p>
+                </div>
+            </div>
+
+            <!-- COLONNE DROITE : COMMANDES RECENTES -->
+            <div class="bg-white border border-gray-100 rounded-2xl p-6">
+                <h3 class="text-[14px] font-bold text-gray-900 mb-4">Commandes récentes</h3>
+                <div class="space-y-4" th:if="${!recentSales.isEmpty()}">
+                    <div class="flex items-center justify-between" th:each="sale : ${recentSales}">
+                        <div>
+                            <p class="text-12 font-bold text-gray-900" th:text="${sale.reference}">FAC-000001</p>
+                            <p class="text-12 text-gray-400" th:text="${sale.customer != null ? sale.customer.name : 'Client comptoir'}">Client</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-12 font-bold text-gray-900" th:text="${#numbers.formatDecimal(sale.totalAmount, 1, 2)} + ' €'">0 €</p>
+                            <span th:if="${sale.balanceDue == 0}" class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-600">Payée</span>
+                            <span th:if="${sale.balanceDue > 0 and sale.amountPaid > 0}" class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-600">Partiellement payée</span>
+                            <span th:if="${sale.balanceDue > 0 and sale.amountPaid == 0}" class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-600">Impayée</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-12 text-gray-400" th:if="${recentSales.isEmpty()}">Aucune vente récente.</p>
             </div>
         </div>
 

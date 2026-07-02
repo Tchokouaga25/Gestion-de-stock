@@ -3,6 +3,7 @@ package com.afristock.controller;
 
 import com.afristock.dto.RegisterRequest;
 import com.afristock.service.RegistrationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,12 @@ public class AuthWebController {
 
     // Affiche le formulaire d'inscription
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(Model model, HttpServletRequest request) {
+        // La page est longue : sans session déjà ouverte, Tomcat committe la réponse
+        // (dépassement du buffer) avant que Thymeleaf ne puisse créer la session
+        // nécessaire au token CSRF du formulaire, ce qui tronque la page. On force
+        // donc la création de la session avant que le rendu ne commence.
+        request.getSession();
         model.addAttribute("registerRequest", new RegisterRequest());
         return "auth/register";  // → templates/auth/accueil.html
     }
