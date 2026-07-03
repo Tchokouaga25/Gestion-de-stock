@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Congés — Afristock</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { background-color: #F8F9FD; } </style>
-</head>
-<body class="p-10">
-    <div class="max-w-5xl mx-auto">
+<head th:insert="~{fragments/layout :: pageHead('Congés — Afristock')}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" data-title="Congés — Afristock" class="max-w-5xl mx-auto">
         <header class="flex justify-between items-center mb-8">
             <h1 class="text-2xl font-bold text-gray-900">Congés & absences</h1>
             <a th:href="@{/hr/employees}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Employés</a>
@@ -73,5 +70,6 @@
             </table>
         </div>
     </div>
+    </main>
 </body>
 </html>

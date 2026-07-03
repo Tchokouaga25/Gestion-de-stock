@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nouvelle vente — Afristock</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { background-color: #F8F9FD; } </style>
-</head>
-<body class="p-10">
-    <div class="max-w-4xl mx-auto">
+<head th:insert="~{fragments/layout :: pageHead('Nouvelle vente — Afristock')}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" data-title="Nouvelle vente — Afristock" class="max-w-4xl mx-auto">
         <header class="flex justify-between items-center mb-8">
             <h1 class="text-2xl font-bold text-gray-900">Nouvelle vente</h1>
             <a th:href="@{/sales}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Historique</a>
@@ -72,10 +68,12 @@
                 <button type="submit" class="px-6 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Valider la vente</button>
             </div>
         </form>
-    </div>
 
-    <!-- Modèle de ligne + logique -->
+    <!-- Modèle de ligne + logique. IIFE + exposition explicite sur window : ce script est
+         réinjecté (et donc ré-exécuté) à chaque navigation SPA vers cette page, une déclaration
+         top-level "const"/"let" nue échouerait à la deuxième exécution ("already declared"). -->
     <script th:inline="javascript">
+    (function () {
         const products = /*[[${products}]]*/ [];
         // On extrait id, nom, prix des produits injectés par Thymeleaf.
         const productData = products.map(p => ({ id: p.id, name: p.name, price: p.salePrice || 0 }));
@@ -111,8 +109,14 @@
             if (!paid.dataset.touched) paid.value = total;
         }
 
+        window.addLine = addLine;
+        window.recompute = recompute;
+
         document.getElementById('amountPaid').addEventListener('input', function () { this.dataset.touched = '1'; });
         addLine(); // première ligne
+    })();
     </script>
+    </div>
+    </main>
 </body>
 </html>

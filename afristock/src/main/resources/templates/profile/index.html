@@ -1,23 +1,16 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Profil — Afristock</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { background-color: #F8F9FD; } </style>
-</head>
-<body class="p-10">
-<div class="max-w-2xl mx-auto">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="~{fragments/layout :: pageHead('Mon Profil — Afristock')}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" data-title="Mon Profil — Afristock" class="max-w-2xl mx-auto">
 
     <header class="flex justify-between items-center mb-8">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Mon Profil</h1>
             <p class="text-sm text-gray-500 mt-1">Gérez vos informations personnelles.</p>
         </div>
-        <a th:href="@{/dashboard}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">
-            ← Tableau de bord
-        </a>
     </header>
 
     <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
@@ -73,6 +66,7 @@
             </div>
         </form>
     </div>
-</div>
+    </div>
+    </main>
 </body>
 </html>

@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'Facture ' + ${sale.reference}">Facture</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #F8F9FD; }
-        @media print { .no-print { display: none; } body { background: white; } }
-    </style>
-</head>
-<body class="p-10">
-    <div class="max-w-2xl mx-auto">
+<head th:insert="~{fragments/layout :: pageHead('Facture ' + ${sale.reference})}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" th:data-title="'Facture ' + ${sale.reference}" class="max-w-2xl mx-auto">
+        <style>
+            @media print {
+                .no-print { display: none !important; }
+                aside { display: none !important; }
+                main { margin-left: 0 !important; }
+                body { background: white; }
+            }
+        </style>
         <div class="no-print flex justify-between items-center mb-6">
             <a th:href="@{/sales}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">← Retour</a>
             <button onclick="window.print()" class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Imprimer / PDF</button>
@@ -58,5 +59,6 @@
             <p class="text-center text-xs text-gray-400 mt-10">Merci de votre confiance — AfriStock</p>
         </div>
     </div>
+    </main>
 </body>
 </html>

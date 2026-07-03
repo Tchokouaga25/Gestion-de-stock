@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produits — Afristock</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style> body { background-color: #F8F9FD; } </style>
-</head>
-<body class="p-10">
-    <div class="max-w-7xl mx-auto">
+<head th:insert="~{fragments/layout :: pageHead('Produits — Afristock')}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" data-title="Produits — Afristock" class="max-w-7xl mx-auto">
         <header class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Produits</h1>
                 <p class="text-sm text-gray-500 mt-1">Catalogue de l'entreprise.</p>
             </div>
             <div class="flex gap-3">
-                <a th:href="@{/dashboard}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Tableau de bord</a>
                 <a th:href="@{/products/categories}" sec:authorize="hasAuthority('PRODUCT_WRITE')" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Catégories</a>
                 <a th:href="@{/products/brands}" sec:authorize="hasAuthority('PRODUCT_WRITE')" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Marques</a>
                 <a th:href="@{/products/add}" sec:authorize="hasAuthority('PRODUCT_WRITE')"
@@ -74,5 +69,6 @@
             </table>
         </div>
     </div>
+    </main>
 </body>
 </html>

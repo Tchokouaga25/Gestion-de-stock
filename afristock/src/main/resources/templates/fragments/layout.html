@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head><title>fragments</title></head>
+<body>
+
+<!--
+  Fragments partagés du shell dashboard (sidebar + head + topbar).
+  activeNav est injecté par SpaNavInterceptor (com.afristock.web) — ne PAS utiliser
+  #httpServletRequest ici, retiré de Thymeleaf 3.1.
+-->
+
+<th:block th:fragment="pageHead(pageTitle)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${pageTitle}">Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        brand: { 600: '#3341ff', 700: '#252eff' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F8FAFC; }
+        .text-10 { font-size: 10px; }
+        .text-12 { font-size: 12px; }
+    </style>
+    <script th:src="@{/js/spa-nav.js}" defer></script>
+</th:block>
+
+<th:block th:fragment="sidebar">
+    <aside class="w-[260px] bg-white text-gray-900 flex flex-col fixed inset-y-0 left-0 z-50 p-6 border-r border-gray-100">
+        <div class="mb-8 px-2">
+            <span class="font-bold text-xl tracking-tight text-gray-900">StockPro</span>
+            <p class="text-12 text-gray-400">Gestion de Stock</p>
+        </div>
+        <nav class="flex-1 space-y-1 overflow-y-auto">
+
+            <!-- Menu "entreprise" : jamais affiché au Super-Admin (pas de société), même si un
+                 feature flag global est actif par défaut (FeatureService.isEnabled renvoie true
+                 quand la fonctionnalité n'est pas encore paramétrée en base). -->
+            <div sec:authorize="!hasRole('SUPER_ADMIN')">
+
+            <a th:href="@{/dashboard}" data-spa-link data-nav-key="dashboard"
+               th:class="${activeNav == 'dashboard'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                <span>📊</span> Dashboard
+            </a>
+
+            <a th:href="@{/sites}" data-spa-link data-nav-key="sites"
+               th:class="${activeNav == 'sites'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('SITES')}"
+               sec:authorize="hasAuthority('SITE_READ')">
+                <span>🏬</span> Sites
+            </a>
+
+            <a th:href="@{/suppliers}" data-spa-link data-nav-key="suppliers"
+               th:class="${activeNav == 'suppliers'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('SUPPLIERS')}"
+               sec:authorize="hasAuthority('SUPPLIER_READ')">
+                <span>🚚</span> Fournisseurs
+            </a>
+
+            <a th:href="@{/customers}" data-spa-link data-nav-key="customers"
+               th:class="${activeNav == 'customers'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('CUSTOMERS')}"
+               sec:authorize="hasAuthority('CUSTOMER_READ')">
+                <span>🧑‍🤝‍🧑</span> Clients
+            </a>
+
+            <a th:href="@{/products}" data-spa-link data-nav-key="products"
+               th:class="${activeNav == 'products'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('PRODUCTS')}">
+                <span>📦</span> Inventaire
+            </a>
+
+            <a th:href="@{/sales}" data-spa-link data-nav-key="sales"
+               th:class="${activeNav == 'sales'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('SALES')}"
+               sec:authorize="hasAuthority('SALE_READ')">
+                <span>🧾</span> Ventes
+            </a>
+
+            <a th:href="@{/purchases}" data-spa-link data-nav-key="purchases"
+               th:class="${activeNav == 'purchases'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('PURCHASES')}"
+               sec:authorize="hasAuthority('PURCHASE_READ')">
+                <span>🛒</span> Achats
+            </a>
+
+            <a th:href="@{/stock}" data-spa-link data-nav-key="stock"
+               th:class="${activeNav == 'stock'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('STOCK')}"
+               sec:authorize="hasAuthority('STOCK_READ')">
+                <span>🏷️</span> Stock par site
+            </a>
+
+            <a th:href="@{/movements/new}" data-spa-link data-nav-key="movements"
+               th:class="${activeNav == 'movements'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('STOCK')}">
+                <span>🔄</span> Mouvements
+            </a>
+
+            <div class="pt-6">
+                <a th:href="@{/profile}" data-spa-link data-nav-key="profile"
+                   th:class="${activeNav == 'profile'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                    <span>👤</span> Mon Profil
+                </a>
+            </div>
+
+            <div sec:authorize="hasAuthority('ADMIN_PME')" class="pt-2">
+                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Administration</div>
+                <a th:href="@{/admin/users}" data-spa-link data-nav-key="admin-users"
+                   th:class="${activeNav == 'admin-users'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                    <span>👥</span> Collaborateurs
+                </a>
+                <a th:href="@{/products/categories}" data-spa-link data-nav-key="admin-categories"
+                   th:class="${activeNav == 'admin-categories'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                    <span>📂</span> Catégories
+                </a>
+                <a th:href="@{/subscription}" data-spa-link data-nav-key="subscription"
+                   th:class="${activeNav == 'subscription'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                    <span>💳</span> Mon abonnement
+                </a>
+            </div>
+
+            <a th:href="@{/accounting}" data-spa-link data-nav-key="accounting"
+               th:class="${activeNav == 'accounting'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('ACCOUNTING')}"
+               sec:authorize="hasAuthority('ACCOUNTING_READ')">
+                <span>💰</span> Comptabilité
+            </a>
+
+            <a th:href="@{/hr/employees}" data-spa-link data-nav-key="hr"
+               th:class="${activeNav == 'hr'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('HR')}"
+               sec:authorize="hasAuthority('HR_READ')">
+                <span>👔</span> RH
+            </a>
+
+            <a th:href="@{/reports}" data-spa-link data-nav-key="reports"
+               th:class="${activeNav == 'reports'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:if="${@featureService.isEnabled('REPORTS')}"
+               sec:authorize="hasAuthority('REPORT_READ')">
+                <span>📈</span> Rapports
+            </a>
+
+            </div>
+
+            <div sec:authorize="hasRole('SUPER_ADMIN')" class="pt-2">
+                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>
+                <a th:href="@{/super-admin/companies}" data-spa-link data-nav-key="superadmin-companies"
+                   th:class="${activeNav == 'superadmin-companies'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                    <span>🏢</span> Entreprises
+                </a>
+                <a th:href="@{/super-admin/plans}" data-spa-link data-nav-key="superadmin-plans"
+                   th:class="${activeNav == 'superadmin-plans'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                    <span>💼</span> Offres
+                </a>
+                <a th:href="@{/super-admin/features}" data-spa-link data-nav-key="superadmin-features"
+                   th:class="${activeNav == 'superadmin-features'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
+                    <span>🧩</span> Fonctionnalités
+                </a>
+            </div>
+        </nav>
+
+        <div class="pt-4 border-t border-gray-100">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-red-500 hover:bg-red-50">
+                    <span>🚪</span> Déconnexion
+                </button>
+            </form>
+        </div>
+    </aside>
+</th:block>
+
+<th:block th:fragment="topbar" th:if="${companyName != null}">
+    <div class="flex items-center gap-4">
+        <div class="bg-white px-4 py-2 rounded-xl border border-gray-100 flex items-center gap-2">
+            <span class="text-10 font-bold text-gray-400 uppercase tracking-widest">Entreprise :</span>
+            <span class="text-12 font-bold text-gray-900" th:text="${companyName}">Nom Compagnie</span>
+        </div>
+    </div>
+</th:block>
+
+</body>
+</html>

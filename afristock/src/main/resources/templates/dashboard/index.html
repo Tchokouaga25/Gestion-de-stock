@@ -1,148 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — Afristock</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-                    colors: {
-                        brand: { 600: '#3341ff', 700: '#252eff' }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { background-color: #F8FAFC; }
-        .text-10 { font-size: 10px; }
-        .text-12 { font-size: 12px; }
-    </style>
-</head>
+<head th:insert="~{fragments/layout :: pageHead('Dashboard — Afristock')}"></head>
 <body class="flex">
 
-    <!-- SIDEBAR -->
-    <aside class="w-[260px] bg-white text-gray-900 flex flex-col fixed inset-y-0 left-0 z-50 p-6 border-r border-gray-100">
-        <div class="mb-8 px-2">
-            <span class="font-bold text-xl tracking-tight text-gray-900">StockPro</span>
-            <p class="text-12 text-gray-400">Gestion de Stock</p>
-        </div>
-        <nav class="flex-1 space-y-1 overflow-y-auto">
-
-            <a th:href="@{/dashboard}" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20">
-                <span>📊</span> Dashboard
-            </a>
-
-            <a th:href="@{/sites}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('SITES')}"
-               sec:authorize="hasAuthority('SITE_READ')">
-                <span>🏬</span> Sites
-            </a>
-
-            <a th:href="@{/suppliers}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('SUPPLIERS')}"
-               sec:authorize="hasAuthority('SUPPLIER_READ')">
-                <span>🚚</span> Fournisseurs
-            </a>
-
-            <a th:href="@{/customers}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('CUSTOMERS')}"
-               sec:authorize="hasAuthority('CUSTOMER_READ')">
-                <span>🧑‍🤝‍🧑</span> Clients
-            </a>
-
-            <a th:href="@{/products}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('PRODUCTS')}">
-                <span>📦</span> Inventaire
-            </a>
-
-            <a th:href="@{/sales}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('SALES')}"
-               sec:authorize="hasAuthority('SALE_READ')">
-                <span>🧾</span> Ventes
-            </a>
-
-            <a th:href="@{/purchases}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('PURCHASES')}"
-               sec:authorize="hasAuthority('PURCHASE_READ')">
-                <span>🛒</span> Achats
-            </a>
-
-            <a th:href="@{/stock}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('STOCK')}"
-               sec:authorize="hasAuthority('STOCK_READ')">
-                <span>🏷️</span> Stock par site
-            </a>
-
-            <a th:href="@{/movements/new}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('STOCK')}">
-                <span>🔄</span> Mouvements
-            </a>
-
-            <div class="pt-6">
-                <a th:href="@{/profile}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                    <span>👤</span> Mon Profil
-                </a>
-            </div>
-
-            <div sec:authorize="hasAuthority('ADMIN_PME')" class="pt-2">
-                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Administration</div>
-                <a th:href="@{/admin/users}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                    <span>👥</span> Collaborateurs
-                </a>
-                <a th:href="@{/products/categories}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                    <span>📂</span> Catégories
-                </a>
-                <a th:href="@{/subscription}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                    <span>💳</span> Mon abonnement
-                </a>
-            </div>
-
-            <a th:href="@{/accounting}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('ACCOUNTING')}"
-               sec:authorize="hasAuthority('ACCOUNTING_READ')">
-                <span>💰</span> Comptabilité
-            </a>
-
-            <a th:href="@{/hr/employees}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('HR')}"
-               sec:authorize="hasAuthority('HR_READ')">
-                <span>👔</span> RH
-            </a>
-
-            <a th:href="@{/reports}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100"
-               th:if="${@featureService.isEnabled('REPORTS')}"
-               sec:authorize="hasAuthority('REPORT_READ')">
-                <span>📈</span> Rapports
-            </a>
-
-            <div sec:authorize="hasRole('SUPER_ADMIN')" class="pt-2">
-                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>
-                <a th:href="@{/super-admin/companies}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                    <span>🏢</span> Entreprises
-                </a>
-                <a th:href="@{/super-admin/features}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                    <span>🧩</span> Fonctionnalités
-                </a>
-            </div>
-        </nav>
-
-        <div class="pt-4 border-t border-gray-100">
-            <form th:action="@{/logout}" method="post">
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-red-500 hover:bg-red-50">
-                    <span>🚪</span> Déconnexion
-                </button>
-            </form>
-        </div>
-    </aside>
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
 
     <!-- MAIN CONTENT -->
-    <main class="ml-[260px] flex-1 p-10">
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" data-title="Dashboard — Afristock">
 
         <!-- HEADER -->
         <header class="flex justify-between items-center mb-8">
@@ -150,12 +15,7 @@
                 <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
                 <p class="text-12 text-gray-500 mt-1">Vue d'ensemble de votre gestion de stock</p>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="bg-white px-4 py-2 rounded-xl border border-gray-100 flex items-center gap-2">
-                    <span class="text-10 font-bold text-gray-400 uppercase tracking-widest">Entreprise :</span>
-                    <span class="text-12 font-bold text-gray-900" th:text="${companyName}">Nom Compagnie</span>
-                </div>
-            </div>
+            <div th:replace="~{fragments/layout :: topbar}"></div>
         </header>
 
         <!-- STATS GRID -->
@@ -259,6 +119,7 @@
             </div>
         </div>
 
+    </div>
     </main>
 
 </body>

@@ -28,7 +28,7 @@ public class AdminUserController {
         User currentUser = (User) authentication.getPrincipal();
         // Filtrer les utilisateurs de la même compagnie
         List<User> colleagues = userRepository.findAll().stream()
-                .filter(u -> u.getCompany().getId().equals(currentUser.getCompany().getId()))
+                .filter(u -> u.getCompany() != null && u.getCompany().getId().equals(currentUser.getCompany().getId()))
                 .toList();
         
         model.addAttribute("users", colleagues);
