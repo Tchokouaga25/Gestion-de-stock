@@ -1,728 +1,1122 @@
 <!DOCTYPE html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription — Afristock</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
-          theme: {
-            extend: {
-              fontFamily: {
-                display: ['Sora', 'sans-serif'],
-                body: ['DM Sans', 'sans-serif'],
-              },
-              colors: {
-                navy: {
-                  950: '#030d1f', 900: '#071530', 800: '#0c2347',
-                  600: '#1a4a8a', 500: '#2563d4', 400: '#3b82f6', 100: '#dbeafe',
-                },
-                accent: { DEFAULT: '#00d4a0', dark: '#00a37c' },
-              },
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Sora', 'sans-serif'],
+                        body: ['DM Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            950: '#030d1f', 900: '#071530', 800: '#0c2347',
+                            600: '#1a4a8a', 500: '#2563d4', 400: '#3b82f6', 100: '#dbeafe',
+                        },
+                        accent: { DEFAULT: '#00d4a0', dark: '#00a37c' },
+                    },
+                }
             }
-          }
         }
     </script>
     <style>
-        body { font-family: 'DM Sans', sans-serif; }
-        .font-display, h1, h2, h3, h4, label, legend { font-family: 'Sora', sans-serif; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .font-display,
+        h1,
+        h2,
+        h3,
+        h4,
+        label,
+        legend {
+            font-family: 'Sora', sans-serif;
+        }
+
         .bg-grid-anim {
-          background-image: linear-gradient(rgba(37,99,212,.06) 1px,transparent 1px),
-                            linear-gradient(90deg,rgba(37,99,212,.06) 1px,transparent 1px);
-          background-size: 48px 48px;
-          animation: gridSlide 22s linear infinite;
+            background-image: linear-gradient(rgba(37, 99, 212, .06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 212, .06) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: gridSlide 22s linear infinite;
         }
-        @keyframes gridSlide { 0%{transform:translate(0,0)} 100%{transform:translate(48px,48px)} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .anim-fadeup   { animation: fadeUp .6s ease both; }
-        .anim-fadeup-1 { animation: fadeUp .6s .15s ease both; }
-        .anim-fadeup-2 { animation: fadeUp .6s .3s ease both; }
+
+        @keyframes gridSlide {
+            0% {
+                transform: translate(0, 0)
+            }
+
+            100% {
+                transform: translate(48px, 48px)
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .anim-fadeup {
+            animation: fadeUp .6s ease both;
+        }
+
+        .anim-fadeup-1 {
+            animation: fadeUp .6s .15s ease both;
+        }
+
+        .anim-fadeup-2 {
+            animation: fadeUp .6s .3s ease both;
+        }
+
         @media (prefers-reduced-motion: reduce) {
-          .bg-grid-anim, .anim-fadeup, .anim-fadeup-1, .anim-fadeup-2 { animation: none; }
+
+            .bg-grid-anim,
+            .anim-fadeup,
+            .anim-fadeup-1,
+            .anim-fadeup-2 {
+                animation: none;
+            }
         }
+
         /* Input */
-        .af-input { transition: border-color .2s, box-shadow .2s; }
-        .af-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,.12); outline: none; }
-        .af-input.is-invalid { border-color: #fca5a5; }
-        .af-input.is-invalid:focus { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.12); }
+        .af-input {
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .af-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
+            outline: none;
+        }
+
+        .af-input.is-invalid {
+            border-color: #fca5a5;
+        }
+
+        .af-input.is-invalid:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, .12);
+        }
+
         /* Buttons */
-        .btn-dark { position:relative; overflow:hidden; transition:transform .2s,box-shadow .2s,opacity .2s; }
-        .btn-dark::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,#1a4a8a,#2563d4); opacity:0; transition:opacity .22s; }
-        .btn-dark:not(:disabled):hover::before { opacity:1; }
-        .btn-dark:not(:disabled):hover { transform:translateY(-1px); box-shadow:0 8px 24px rgba(3,13,31,.3); }
-        .btn-dark:disabled { opacity:.4; cursor:not-allowed; }
-        .btn-dark:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
-        .btn-ghost { transition: background-color .15s, color .15s; }
-        .btn-ghost:hover { background: #f1f5f9; }
-        .btn-ghost:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+        .btn-dark {
+            position: relative;
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s, opacity .2s;
+        }
+
+        .btn-dark::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1a4a8a, #2563d4);
+            opacity: 0;
+            transition: opacity .22s;
+        }
+
+        .btn-dark:not(:disabled):hover::before {
+            opacity: 1;
+        }
+
+        .btn-dark:not(:disabled):hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(3, 13, 31, .3);
+        }
+
+        .btn-dark:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        .btn-dark:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        .btn-ghost {
+            transition: background-color .15s, color .15s;
+        }
+
+        .btn-ghost:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-ghost:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
         /* Checkbox */
-        .af-check .af-box { display:flex; align-items:center; justify-content:center; }
-        .af-check input:checked ~ .af-box { background:#2563d4; border-color:#2563d4; }
-        .af-check input:focus-visible ~ .af-box { box-shadow:0 0 0 3px rgba(37,99,212,.25); border-color:#2563d4; }
+        .af-check .af-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .af-check input:checked~.af-box {
+            background: #2563d4;
+            border-color: #2563d4;
+        }
+
+        .af-check input:focus-visible~.af-box {
+            box-shadow: 0 0 0 3px rgba(37, 99, 212, .25);
+            border-color: #2563d4;
+        }
+
         /* Left panel step connector + nav states */
-        .step-connector { position:absolute; left:13px; top:32px; bottom:-6px; width:1px; background:rgba(255,255,255,.08); }
-        li[data-nav-step] .nav-circle { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.3); transition:background .3s,border-color .3s,color .3s,box-shadow .3s; }
-        li[data-nav-step] .nav-title { color:rgba(255,255,255,.4); transition:color .3s; }
-        li[data-nav-step] .nav-sub { color:rgba(255,255,255,.25); transition:color .3s; }
-        li[data-nav-step].is-active .nav-circle { background:#2563d4; color:#fff; border-color:transparent; box-shadow:0 0 0 4px rgba(37,99,212,.2); }
-        li[data-nav-step].is-active .nav-title { color:rgba(255,255,255,.75); }
-        li[data-nav-step].is-active .nav-sub { color:rgba(255,255,255,.35); }
-        li[data-nav-step].is-done .nav-circle { background:#00d4a0; color:#030d1f; border-color:transparent; box-shadow:none; }
-        li[data-nav-step].is-done .nav-title { color:rgba(255,255,255,.6); }
+        .step-connector {
+            position: absolute;
+            left: 13px;
+            top: 32px;
+            bottom: -6px;
+            width: 1px;
+            background: rgba(255, 255, 255, .08);
+        }
+
+        li[data-nav-step] .nav-circle {
+            background: rgba(255, 255, 255, .06);
+            border: 1px solid rgba(255, 255, 255, .1);
+            color: rgba(255, 255, 255, .3);
+            transition: background .3s, border-color .3s, color .3s, box-shadow .3s;
+        }
+
+        li[data-nav-step] .nav-title {
+            color: rgba(255, 255, 255, .4);
+            transition: color .3s;
+        }
+
+        li[data-nav-step] .nav-sub {
+            color: rgba(255, 255, 255, .25);
+            transition: color .3s;
+        }
+
+        li[data-nav-step].is-active .nav-circle {
+            background: #2563d4;
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 0 0 4px rgba(37, 99, 212, .2);
+        }
+
+        li[data-nav-step].is-active .nav-title {
+            color: rgba(255, 255, 255, .75);
+        }
+
+        li[data-nav-step].is-active .nav-sub {
+            color: rgba(255, 255, 255, .35);
+        }
+
+        li[data-nav-step].is-done .nav-circle {
+            background: #00d4a0;
+            color: #030d1f;
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        li[data-nav-step].is-done .nav-title {
+            color: rgba(255, 255, 255, .6);
+        }
+
         /* Wizard progress (right panel) */
-        .step-dot { width:1.75rem; height:1.75rem; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; background:#f1f5f9; color:#94a3b8; border:1.5px solid #e2e8f0; transition:background .25s,border-color .25s,color .25s,box-shadow .25s,transform .25s; flex-shrink:0; }
-        .step-dot.is-active { background:#030d1f; color:#fff; border-color:#030d1f; box-shadow:0 0 0 4px rgba(3,13,31,.1); transform:scale(1.08); }
-        .step-dot.is-done { background:#00d4a0; color:#030d1f; border-color:#00d4a0; }
-        .step-line { flex:1; height:2px; background:#e2e8f0; position:relative; overflow:hidden; border-radius:2px; }
-        .step-line::after { content:''; position:absolute; inset:0; background:#00d4a0; transform:scaleX(0); transform-origin:left; transition:transform .4s ease; }
-        .step-line.is-done::after { transform:scaleX(1); }
+        .step-dot {
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .7rem;
+            font-weight: 700;
+            background: #f1f5f9;
+            color: #94a3b8;
+            border: 1.5px solid #e2e8f0;
+            transition: background .25s, border-color .25s, color .25s, box-shadow .25s, transform .25s;
+            flex-shrink: 0;
+        }
+
+        .step-dot.is-active {
+            background: #030d1f;
+            color: #fff;
+            border-color: #030d1f;
+            box-shadow: 0 0 0 4px rgba(3, 13, 31, .1);
+            transform: scale(1.08);
+        }
+
+        .step-dot.is-done {
+            background: #00d4a0;
+            color: #030d1f;
+            border-color: #00d4a0;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .step-line::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #00d4a0;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .4s ease;
+        }
+
+        .step-line.is-done::after {
+            transform: scaleX(1);
+        }
+
         /* Wizard steps */
-        .wizard-step.is-hidden { display:none; }
+        .wizard-step.is-hidden {
+            display: none;
+        }
+
         /* Strength bars */
-        .strength-bar { transition: background .3s; }
-        .spinner { animation: spin .7s linear infinite; }
+        .strength-bar {
+            transition: background .3s;
+        }
+
+        .spinner {
+            animation: spin .7s linear infinite;
+        }
+
         /* Reset native fieldset/legend chrome, keep them for a11y grouping only */
-        fieldset { border: 0; margin: 0; padding: 0; }
-        legend { display: block; width: 100%; padding: 0; }
-        .sr-only-focusable:not(:focus) { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+        fieldset {
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        legend {
+            display: block;
+            width: 100%;
+            padding: 0;
+        }
+
+        .sr-only-focusable:not(:focus) {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+        }
     </style>
 </head>
 
-<body class="bg-[#030d1f] min-h-screen flex">
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6"
+    th:style="'background-image: url(' + @{/images/background2.jpg} + '); background-size: cover; background-position: center;'">
 
-<!-- Inline icon sprite — hand-authored outline icons (no external icon font/CDN) -->
-<svg style="display:none" aria-hidden="true">
-    <g id="icon-defs">
-        <!-- Attributes are repeated on every <symbol> (rather than relying on inheritance
+    <!-- Inline icon sprite — hand-authored outline icons (no external icon font/CDN) -->
+    <svg style="display:none" aria-hidden="true">
+        <g id="icon-defs">
+            <!-- Attributes are repeated on every <symbol> (rather than relying on inheritance
              from this wrapping <g>) because <use> clones re-parent for CSS inheritance
              purposes, so a shared ancestor's presentation attributes would not apply. -->
-        <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
-        <symbol id="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
-        <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5v-.8a7.5 7.5 0 0 1 15 0v.8"/></symbol>
-        <symbol id="icon-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="12.5" rx="2"/><path d="M8.5 7.5V5.8a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7.5"/><path d="M3 12.5h18"/></symbol>
-        <symbol id="icon-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z"/><circle cx="12" cy="10" r="2.4"/></symbol>
-        <symbol id="icon-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.1-2.2a1.4 1.4 0 0 1 1.5-.3c1.1.4 2.4.6 3.7.6a1.4 1.4 0 0 1 1.4 1.4V20a1.4 1.4 0 0 1-1.4 1.4C10.4 21.4 2.6 13.6 2.6 3.4A1.4 1.4 0 0 1 4 2h3.1a1.4 1.4 0 0 1 1.4 1.4c0 1.3.2 2.6.6 3.7a1.4 1.4 0 0 1-.3 1.5L6.6 10.8Z"/></symbol>
-        <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4.5 4.5L19 8"/></symbol>
-        <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12h15"/><path d="M13 5.5 19.5 12 13 18.5"/></symbol>
-        <symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18.5 8.5 12 15 5.5"/></symbol>
-        <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1.8 12S5.4 5.3 12 5.3 22.2 12 22.2 12 18.6 18.7 12 18.7 1.8 12 1.8 12Z"/><circle cx="12" cy="12" r="2.8"/></symbol>
-        <symbol id="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 5.1A11.6 11.6 0 0 1 12 5c6.6 0 10.2 7 10.2 7a13.4 13.4 0 0 1-3 4M6.5 6.7C3.7 8.5 1.8 12 1.8 12s3.6 7 10.2 7c1.2 0 2.4-.2 3.4-.5" /><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
-        <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5S3.8 17.2 3.8 10.5V5l8.2-3 8.2 3v5.5c0 6.7-8.2 11-8.2 11Z"/><path d="M8.8 12l2.2 2.2L15.4 10"/></symbol>
-        <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4"/><path d="M12 2.8c2.6 2.4 4 5.7 4 9.2s-1.4 6.8-4 9.2c-2.6-2.4-4-5.7-4-9.2s1.4-6.8 4-9.2Z"/></symbol>
-        <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7l2.9 5.9 6.5.6-4.9 4.4 1.4 6.3L12 16.7l-5.9 3.2 1.4-6.3-4.9-4.4 6.5-.6L12 2.7Z"/></symbol>
-        <symbol id="icon-no-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.3" y="6" width="19.4" height="13.5" rx="2"/><path d="M2.3 10.2h19.4"/><path d="M4 3.5l16.5 17.5"/></symbol>
-        <symbol id="icon-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="12" rx="1.2"/><path d="M12 9v12"/><path d="M3 13.5h18"/><path d="M7.8 9a2.6 2.6 0 1 1 0-5.2c2.6 0 4.2 5.2 4.2 5.2s1.6-5.2 4.2-5.2a2.6 2.6 0 1 1 0 5.2"/></symbol>
-    </g>
-</svg>
+            <symbol id="icon-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="m3 7 9 6 9-6" />
+            </symbol>
+            <symbol id="icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="11" width="14" height="9" rx="2" />
+                <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </symbol>
+            <symbol id="icon-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="3.6" />
+                <path d="M4.5 20.5v-.8a7.5 7.5 0 0 1 15 0v.8" />
+            </symbol>
+            <symbol id="icon-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="7.5" width="18" height="12.5" rx="2" />
+                <path d="M8.5 7.5V5.8a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7.5" />
+                <path d="M3 12.5h18" />
+            </symbol>
+            <symbol id="icon-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z" />
+                <circle cx="12" cy="10" r="2.4" />
+            </symbol>
+            <symbol id="icon-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.1-2.2a1.4 1.4 0 0 1 1.5-.3c1.1.4 2.4.6 3.7.6a1.4 1.4 0 0 1 1.4 1.4V20a1.4 1.4 0 0 1-1.4 1.4C10.4 21.4 2.6 13.6 2.6 3.4A1.4 1.4 0 0 1 4 2h3.1a1.4 1.4 0 0 1 1.4 1.4c0 1.3.2 2.6.6 3.7a1.4 1.4 0 0 1-.3 1.5L6.6 10.8Z" />
+            </symbol>
+            <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 13l4.5 4.5L19 8" />
+            </symbol>
+            <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4.5 12h15" />
+                <path d="M13 5.5 19.5 12 13 18.5" />
+            </symbol>
+            <symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18.5 8.5 12 15 5.5" />
+            </symbol>
+            <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1.8 12S5.4 5.3 12 5.3 22.2 12 22.2 12 18.6 18.7 12 18.7 1.8 12 1.8 12Z" />
+                <circle cx="12" cy="12" r="2.8" />
+            </symbol>
+            <symbol id="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3l18 18" />
+                <path
+                    d="M10.6 5.1A11.6 11.6 0 0 1 12 5c6.6 0 10.2 7 10.2 7a13.4 13.4 0 0 1-3 4M6.5 6.7C3.7 8.5 1.8 12 1.8 12s3.6 7 10.2 7c1.2 0 2.4-.2 3.4-.5" />
+                <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+            </symbol>
+            <symbol id="icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21.5S3.8 17.2 3.8 10.5V5l8.2-3 8.2 3v5.5c0 6.7-8.2 11-8.2 11Z" />
+                <path d="M8.8 12l2.2 2.2L15.4 10" />
+            </symbol>
+            <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9.2" />
+                <path d="M2.8 12h18.4" />
+                <path d="M12 2.8c2.6 2.4 4 5.7 4 9.2s-1.4 6.8-4 9.2c-2.6-2.4-4-5.7-4-9.2s1.4-6.8 4-9.2Z" />
+            </symbol>
+            <symbol id="icon-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2.7l2.9 5.9 6.5.6-4.9 4.4 1.4 6.3L12 16.7l-5.9 3.2 1.4-6.3-4.9-4.4 6.5-.6L12 2.7Z" />
+            </symbol>
+            <symbol id="icon-no-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2.3" y="6" width="19.4" height="13.5" rx="2" />
+                <path d="M2.3 10.2h19.4" />
+                <path d="M4 3.5l16.5 17.5" />
+            </symbol>
+            <symbol id="icon-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="9" width="18" height="12" rx="1.2" />
+                <path d="M12 9v12" />
+                <path d="M3 13.5h18" />
+                <path d="M7.8 9a2.6 2.6 0 1 1 0-5.2c2.6 0 4.2 5.2 4.2 5.2s1.6-5.2 4.2-5.2a2.6 2.6 0 1 1 0 5.2" />
+            </symbol>
+        </g>
+    </svg>
 
-<div class="w-full min-h-screen grid lg:grid-cols-2">
+    <div class="relative z-10 w-full max-w-4xl grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl max-h-[92vh]">
 
-    <!-- ════════════════════════════════════════
+        <!-- ════════════════════════════════════════
          LEFT — Brand panel
     ════════════════════════════════════════ -->
-    <aside class="relative hidden lg:flex flex-col justify-between p-12 bg-[#030d1f] overflow-hidden">
+        <aside class="relative hidden lg:flex flex-col justify-between p-12 bg-[#030d1f] overflow-hidden">
 
-        <div class="absolute inset-0 bg-grid-anim" aria-hidden="true"></div>
-        <div class="absolute bottom-0 right-0 w-80 h-80 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(0,212,160,.15),transparent 70%);filter:blur(80px)" aria-hidden="true"></div>
-        <div class="absolute top-16 -left-16 w-64 h-64 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(37,99,212,.2),transparent 70%);filter:blur(80px)" aria-hidden="true"></div>
+            <div class="absolute inset-0 bg-grid-anim" aria-hidden="true"></div>
+            <div class="absolute bottom-0 right-0 w-80 h-80 rounded-full pointer-events-none"
+                style="background:radial-gradient(circle,rgba(0,212,160,.15),transparent 70%);filter:blur(80px)"
+                aria-hidden="true"></div>
+            <div class="absolute top-16 -left-16 w-64 h-64 rounded-full pointer-events-none"
+                style="background:radial-gradient(circle,rgba(37,99,212,.2),transparent 70%);filter:blur(80px)"
+                aria-hidden="true"></div>
 
-        <!-- Logo -->
-        <a th:href="@{/}" href="../accueil.html" class="relative z-10 inline-flex items-center gap-3 no-underline anim-fadeup">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-[#030d1f] font-display font-black text-lg" style="background:linear-gradient(135deg,#00d4a0,#3b82f6)" aria-hidden="true">A</div>
-            <span class="font-display text-2xl font-extrabold text-white tracking-tight">Afristock</span>
-        </a>
+            <!-- Logo -->
+            <a th:href="@{/}" href="../accueil.html"
+                class="relative z-10 inline-flex items-center gap-3 no-underline anim-fadeup">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center"
+                    th:style="'background-image: url(' + @{/images/logos.png} + '); background-size: contain; background-repeat: no-repeat; background-position: center;'">
+                </div>
+                <span
+                    class="font-display text-2xl font-extrabold tracking-tight bg-gradient-to-r from-navy-400 via-green-600 to-navy-600 bg-clip-text text-transparent">Afristock</span>
+            </a>
 
-        <!-- Center -->
-        <div class="relative z-10 flex-1 flex flex-col justify-center py-8 anim-fadeup-1">
+            <!-- Center -->
+            <div class="relative z-10 flex-1 flex flex-col justify-center py-8 anim-fadeup-1">
 
-            <h2 class="font-display text-[28px] font-extrabold text-white tracking-tight leading-[1.15] mb-1">Pilotez votre stock<br>comme les pros.</h2>
-            <p class="text-sm text-white/40 mb-7 max-w-xs">Rejoignez plus de 2 400 entreprises qui gèrent leurs ventes, achats et équipes depuis Afristock.</p>
+                <h2
+                    class="font-display text-[28px] font-extrabold tracking-tight bg-gradient-to-r from-navy-400 via-green-600 to-navy-600 bg-clip-text text-transparent leading-[1.15] mb-1">
+                    Pilotez votre stock<br>comme les pros.</h2>
+                <p class="text-sm text-white/40 mb-7 max-w-xs">Rejoignez plus de 2 400 entreprises qui gèrent leurs
+                    ventes, achats et équipes depuis Afristock.</p>
 
-            <!-- Onboarding steps -->
-            <div class="rounded-2xl p-6 mb-6" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">
-                <div class="font-display text-[10px] font-semibold tracking-[.08em] uppercase text-white/35 mb-5">Votre parcours d'inscription</div>
-                <ol class="flex flex-col gap-0 list-none m-0 p-0">
+                <!-- Onboarding steps -->
+                <div class="rounded-2xl p-6 mb-6"
+                    style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">
+                    <div class="font-display text-[10px] font-semibold tracking-[.08em] uppercase text-white/35 mb-5">
+                        Votre parcours d'inscription</div>
+                    <ol class="flex flex-col gap-0 list-none m-0 p-0">
 
-                    <li class="is-active flex items-start gap-3.5 py-3 relative" data-nav-step="1">
-                        <div class="step-connector" aria-hidden="true"></div>
-                        <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10" data-nav-circle="1" aria-hidden="true">1</div>
-                        <div class="pt-0.5">
-                            <div class="nav-title font-display text-[13px] font-semibold">Créer votre compte</div>
-                            <div class="nav-sub text-xs mt-0.5 leading-relaxed">Email, mot de passe et informations</div>
-                        </div>
-                    </li>
+                        <li class="is-active flex items-start gap-3.5 py-3 relative" data-nav-step="1">
+                            <div class="step-connector" aria-hidden="true"></div>
+                            <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10"
+                                data-nav-circle="1" aria-hidden="true">1</div>
+                            <div class="pt-0.5">
+                                <div class="nav-title font-display text-[13px] font-semibold">Créer votre compte</div>
+                                <div class="nav-sub text-xs mt-0.5 leading-relaxed">Email, mot de passe et informations
+                                </div>
+                            </div>
+                        </li>
 
-                    <li class="flex items-start gap-3.5 py-3 relative" data-nav-step="2">
-                        <div class="step-connector" aria-hidden="true"></div>
-                        <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10" data-nav-circle="2" aria-hidden="true">2</div>
-                        <div class="pt-0.5">
-                            <div class="nav-title font-display text-[13px] font-semibold">Configurer votre entreprise</div>
-                            <div class="nav-sub text-xs mt-0.5 leading-relaxed">Nom, ville, coordonnées</div>
-                        </div>
-                    </li>
+                        <li class="flex items-start gap-3.5 py-3 relative" data-nav-step="2">
+                            <div class="step-connector" aria-hidden="true"></div>
+                            <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10"
+                                data-nav-circle="2" aria-hidden="true">2</div>
+                            <div class="pt-0.5">
+                                <div class="nav-title font-display text-[13px] font-semibold">Configurer votre
+                                    entreprise</div>
+                                <div class="nav-sub text-xs mt-0.5 leading-relaxed">Nom, ville, coordonnées</div>
+                            </div>
+                        </li>
 
-                    <li class="flex items-start gap-3.5 py-3 relative">
-                        <div class="step-connector" aria-hidden="true"></div>
-                        <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10" aria-hidden="true">3</div>
-                        <div class="pt-0.5">
-                            <div class="nav-title font-display text-[13px] font-semibold">Ajouter vos premiers produits</div>
-                            <div class="nav-sub text-xs mt-0.5 leading-relaxed">Import Excel ou saisie manuelle</div>
-                        </div>
-                    </li>
+                        <li class="flex items-start gap-3.5 py-3 relative">
+                            <div class="step-connector" aria-hidden="true"></div>
+                            <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0 relative z-10"
+                                aria-hidden="true">3</div>
+                            <div class="pt-0.5">
+                                <div class="nav-title font-display text-[13px] font-semibold">Ajouter vos premiers
+                                    produits</div>
+                                <div class="nav-sub text-xs mt-0.5 leading-relaxed">Import Excel ou saisie manuelle
+                                </div>
+                            </div>
+                        </li>
 
-                    <li class="flex items-start gap-3.5 pt-3">
-                        <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0" aria-hidden="true">4</div>
-                        <div class="pt-0.5">
-                            <div class="nav-title font-display text-[13px] font-semibold">Inviter votre équipe</div>
-                            <div class="nav-sub text-xs mt-0.5 leading-relaxed">Collaborez dès le premier jour</div>
-                        </div>
-                    </li>
+                        <li class="flex items-start gap-3.5 pt-3">
+                            <div class="nav-circle w-7 h-7 rounded-full flex items-center justify-center font-display text-xs font-bold flex-shrink-0"
+                                aria-hidden="true">4</div>
+                            <div class="pt-0.5">
+                                <div class="nav-title font-display text-[13px] font-semibold">Inviter votre équipe</div>
+                                <div class="nav-sub text-xs mt-0.5 leading-relaxed">Collaborez dès le premier jour</div>
+                            </div>
+                        </li>
 
-                </ol>
+                    </ol>
+                </div>
+
+
             </div>
 
-            <!-- Plans mini -->
-            <div class="rounded-2xl p-5 anim-fadeup-2" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)">
-                <div class="font-display text-[10px] font-semibold tracking-[.08em] uppercase text-white/35 mb-4">Plan inclus gratuitement</div>
-                <div class="flex items-center gap-3 rounded-xl px-3 py-2.5 mb-2" style="background:rgba(0,212,160,.08);border:1px solid rgba(0,212,160,.18)">
-                    <span class="font-display text-sm font-semibold text-[#00d4a0] flex-1">Plan Gratuit</span>
-                    <span class="text-xs text-[#00d4a0]/70">100 produits · 1 entrepôt</span>
-                    <span class="font-display text-[10px] font-bold text-[#030d1f] bg-[#00d4a0] px-2 py-0.5 rounded-full">GRATUIT</span>
-                </div>
-                <div class="flex items-center gap-3 rounded-xl px-3 py-2 mb-1.5" style="background:rgba(255,255,255,.02)">
-                    <span class="font-display text-sm font-semibold text-white/50 flex-1">Standard</span>
-                    <span class="text-xs text-white/30">29 900 XAF/mois</span>
-                </div>
-                <div class="flex items-center gap-3 rounded-xl px-3 py-2" style="background:rgba(255,255,255,.02)">
-                    <span class="font-display text-sm font-semibold text-white/50 flex-1">Pro</span>
-                    <span class="text-xs text-white/30">79 900 XAF/mois</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- Trust badges -->
-        <div class="relative z-10 flex flex-wrap gap-x-5 gap-y-2 anim-fadeup-2">
-            <div class="flex items-center gap-1.5 text-xs text-white/35"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#icon-shield"></use></svg> Données chiffrées SSL</div>
-            <div class="flex items-center gap-1.5 text-xs text-white/35"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#icon-globe"></use></svg> 14 pays africains</div>
-            <div class="flex items-center gap-1.5 text-xs text-white/35"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#icon-star"></use></svg> 2 400+ entreprises</div>
-            <div class="flex items-center gap-1.5 text-xs text-white/35"><svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#icon-no-card"></use></svg> Sans carte bancaire</div>
-        </div>
-    </aside>
+        </aside>
 
-    <!-- ════════════════════════════════════════
+        <!-- ════════════════════════════════════════
          RIGHT — Form panel
     ════════════════════════════════════════ -->
-    <main class="bg-white flex items-start justify-center px-6 py-10 lg:px-12 overflow-y-auto relative">
+        <main class="bg-white flex items-start justify-center px-6 py-10 lg:px-12 overflow-y-auto relative">
 
-        <div class="absolute top-0 left-0 bottom-0 w-px hidden lg:block" style="background:linear-gradient(to bottom,transparent,#e2e8f0 20%,#e2e8f0 80%,transparent)" aria-hidden="true"></div>
+            <div class="absolute top-0 left-0 bottom-0 w-px hidden lg:block"
+                style="background:linear-gradient(to bottom,transparent,#e2e8f0 20%,#e2e8f0 80%,transparent)"
+                aria-hidden="true"></div>
 
-        <div class="w-full max-w-md anim-fadeup">
+            <div class="w-full max-w-md anim-fadeup">
 
-            <!-- Mobile logo -->
-            <div class="lg:hidden flex justify-center mb-8">
-                <a th:href="@{/}" href="../accueil.html" class="inline-flex items-center gap-3 no-underline">
-                    <div class="w-9 h-9 rounded-xl flex items-center justify-center text-[#030d1f] font-display font-black" style="background:linear-gradient(135deg,#00d4a0,#3b82f6)" aria-hidden="true">A</div>
-                    <span class="font-display text-xl font-extrabold text-[#030d1f] tracking-tight">Afristock</span>
-                </a>
-            </div>
+                <!-- Mobile logo -->
+                <div class="lg:hidden flex justify-center mb-8">
+                    <a th:href="@{/}" href="../accueil.html" class="inline-flex items-center gap-3 no-underline">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-[#030d1f] font-display font-black"
+                            th:style="'background-image: url(' + @{/images/logos.png} + '); background-size: contain; background-repeat: no-repeat; background-position: center;'">
+                        </div>
+                        <span class="font-display text-xl font-extrabold text-[#030d1f] tracking-tight">Afristock</span>
+                    </a>
+                </div>
 
-            <!-- Header -->
-            <div class="mb-5 flex items-start justify-between gap-4">
-                <div>
-                    <div class="flex items-center gap-2 mb-3">
-                        <div class="w-5 h-0.5 rounded-full bg-[#00d4a0]" aria-hidden="true"></div>
-                        <span class="font-display text-[10px] font-semibold tracking-[.08em] uppercase text-[#00a37c]">Inscription gratuite</span>
+                <!-- Header -->
+                <div class="mb-5 flex items-start justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-8 h-0.5 rounded-full bg-[#00d4a0]" aria-hidden="true"></div>
+                            <span
+                                class="font-display text-[15px] font-semibold tracking-[.08em] uppercase text-[#00a37c]">Inscription
+                                gratuite</span>
+                        </div>
+                        <h1 class="font-display text-[20px] font-extrabold text-[#030d1f] tracking-tight leading-tight">
+                            Commencez dès aujourd'hui</h1>
                     </div>
-                    <h1 class="font-display text-[26px] font-extrabold text-[#030d1f] tracking-tight leading-tight">Commencez dès aujourd'hui</h1>
                 </div>
-            </div>
-            <p class="text-sm text-slate-500 mb-6">
-                Déjà inscrit ?
-                <a th:href="@{/auth/login}" href="login.html" class="text-blue-600 font-semibold hover:underline">Se connecter →</a>
-            </p>
+                <p class="text-sm text-slate-500 mb-6">
+                    Déjà inscrit ?
+                    <a th:href="@{/auth/login}" href="login.html" class="text-blue-600 font-semibold hover:underline">Se
+                        connecter →</a>
+                </p>
 
-            <!-- Wizard progress -->
-            <div class="flex items-center gap-2 mb-2" role="presentation">
-                <div class="step-dot is-active" data-step-dot="1">1</div>
-                <div class="step-line" data-step-line="1"></div>
-                <div class="step-dot" data-step-dot="2">2</div>
-                <div class="step-line" data-step-line="2"></div>
-                <div class="step-dot" data-step-dot="3">3</div>
-            </div>
-            <p id="stepAnnouncement" class="text-xs font-display font-semibold text-slate-500 mb-6" aria-live="polite">Étape 1 sur 3 — Votre compte</p>
-
-            <!-- Free plan banner -->
-            <div class="flex items-center gap-3 rounded-xl px-4 py-3.5 mb-6" style="background:linear-gradient(135deg,rgba(0,212,160,.06),rgba(37,99,212,.06));border:1.5px solid rgba(0,212,160,.2)">
-                <svg class="w-5 h-5 flex-shrink-0 text-[#00a37c]" aria-hidden="true"><use href="#icon-gift"></use></svg>
-                <div>
-                    <strong class="font-display text-sm font-bold text-[#030d1f] block">Plan Gratuit activé automatiquement</strong>
-                    <span class="text-xs text-slate-500">Aucune carte bancaire requise · Annulation en 1 clic</span>
+                <!-- Wizard progress -->
+                <div class="flex items-center gap-2 mb-2" role="presentation">
+                    <div class="step-dot is-active" data-step-dot="1">1</div>
+                    <div class="step-line" data-step-line="1"></div>
+                    <div class="step-dot" data-step-dot="2">2</div>
+                    <div class="step-line" data-step-line="2"></div>
+                    <div class="step-dot" data-step-dot="3">3</div>
                 </div>
-            </div>
+                <p id="stepAnnouncement" class="text-xs font-display font-semibold text-slate-500 mb-6"
+                    aria-live="polite">Étape 1 sur 3 — Votre compte</p>
 
-            <!-- Thymeleaf alerts -->
-            <div th:if="${success}" class="mb-5 flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl" role="status">
-                <svg class="w-4 h-4 flex-shrink-0" aria-hidden="true"><use href="#icon-check"></use></svg> <span th:text="${success}"></span>
-            </div>
-            <div th:if="${error}" class="mb-5 flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-200 px-4 py-3 rounded-xl" role="alert">
-                <span aria-hidden="true">⚠</span> <span th:text="${error}"></span>
-            </div>
+                <!-- Thymeleaf alerts -->
+                <div th:if="${success}"
+                    class="mb-5 flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl"
+                    role="status">
+                    <svg class="w-4 h-4 flex-shrink-0" aria-hidden="true">
+                        <use href="#icon-check"></use>
+                    </svg> <span th:text="${success}"></span>
+                </div>
+                <div th:if="${error}"
+                    class="mb-5 flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-200 px-4 py-3 rounded-xl"
+                    role="alert">
+                    <span aria-hidden="true">⚠</span> <span th:text="${error}"></span>
+                </div>
 
-            <!-- Form -->
-            <form id="registerForm" th:object="${registerRequest}" th:action="@{/auth/register}" method="post" novalidate
-                  th:attr="data-step1-error=${#fields.hasErrors('email') or #fields.hasErrors('firstName') or #fields.hasErrors('lastName') or #fields.hasErrors('password') or #fields.hasErrors('passwordConfirm')},
+                <!-- Form -->
+                <form id="registerForm" th:object="${registerRequest}" th:action="@{/auth/register}" method="post"
+                    novalidate
+                    th:attr="data-step1-error=${#fields.hasErrors('email') or #fields.hasErrors('firstName') or #fields.hasErrors('lastName') or #fields.hasErrors('password') or #fields.hasErrors('passwordConfirm')},
                            data-step2-error=${#fields.hasErrors('companyName') or #fields.hasErrors('companyCity') or #fields.hasErrors('companyPhone') or #fields.hasErrors('companyEmail')}">
 
-                <!-- ══ STEP 1 — Votre compte ══ -->
-                <section class="wizard-step" data-step="1">
-                    <h2 class="font-display text-lg font-bold text-[#030d1f] mb-1" tabindex="-1">Votre compte</h2>
-                    <p class="text-sm text-slate-500 mb-5">Les informations pour vous connecter à Afristock.</p>
+                    <!-- ══ STEP 1 — Votre compte ══ -->
+                    <section class="wizard-step" data-step="1">
 
-                    <fieldset class="space-y-3">
-                        <legend class="sr-only">Informations administrateur</legend>
+                        <fieldset class="space-y-2">
+                            <legend class="sr-only">Informations administrateur</legend>
 
-                        <div class="flex flex-col gap-1.5">
-                            <label class="font-display text-xs font-semibold text-slate-700" for="email">Email de connexion</label>
-                            <div class="relative">
-                                <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-mail"></use></svg>
-                                <input type="email" id="email" th:field="*{email}"
-                                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
-                                       th:attr="aria-invalid=${#fields.hasErrors('email')}"
-                                       aria-describedby="emailError"
-                                       placeholder="vous@entreprise.com" autocomplete="email" required
-                                       class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
-                            </div>
-                            <p id="emailError" class="text-[11px] text-red-600" role="alert" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3">
                             <div class="flex flex-col gap-1.5">
-                                <label class="font-display text-xs font-semibold text-slate-700" for="firstName">Prénom</label>
+                                <label class="font-display text-xs font-semibold text-slate-700" for="email">Email de
+                                    connexion</label>
                                 <div class="relative">
-                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-user"></use></svg>
-                                    <input type="text" id="firstName" th:field="*{firstName}"
-                                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
-                                           th:attr="aria-invalid=${#fields.hasErrors('firstName')}"
-                                           aria-describedby="firstNameError"
-                                           placeholder="Jean" autocomplete="given-name" required
-                                           class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                        aria-hidden="true">
+                                        <use href="#icon-mail"></use>
+                                    </svg>
+                                    <input type="email" id="email" th:field="*{email}"
+                                        th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                        th:attr="aria-invalid=${#fields.hasErrors('email')}"
+                                        aria-describedby="emailError" placeholder="vous@entreprise.com"
+                                        autocomplete="email" required
+                                        class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
                                 </div>
-                                <p id="firstNameError" class="text-[11px] text-red-600" role="alert" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                                <p id="emailError" class="text-[11px] text-red-600" role="alert"
+                                    th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
                             </div>
-                            <div class="flex flex-col gap-1.5">
-                                <label class="font-display text-xs font-semibold text-slate-700" for="lastName">Nom</label>
-                                <div class="relative">
-                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-user"></use></svg>
-                                    <input type="text" id="lastName" th:field="*{lastName}"
-                                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
-                                           th:attr="aria-invalid=${#fields.hasErrors('lastName')}"
-                                           aria-describedby="lastNameError"
-                                           placeholder="Dupont" autocomplete="family-name" required
-                                           class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
-                                </div>
-                                <p id="lastNameError" class="text-[11px] text-red-600" role="alert" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
-                            </div>
-                        </div>
 
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="flex flex-col gap-1.5">
-                                <label class="font-display text-xs font-semibold text-slate-700" for="password">Mot de passe</label>
-                                <div class="relative">
-                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-lock"></use></svg>
-                                    <input type="password" id="password" name="password"
-                                           th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
-                                           th:attr="aria-invalid=${#fields.hasErrors('password')}"
-                                           aria-describedby="passwordError passwordStrengthLabel"
-                                           placeholder="Min. 8 caractères" autocomplete="new-password" minlength="8" required
-                                           class="af-input w-full pl-9 pr-8 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
-                                    <button type="button" onclick="togglePwd('password',this)" aria-label="Afficher le mot de passe" aria-pressed="false"
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-display text-xs font-semibold text-slate-700"
+                                        for="firstName">Prénom</label>
+                                    <div class="relative">
+                                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                            aria-hidden="true">
+                                            <use href="#icon-user"></use>
+                                        </svg>
+                                        <input type="text" id="firstName" th:field="*{firstName}"
+                                            th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''"
+                                            th:attr="aria-invalid=${#fields.hasErrors('firstName')}"
+                                            aria-describedby="firstNameError" placeholder="Jean"
+                                            autocomplete="given-name" required
+                                            class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                    </div>
+                                    <p id="firstNameError" class="text-[11px] text-red-600" role="alert"
+                                        th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                                </div>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-display text-xs font-semibold text-slate-700"
+                                        for="lastName">Nom</label>
+                                    <div class="relative">
+                                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                            aria-hidden="true">
+                                            <use href="#icon-user"></use>
+                                        </svg>
+                                        <input type="text" id="lastName" th:field="*{lastName}"
+                                            th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''"
+                                            th:attr="aria-invalid=${#fields.hasErrors('lastName')}"
+                                            aria-describedby="lastNameError" placeholder="Dupont"
+                                            autocomplete="family-name" required
+                                            class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                    </div>
+                                    <p id="lastNameError" class="text-[11px] text-red-600" role="alert"
+                                        th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-display text-xs font-semibold text-slate-700" for="password">Mot
+                                        de passe</label>
+                                    <div class="relative">
+                                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                            aria-hidden="true">
+                                            <use href="#icon-lock"></use>
+                                        </svg>
+                                        <input type="password" id="password" name="password"
+                                            th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                            th:attr="aria-invalid=${#fields.hasErrors('password')}"
+                                            aria-describedby="passwordError passwordStrengthLabel"
+                                            placeholder="Min. 8 caractères" autocomplete="new-password" minlength="8"
+                                            required
+                                            class="af-input w-full pl-9 pr-8 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                        <button type="button" onclick="togglePwd('password',this)"
+                                            aria-label="Afficher le mot de passe" aria-pressed="false"
                                             class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors bg-transparent border-none cursor-pointer p-1">
-                                        <svg class="w-4 h-4 icon-eye" aria-hidden="true"><use href="#icon-eye"></use></svg>
-                                        <svg class="w-4 h-4 icon-eye-off hidden" aria-hidden="true"><use href="#icon-eye-off"></use></svg>
-                                    </button>
+                                            <svg class="w-4 h-4 icon-eye" aria-hidden="true">
+                                                <use href="#icon-eye"></use>
+                                            </svg>
+                                            <svg class="w-4 h-4 icon-eye-off hidden" aria-hidden="true">
+                                                <use href="#icon-eye-off"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="flex gap-1 mt-1" aria-hidden="true">
+                                        <div id="s1" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                                        <div id="s2" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                                        <div id="s3" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                                        <div id="s4" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
+                                    </div>
+                                    <span id="passwordStrengthLabel" class="text-[10px] text-slate-400"
+                                        aria-live="polite"></span>
+                                    <p id="passwordError" class="text-[11px] text-red-600" role="alert"
+                                        th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                                 </div>
-                                <div class="flex gap-1 mt-1" aria-hidden="true">
-                                    <div id="s1" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
-                                    <div id="s2" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
-                                    <div id="s3" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
-                                    <div id="s4" class="strength-bar flex-1 h-1 rounded-full bg-slate-200"></div>
-                                </div>
-                                <span id="passwordStrengthLabel" class="text-[10px] text-slate-400" aria-live="polite"></span>
-                                <p id="passwordError" class="text-[11px] text-red-600" role="alert" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-                            </div>
-                            <div class="flex flex-col gap-1.5">
-                                <label class="font-display text-xs font-semibold text-slate-700" for="passwordConfirm">Confirmer</label>
-                                <div class="relative">
-                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-lock"></use></svg>
-                                    <input type="password" id="passwordConfirm" name="passwordConfirm"
-                                           th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid' : ''"
-                                           th:attr="aria-invalid=${#fields.hasErrors('passwordConfirm')}"
-                                           aria-describedby="passwordConfirmError"
-                                           placeholder="Répétez" autocomplete="new-password" required
-                                           class="af-input w-full pl-9 pr-8 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
-                                    <button type="button" onclick="togglePwd('passwordConfirm',this)" aria-label="Afficher le mot de passe" aria-pressed="false"
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-display text-xs font-semibold text-slate-700"
+                                        for="passwordConfirm">Confirmer</label>
+                                    <div class="relative">
+                                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                            aria-hidden="true">
+                                            <use href="#icon-lock"></use>
+                                        </svg>
+                                        <input type="password" id="passwordConfirm" name="passwordConfirm"
+                                            th:classappend="${#fields.hasErrors('passwordConfirm')} ? 'is-invalid' : ''"
+                                            th:attr="aria-invalid=${#fields.hasErrors('passwordConfirm')}"
+                                            aria-describedby="passwordConfirmError" placeholder="Répétez"
+                                            autocomplete="new-password" required
+                                            class="af-input w-full pl-9 pr-8 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                        <button type="button" onclick="togglePwd('passwordConfirm',this)"
+                                            aria-label="Afficher le mot de passe" aria-pressed="false"
                                             class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors bg-transparent border-none cursor-pointer p-1">
-                                        <svg class="w-4 h-4 icon-eye" aria-hidden="true"><use href="#icon-eye"></use></svg>
-                                        <svg class="w-4 h-4 icon-eye-off hidden" aria-hidden="true"><use href="#icon-eye-off"></use></svg>
-                                    </button>
-                                </div>
-                                <p id="passwordConfirmError" class="text-[11px] text-red-600" role="alert" aria-live="polite"
-                                   th:text="${#fields.hasErrors('passwordConfirm')} ? ${#strings.listJoin(#fields.errors('passwordConfirm'), ', ')} : ''"></p>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <button type="button" id="step1NextBtn" disabled
-                            class="btn-dark w-full py-3.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer mt-6 flex items-center justify-center gap-2">
-                        Continuer
-                        <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-arrow-right"></use></svg>
-                    </button>
-                </section>
-
-                <!-- ══ STEP 2 — Votre entreprise ══ -->
-                <section class="wizard-step is-hidden" data-step="2">
-                    <h2 class="font-display text-lg font-bold text-[#030d1f] mb-1" tabindex="-1">Votre entreprise</h2>
-                    <p class="text-sm text-slate-500 mb-5">Elle apparaîtra sur vos factures et documents.</p>
-
-                    <fieldset class="space-y-3">
-                        <legend class="sr-only">Informations entreprise</legend>
-
-                        <div class="flex flex-col gap-1.5">
-                            <label class="font-display text-xs font-semibold text-slate-700" for="companyName">Nom de l'entreprise</label>
-                            <div class="relative">
-                                <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-briefcase"></use></svg>
-                                <input type="text" id="companyName" th:field="*{companyName}"
-                                       th:classappend="${#fields.hasErrors('companyName')} ? 'is-invalid' : ''"
-                                       th:attr="aria-invalid=${#fields.hasErrors('companyName')}"
-                                       aria-describedby="companyNameError"
-                                       placeholder="Mon Entreprise SARL" autocomplete="organization" required
-                                       class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
-                            </div>
-                            <p id="companyNameError" class="text-[11px] text-red-600" role="alert" th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-3">
-                            <div class="flex flex-col gap-1.5">
-                                <label class="font-display text-xs font-semibold text-slate-700" for="companyCity">Ville</label>
-                                <div class="relative">
-                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-pin"></use></svg>
-                                    <input type="text" id="companyCity" th:field="*{companyCity}"
-                                           th:classappend="${#fields.hasErrors('companyCity')} ? 'is-invalid' : ''"
-                                           th:attr="aria-invalid=${#fields.hasErrors('companyCity')}"
-                                           aria-describedby="companyCityError"
-                                           placeholder="Douala" autocomplete="address-level2" required
-                                           class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
-                                </div>
-                                <p id="companyCityError" class="text-[11px] text-red-600" role="alert" th:if="${#fields.hasErrors('companyCity')}" th:errors="*{companyCity}"></p>
-                            </div>
-                            <div class="flex flex-col gap-1.5">
-                                <label class="font-display text-xs font-semibold text-slate-700" for="companyPhone">Téléphone <span class="text-slate-400 font-normal normal-case">(optionnel)</span></label>
-                                <div class="relative">
-                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-phone"></use></svg>
-                                    <input type="tel" id="companyPhone" th:field="*{companyPhone}"
-                                           placeholder="+237 6XX XX XX" autocomplete="tel"
-                                           class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                            <svg class="w-4 h-4 icon-eye" aria-hidden="true">
+                                                <use href="#icon-eye"></use>
+                                            </svg>
+                                            <svg class="w-4 h-4 icon-eye-off hidden" aria-hidden="true">
+                                                <use href="#icon-eye-off"></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <p id="passwordConfirmError" class="text-[11px] text-red-600" role="alert"
+                                        aria-live="polite"
+                                        th:text="${#fields.hasErrors('passwordConfirm')} ? ${#strings.listJoin(#fields.errors('passwordConfirm'), ', ')} : ''">
+                                    </p>
                                 </div>
                             </div>
-                        </div>
+                        </fieldset>
 
-                        <div class="flex flex-col gap-1.5">
-                            <label class="font-display text-xs font-semibold text-slate-700" for="companyEmail">Email de l'entreprise <span class="text-slate-400 font-normal normal-case">(optionnel)</span></label>
-                            <div class="relative">
-                                <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" aria-hidden="true"><use href="#icon-mail"></use></svg>
-                                <input type="email" id="companyEmail" th:field="*{companyEmail}"
-                                       placeholder="contact@entreprise.com" autocomplete="email"
-                                       aria-describedby="companyEmailHelp"
-                                       class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
-                            </div>
-                            <p id="companyEmailHelp" class="text-[11px] text-slate-400">Distinct de votre email de connexion, utilisé pour vos factures.</p>
-                        </div>
-                    </fieldset>
-
-                    <div class="flex gap-3 mt-6">
-                        <button type="button" onclick="goToStep(1)"
-                                class="btn-ghost flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-xl font-display text-sm font-bold text-slate-600 border-none cursor-pointer">
-                            <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-chevron-left"></use></svg>
-                            Retour
-                        </button>
-                        <button type="button" id="step2NextBtn" disabled
-                                class="btn-dark flex-1 py-3.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer flex items-center justify-center gap-2">
+                        <button type="button" id="step1NextBtn" disabled
+                            class="btn-dark w-full py-2.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer mt-6 flex items-center justify-center gap-2">
                             Continuer
-                            <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-arrow-right"></use></svg>
+                            <svg class="w-4 h-4" aria-hidden="true">
+                                <use href="#icon-arrow-right"></use>
+                            </svg>
                         </button>
-                    </div>
-                </section>
+                    </section>
 
-                <!-- ══ STEP 3 — Confirmation ══ -->
-                <section class="wizard-step is-hidden" data-step="3">
-                    <h2 class="font-display text-lg font-bold text-[#030d1f] mb-1" tabindex="-1">Vérifiez et confirmez</h2>
-                    <p class="text-sm text-slate-500 mb-5">Dernière étape avant de créer votre espace Afristock.</p>
+                    <!-- ══ STEP 2 — Votre entreprise ══ -->
+                    <section class="wizard-step is-hidden" data-step="2">
+                        <h2 class="font-display text-lg font-bold text-[#030d1f] mb-1" tabindex="-1">Votre entreprise
+                        </h2>
+                        <p class="text-sm text-slate-500 mb-5">Elle apparaîtra sur vos factures et documents.</p>
 
-                    <dl class="rounded-xl border border-slate-200 divide-y divide-slate-100 mb-5 text-sm">
-                        <div class="flex items-center justify-between px-4 py-3">
-                            <dt class="text-slate-500">Nom complet</dt>
-                            <dd id="recapName" class="font-semibold text-slate-800 text-right">—</dd>
-                        </div>
-                        <div class="flex items-center justify-between px-4 py-3">
-                            <dt class="text-slate-500">Email de connexion</dt>
-                            <dd id="recapEmail" class="font-semibold text-slate-800 text-right break-all">—</dd>
-                        </div>
-                        <div class="flex items-center justify-between px-4 py-3">
-                            <dt class="text-slate-500">Mot de passe</dt>
-                            <dd class="font-semibold text-slate-800 text-right">••••••••</dd>
-                        </div>
-                        <div class="flex items-center justify-between px-4 py-3">
-                            <dt class="text-slate-500">Entreprise</dt>
-                            <dd id="recapCompany" class="font-semibold text-slate-800 text-right">—</dd>
-                        </div>
-                        <div class="flex items-center justify-between px-4 py-3">
-                            <dt class="text-slate-500">Ville</dt>
-                            <dd id="recapCity" class="font-semibold text-slate-800 text-right">—</dd>
-                        </div>
-                    </dl>
+                        <fieldset class="space-y-3">
+                            <legend class="sr-only">Informations entreprise</legend>
 
-                    <div>
-                        <label class="af-check flex items-start gap-2.5 cursor-pointer select-none">
-                            <span class="relative inline-flex flex-shrink-0 mt-0.5">
-                                <input type="checkbox" id="terms" name="terms" required class="peer sr-only" aria-describedby="termsError">
-                                <span class="af-box w-[17px] h-[17px] rounded-[5px] border border-slate-300 bg-white transition-all duration-200" aria-hidden="true"></span>
-                                <svg class="w-2.5 h-2.5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden peer-checked:block pointer-events-none" aria-hidden="true"><use href="#icon-check"></use></svg>
-                            </span>
-                            <span class="text-xs text-slate-500 leading-relaxed">
-                J'accepte les
-                <a href="#" class="text-blue-600 hover:underline font-medium">Conditions d'utilisation</a>
-                et la
-                <a href="#" class="text-blue-600 hover:underline font-medium">Politique de confidentialité</a>
-                d'Afristock.
-              </span>
-                        </label>
-                        <p id="termsError" class="text-[11px] text-red-600 mt-1 hidden" role="alert">Vous devez accepter les conditions pour continuer.</p>
-                    </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-display text-xs font-semibold text-slate-700" for="companyName">Nom
+                                    de l'entreprise</label>
+                                <div class="relative">
+                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                        aria-hidden="true">
+                                        <use href="#icon-briefcase"></use>
+                                    </svg>
+                                    <input type="text" id="companyName" th:field="*{companyName}"
+                                        th:classappend="${#fields.hasErrors('companyName')} ? 'is-invalid' : ''"
+                                        th:attr="aria-invalid=${#fields.hasErrors('companyName')}"
+                                        aria-describedby="companyNameError" placeholder="Mon Entreprise SARL"
+                                        autocomplete="organization" required
+                                        class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                </div>
+                                <p id="companyNameError" class="text-[11px] text-red-600" role="alert"
+                                    th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></p>
+                            </div>
 
-                    <div class="flex gap-3 mt-6">
-                        <button type="button" onclick="goToStep(2)"
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-display text-xs font-semibold text-slate-700"
+                                        for="companyCity">Ville</label>
+                                    <div class="relative">
+                                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                            aria-hidden="true">
+                                            <use href="#icon-pin"></use>
+                                        </svg>
+                                        <input type="text" id="companyCity" th:field="*{companyCity}"
+                                            th:classappend="${#fields.hasErrors('companyCity')} ? 'is-invalid' : ''"
+                                            th:attr="aria-invalid=${#fields.hasErrors('companyCity')}"
+                                            aria-describedby="companyCityError" placeholder="Douala"
+                                            autocomplete="address-level2" required
+                                            class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                    </div>
+                                    <p id="companyCityError" class="text-[11px] text-red-600" role="alert"
+                                        th:if="${#fields.hasErrors('companyCity')}" th:errors="*{companyCity}"></p>
+                                </div>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="font-display text-xs font-semibold text-slate-700"
+                                        for="companyPhone">Téléphone <span
+                                            class="text-slate-400 font-normal normal-case">(optionnel)</span></label>
+                                    <div class="relative">
+                                        <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                            aria-hidden="true">
+                                            <use href="#icon-phone"></use>
+                                        </svg>
+                                        <input type="tel" id="companyPhone" th:field="*{companyPhone}"
+                                            placeholder="+237 6XX XX XX" autocomplete="tel"
+                                            class="af-input w-full pl-9 pr-3 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-display text-xs font-semibold text-slate-700"
+                                    for="companyEmail">Email de l'entreprise <span
+                                        class="text-slate-400 font-normal normal-case">(optionnel)</span></label>
+                                <div class="relative">
+                                    <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                                        aria-hidden="true">
+                                        <use href="#icon-mail"></use>
+                                    </svg>
+                                    <input type="email" id="companyEmail" th:field="*{companyEmail}"
+                                        placeholder="contact@entreprise.com" autocomplete="email"
+                                        aria-describedby="companyEmailHelp"
+                                        class="af-input w-full pl-9 pr-4 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
+                                </div>
+                                <p id="companyEmailHelp" class="text-[11px] text-slate-400">Distinct de votre email de
+                                    connexion, utilisé pour vos factures.</p>
+                            </div>
+                        </fieldset>
+
+                        <div class="flex gap-3 mt-6">
+                            <button type="button" onclick="goToStep(1)"
                                 class="btn-ghost flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-xl font-display text-sm font-bold text-slate-600 border-none cursor-pointer">
-                            <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-chevron-left"></use></svg>
-                            Retour
-                        </button>
-                        <button type="submit" id="submitBtn" disabled
+                                <svg class="w-4 h-4" aria-hidden="true">
+                                    <use href="#icon-chevron-left"></use>
+                                </svg>
+                                Retour
+                            </button>
+                            <button type="button" id="step2NextBtn" disabled
+                                class="btn-dark flex-1 py-3.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer flex items-center justify-center gap-2">
+                                Continuer
+                                <svg class="w-4 h-4" aria-hidden="true">
+                                    <use href="#icon-arrow-right"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- ══ STEP 3 — Confirmation ══ -->
+                    <section class="wizard-step is-hidden" data-step="3">
+                        <h2 class="font-display text-lg font-bold text-[#030d1f] mb-1" tabindex="-1">Vérifiez et
+                            confirmez</h2>
+                        <p class="text-sm text-slate-500 mb-5">Dernière étape avant de créer votre espace Afristock.</p>
+
+                        <dl class="rounded-xl border border-slate-200 divide-y divide-slate-100 mb-5 text-sm">
+                            <div class="flex items-center justify-between px-4 py-3">
+                                <dt class="text-slate-500">Nom complet</dt>
+                                <dd id="recapName" class="font-semibold text-slate-800 text-right">—</dd>
+                            </div>
+                            <div class="flex items-center justify-between px-4 py-3">
+                                <dt class="text-slate-500">Email de connexion</dt>
+                                <dd id="recapEmail" class="font-semibold text-slate-800 text-right break-all">—</dd>
+                            </div>
+                            <div class="flex items-center justify-between px-4 py-3">
+                                <dt class="text-slate-500">Mot de passe</dt>
+                                <dd class="font-semibold text-slate-800 text-right">••••••••</dd>
+                            </div>
+                            <div class="flex items-center justify-between px-4 py-3">
+                                <dt class="text-slate-500">Entreprise</dt>
+                                <dd id="recapCompany" class="font-semibold text-slate-800 text-right">—</dd>
+                            </div>
+                            <div class="flex items-center justify-between px-4 py-3">
+                                <dt class="text-slate-500">Ville</dt>
+                                <dd id="recapCity" class="font-semibold text-slate-800 text-right">—</dd>
+                            </div>
+                        </dl>
+
+                        <div>
+                            <label class="af-check flex items-start gap-2.5 cursor-pointer select-none">
+                                <span class="relative inline-flex flex-shrink-0 mt-0.5">
+                                    <input type="checkbox" id="terms" name="terms" required class="peer sr-only"
+                                        aria-describedby="termsError">
+                                    <span
+                                        class="af-box w-[17px] h-[17px] rounded-[5px] border border-slate-300 bg-white transition-all duration-200"
+                                        aria-hidden="true"></span>
+                                    <svg class="w-2.5 h-2.5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden peer-checked:block pointer-events-none"
+                                        aria-hidden="true">
+                                        <use href="#icon-check"></use>
+                                    </svg>
+                                </span>
+                                <span class="text-xs text-slate-500 leading-relaxed">
+                                    J'accepte les
+                                    <a href="#" class="text-blue-600 hover:underline font-medium">Conditions
+                                        d'utilisation</a>
+                                    et la
+                                    <a href="#" class="text-blue-600 hover:underline font-medium">Politique de
+                                        confidentialité</a>
+                                    d'Afristock.
+                                </span>
+                            </label>
+                            <p id="termsError" class="text-[11px] text-red-600 mt-1 hidden" role="alert">Vous devez
+                                accepter les conditions pour continuer.</p>
+                        </div>
+
+                        <div class="flex gap-3 mt-6">
+                            <button type="button" onclick="goToStep(2)"
+                                class="btn-ghost flex items-center justify-center gap-1.5 px-4 py-3.5 rounded-xl font-display text-sm font-bold text-slate-600 border-none cursor-pointer">
+                                <svg class="w-4 h-4" aria-hidden="true">
+                                    <use href="#icon-chevron-left"></use>
+                                </svg>
+                                Retour
+                            </button>
+                            <button type="submit" id="submitBtn" disabled
                                 class="btn-dark flex-1 py-3.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer">
-                            <span id="submitLabel" class="relative z-10 flex items-center justify-center gap-2">
-                                Créer mon compte gratuitement
-                                <svg class="w-4 h-4" aria-hidden="true"><use href="#icon-arrow-right"></use></svg>
-                            </span>
-                        </button>
-                    </div>
-                </section>
+                                <span id="submitLabel" class="relative z-10 flex items-center justify-center gap-2">
+                                    Créer mon compte gratuitement
+                                    <svg class="w-4 h-4" aria-hidden="true">
+                                        <use href="#icon-arrow-right"></use>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </section>
 
-            </form>
+                </form>
 
-            <!-- Login link -->
-            <p class="text-center text-sm text-slate-500 mt-6 pt-5 border-t border-slate-100">
-                Déjà un compte ?
-                <a th:href="@{/auth/login}" href="login.html" class="text-blue-600 font-display font-semibold hover:underline">Se connecter</a>
-            </p>
+                <!-- Login link -->
+                <p class="text-center text-sm text-slate-500 mt-6 pt-5 border-t border-slate-100">
+                    Déjà un compte ?
+                    <a th:href="@{/auth/login}" href="login.html"
+                        class="text-blue-600 font-display font-semibold hover:underline">Se connecter</a>
+                </p>
 
-        </div>
-    </main>
-</div>
+            </div>
+        </main>
+    </div>
 
-<script>
-    /* This SVG-based checkbox tick relies on the CSS `peer-checked` utility class emitted
-       by Tailwind's Play CDN build, which watches the DOM and needs no extra JS. */
+    <script>
+        /* This SVG-based checkbox tick relies on the CSS `peer-checked` utility class emitted
+           by Tailwind's Play CDN build, which watches the DOM and needs no extra JS. */
 
-    function togglePwd(id, btn) {
-      const el = document.getElementById(id);
-      const showing = el.type === 'password';
-      el.type = showing ? 'text' : 'password';
-      btn.querySelector('.icon-eye').classList.toggle('hidden', showing);
-      btn.querySelector('.icon-eye-off').classList.toggle('hidden', !showing);
-      btn.setAttribute('aria-label', showing ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
-      btn.setAttribute('aria-pressed', String(showing));
-    }
-
-    function checkStrength(val) {
-      let score = 0;
-      if (val.length >= 8) score++;
-      if (/[A-Z]/.test(val)) score++;
-      if (/[0-9]/.test(val)) score++;
-      if (/[^A-Za-z0-9]/.test(val)) score++;
-
-      const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#00d4a0'];
-      const labels = ['Faible', 'Moyen', 'Bon', 'Excellent'];
-      const ids = ['s1', 's2', 's3', 's4'];
-
-      ids.forEach((id, i) => {
-        document.getElementById(id).style.background = i < score ? colors[score - 1] : '#e2e8f0';
-      });
-
-      const lbl = document.getElementById('passwordStrengthLabel');
-      if (!val) { lbl.textContent = ''; return; }
-      lbl.textContent = labels[score - 1] || 'Faible';
-      lbl.style.color = colors[score - 1] || '#ef4444';
-    }
-
-    (function () {
-        const form = document.getElementById('registerForm');
-        const steps = Array.from(form.querySelectorAll('.wizard-step'));
-        const email = document.getElementById('email');
-        const firstName = document.getElementById('firstName');
-        const lastName = document.getElementById('lastName');
-        const password = document.getElementById('password');
-        const passwordConfirm = document.getElementById('passwordConfirm');
-        const confirmError = document.getElementById('passwordConfirmError');
-        const companyName = document.getElementById('companyName');
-        const companyCity = document.getElementById('companyCity');
-        const companyPhone = document.getElementById('companyPhone');
-        const companyEmail = document.getElementById('companyEmail');
-        const terms = document.getElementById('terms');
-        const termsError = document.getElementById('termsError');
-        const submitBtn = document.getElementById('submitBtn');
-        const submitLabel = document.getElementById('submitLabel');
-        const step1NextBtn = document.getElementById('step1NextBtn');
-        const step2NextBtn = document.getElementById('step2NextBtn');
-        const stepAnnouncement = document.getElementById('stepAnnouncement');
-
-        const stepFields = {
-            1: [email, firstName, lastName, password, passwordConfirm],
-            2: [companyName, companyCity, companyPhone, companyEmail],
-        };
-        const stepLabels = { 1: 'Votre compte', 2: 'Votre entreprise', 3: 'Confirmation' };
-
-        let currentStep = 1;
-
-        function checkPasswordsMatch() {
-            if (passwordConfirm.value && passwordConfirm.value !== password.value) {
-                passwordConfirm.setCustomValidity('Les mots de passe ne correspondent pas');
-                confirmError.textContent = 'Les mots de passe ne correspondent pas';
-            } else {
-                passwordConfirm.setCustomValidity('');
-                confirmError.textContent = '';
-            }
+        function togglePwd(id, btn) {
+            const el = document.getElementById(id);
+            const showing = el.type === 'password';
+            el.type = showing ? 'text' : 'password';
+            btn.querySelector('.icon-eye').classList.toggle('hidden', showing);
+            btn.querySelector('.icon-eye-off').classList.toggle('hidden', !showing);
+            btn.setAttribute('aria-label', showing ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+            btn.setAttribute('aria-pressed', String(showing));
         }
 
-        function stepIsValid(n) {
-            return stepFields[n].every(function (el) { return el.checkValidity(); });
-        }
+        function checkStrength(val) {
+            let score = 0;
+            if (val.length >= 8) score++;
+            if (/[A-Z]/.test(val)) score++;
+            if (/[0-9]/.test(val)) score++;
+            if (/[^A-Za-z0-9]/.test(val)) score++;
 
-        function updateGateButtons() {
-            step1NextBtn.disabled = !stepIsValid(1);
-            step2NextBtn.disabled = !stepIsValid(2);
-            submitBtn.disabled = !(stepIsValid(1) && stepIsValid(2) && terms.checked);
-        }
+            const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#00d4a0'];
+            const labels = ['Faible', 'Moyen', 'Bon', 'Excellent'];
+            const ids = ['s1', 's2', 's3', 's4'];
 
-        function setNavState(n, state) {
-            const li = document.querySelector('li[data-nav-step="' + n + '"]');
-            if (!li) return;
-            li.classList.remove('is-active', 'is-done');
-            const circle = li.querySelector('.nav-circle');
-            if (state === 'active') {
-                li.classList.add('is-active');
-                circle.innerHTML = n;
-            } else if (state === 'done') {
-                li.classList.add('is-done');
-                circle.innerHTML = '<svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#icon-check"></use></svg>';
-            } else {
-                circle.innerHTML = n;
-            }
-        }
-
-        function updateProgressUI(step) {
-            [1, 2, 3].forEach(function (n) {
-                const dot = document.querySelector('[data-step-dot="' + n + '"]');
-                dot.classList.remove('is-active', 'is-done');
-                dot.innerHTML = n;
-                if (n < step) {
-                    dot.classList.add('is-done');
-                    dot.innerHTML = '<svg class="w-3 h-3" aria-hidden="true"><use href="#icon-check"></use></svg>';
-                } else if (n === step) {
-                    dot.classList.add('is-active');
-                }
+            ids.forEach((id, i) => {
+                document.getElementById(id).style.background = i < score ? colors[score - 1] : '#e2e8f0';
             });
-            const line1 = document.querySelector('[data-step-line="1"]');
-            const line2 = document.querySelector('[data-step-line="2"]');
-            line1.classList.toggle('is-done', step > 1);
-            line2.classList.toggle('is-done', step > 2);
 
-            setNavState(1, step > 1 ? 'done' : 'active');
-            setNavState(2, step > 2 ? 'done' : (step === 2 ? 'active' : 'pending'));
-
-            stepAnnouncement.textContent = 'Étape ' + step + ' sur 3 — ' + stepLabels[step];
+            const lbl = document.getElementById('passwordStrengthLabel');
+            if (!val) { lbl.textContent = ''; return; }
+            lbl.textContent = labels[score - 1] || 'Faible';
+            lbl.style.color = colors[score - 1] || '#ef4444';
         }
 
-        function populateRecap() {
-            document.getElementById('recapName').textContent = (firstName.value + ' ' + lastName.value).trim() || '—';
-            document.getElementById('recapEmail').textContent = email.value || '—';
-            document.getElementById('recapCompany').textContent = companyName.value || '—';
-            document.getElementById('recapCity').textContent = companyCity.value || '—';
-        }
+        (function () {
+            const form = document.getElementById('registerForm');
+            const steps = Array.from(form.querySelectorAll('.wizard-step'));
+            const email = document.getElementById('email');
+            const firstName = document.getElementById('firstName');
+            const lastName = document.getElementById('lastName');
+            const password = document.getElementById('password');
+            const passwordConfirm = document.getElementById('passwordConfirm');
+            const confirmError = document.getElementById('passwordConfirmError');
+            const companyName = document.getElementById('companyName');
+            const companyCity = document.getElementById('companyCity');
+            const companyPhone = document.getElementById('companyPhone');
+            const companyEmail = document.getElementById('companyEmail');
+            const terms = document.getElementById('terms');
+            const termsError = document.getElementById('termsError');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitLabel = document.getElementById('submitLabel');
+            const step1NextBtn = document.getElementById('step1NextBtn');
+            const step2NextBtn = document.getElementById('step2NextBtn');
+            const stepAnnouncement = document.getElementById('stepAnnouncement');
 
-        function goToStep(n) {
-            steps.forEach(function (s) { s.classList.add('is-hidden'); });
-            const target = steps.find(function (s) { return s.dataset.step === String(n); });
-            target.classList.remove('is-hidden');
-            target.classList.remove('anim-fadeup');
-            void target.offsetWidth;
-            target.classList.add('anim-fadeup');
-            currentStep = n;
-            updateProgressUI(n);
-            if (n === 3) populateRecap();
-            const heading = target.querySelector('h2');
-            if (heading) heading.focus();
-        }
-        window.goToStep = goToStep;
+            const stepFields = {
+                1: [email, firstName, lastName, password, passwordConfirm],
+                2: [companyName, companyCity, companyPhone, companyEmail],
+            };
+            const stepLabels = { 1: 'Votre compte', 2: 'Votre entreprise', 3: 'Confirmation' };
 
-        password.addEventListener('input', function () {
-            checkStrength(this.value);
-            checkPasswordsMatch();
-            updateGateButtons();
-        });
-        [email, firstName, lastName, passwordConfirm, companyName, companyCity, companyPhone, companyEmail].forEach(function (el) {
-            el.addEventListener('input', function () {
-                if (el === passwordConfirm) checkPasswordsMatch();
+            let currentStep = 1;
+
+            function checkPasswordsMatch() {
+                if (passwordConfirm.value && passwordConfirm.value !== password.value) {
+                    passwordConfirm.setCustomValidity('Les mots de passe ne correspondent pas');
+                    confirmError.textContent = 'Les mots de passe ne correspondent pas';
+                } else {
+                    passwordConfirm.setCustomValidity('');
+                    confirmError.textContent = '';
+                }
+            }
+
+            function stepIsValid(n) {
+                return stepFields[n].every(function (el) { return el.checkValidity(); });
+            }
+
+            function updateGateButtons() {
+                step1NextBtn.disabled = !stepIsValid(1);
+                step2NextBtn.disabled = !stepIsValid(2);
+                submitBtn.disabled = !(stepIsValid(1) && stepIsValid(2) && terms.checked);
+            }
+
+            function setNavState(n, state) {
+                const li = document.querySelector('li[data-nav-step="' + n + '"]');
+                if (!li) return;
+                li.classList.remove('is-active', 'is-done');
+                const circle = li.querySelector('.nav-circle');
+                if (state === 'active') {
+                    li.classList.add('is-active');
+                    circle.innerHTML = n;
+                } else if (state === 'done') {
+                    li.classList.add('is-done');
+                    circle.innerHTML = '<svg class="w-3.5 h-3.5" aria-hidden="true"><use href="#icon-check"></use></svg>';
+                } else {
+                    circle.innerHTML = n;
+                }
+            }
+
+            function updateProgressUI(step) {
+                [1, 2, 3].forEach(function (n) {
+                    const dot = document.querySelector('[data-step-dot="' + n + '"]');
+                    dot.classList.remove('is-active', 'is-done');
+                    dot.innerHTML = n;
+                    if (n < step) {
+                        dot.classList.add('is-done');
+                        dot.innerHTML = '<svg class="w-3 h-3" aria-hidden="true"><use href="#icon-check"></use></svg>';
+                    } else if (n === step) {
+                        dot.classList.add('is-active');
+                    }
+                });
+                const line1 = document.querySelector('[data-step-line="1"]');
+                const line2 = document.querySelector('[data-step-line="2"]');
+                line1.classList.toggle('is-done', step > 1);
+                line2.classList.toggle('is-done', step > 2);
+
+                setNavState(1, step > 1 ? 'done' : 'active');
+                setNavState(2, step > 2 ? 'done' : (step === 2 ? 'active' : 'pending'));
+
+                stepAnnouncement.textContent = 'Étape ' + step + ' sur 3 — ' + stepLabels[step];
+            }
+
+            function populateRecap() {
+                document.getElementById('recapName').textContent = (firstName.value + ' ' + lastName.value).trim() || '—';
+                document.getElementById('recapEmail').textContent = email.value || '—';
+                document.getElementById('recapCompany').textContent = companyName.value || '—';
+                document.getElementById('recapCity').textContent = companyCity.value || '—';
+            }
+
+            function goToStep(n) {
+                steps.forEach(function (s) { s.classList.add('is-hidden'); });
+                const target = steps.find(function (s) { return s.dataset.step === String(n); });
+                target.classList.remove('is-hidden');
+                target.classList.remove('anim-fadeup');
+                void target.offsetWidth;
+                target.classList.add('anim-fadeup');
+                currentStep = n;
+                updateProgressUI(n);
+                if (n === 3) populateRecap();
+                const heading = target.querySelector('h2');
+                if (heading) heading.focus();
+            }
+            window.goToStep = goToStep;
+
+            password.addEventListener('input', function () {
+                checkStrength(this.value);
+                checkPasswordsMatch();
                 updateGateButtons();
             });
-        });
-        terms.addEventListener('change', function () {
-            if (this.checked) termsError.classList.add('hidden');
+            [email, firstName, lastName, passwordConfirm, companyName, companyCity, companyPhone, companyEmail].forEach(function (el) {
+                el.addEventListener('input', function () {
+                    if (el === passwordConfirm) checkPasswordsMatch();
+                    updateGateButtons();
+                });
+            });
+            terms.addEventListener('change', function () {
+                if (this.checked) termsError.classList.add('hidden');
+                updateGateButtons();
+            });
+
+            step1NextBtn.addEventListener('click', function () { if (stepIsValid(1)) goToStep(2); });
+            step2NextBtn.addEventListener('click', function () { if (stepIsValid(2)) goToStep(3); });
+
+            // Enter key on steps 1-2 should advance to the next step, not implicitly
+            // submit the form (the only type="submit" button lives on step 3).
+            form.addEventListener('keydown', function (e) {
+                if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA') return;
+                if (currentStep === 1) { e.preventDefault(); if (!step1NextBtn.disabled) goToStep(2); }
+                else if (currentStep === 2) { e.preventDefault(); if (!step2NextBtn.disabled) goToStep(3); }
+            });
+
+            form.addEventListener('submit', function (e) {
+                if (!stepIsValid(1)) { e.preventDefault(); goToStep(1); return; }
+                if (!stepIsValid(2)) { e.preventDefault(); goToStep(2); return; }
+                if (!terms.checked) {
+                    e.preventDefault();
+                    termsError.classList.remove('hidden');
+                    return;
+                }
+                submitBtn.disabled = true;
+                submitLabel.innerHTML = '<svg class="spinner w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-opacity=".25"/><path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg> Création du compte…';
+            });
+
+            // Land on the first step that failed server-side validation (whole-form
+            // POST re-rendered by Thymeleaf with BindingResult errors attached).
+            const initialStep = form.dataset.step1Error === 'true' ? 1
+                : (form.dataset.step2Error === 'true' ? 2 : 1);
+
             updateGateButtons();
-        });
-
-        step1NextBtn.addEventListener('click', function () { if (stepIsValid(1)) goToStep(2); });
-        step2NextBtn.addEventListener('click', function () { if (stepIsValid(2)) goToStep(3); });
-
-        // Enter key on steps 1-2 should advance to the next step, not implicitly
-        // submit the form (the only type="submit" button lives on step 3).
-        form.addEventListener('keydown', function (e) {
-            if (e.key !== 'Enter' || e.target.tagName === 'TEXTAREA') return;
-            if (currentStep === 1) { e.preventDefault(); if (!step1NextBtn.disabled) goToStep(2); }
-            else if (currentStep === 2) { e.preventDefault(); if (!step2NextBtn.disabled) goToStep(3); }
-        });
-
-        form.addEventListener('submit', function (e) {
-            if (!stepIsValid(1)) { e.preventDefault(); goToStep(1); return; }
-            if (!stepIsValid(2)) { e.preventDefault(); goToStep(2); return; }
-            if (!terms.checked) {
-                e.preventDefault();
-                termsError.classList.remove('hidden');
-                return;
-            }
-            submitBtn.disabled = true;
-            submitLabel.innerHTML = '<svg class="spinner w-4 h-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-opacity=".25"/><path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg> Création du compte…';
-        });
-
-        // Land on the first step that failed server-side validation (whole-form
-        // POST re-rendered by Thymeleaf with BindingResult errors attached).
-        const initialStep = form.dataset.step1Error === 'true' ? 1
-            : (form.dataset.step2Error === 'true' ? 2 : 1);
-
-        updateGateButtons();
-        goToStep(initialStep);
-    })();
-</script>
+            goToStep(initialStep);
+        })();
+    </script>
 </body>
+
 </html>
