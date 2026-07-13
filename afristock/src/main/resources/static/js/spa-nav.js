@@ -27,6 +27,12 @@
     var ACTIVE_CLASSES = "flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20";
     var INACTIVE_CLASSES = "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100";
 
+    // Sidebar sombre du Super-Admin (voir fragments/layout.html :: sidebarSuperAdmin) : classes
+    // distinctes pour que la navigation SPA (qui ne fait que remplacer #main-content) ne réécrive
+    // pas les liens de la sidebar persistante avec le thème clair.
+    var ACTIVE_CLASSES_DARK = "flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-indigo-500 text-white shadow-lg shadow-indigo-500/20";
+    var INACTIVE_CLASSES_DARK = "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5";
+
     function computeActiveNav(pathname) {
         var best = null;
         for (var i = 0; i < NAV_PREFIXES.length; i++) {
@@ -61,7 +67,11 @@
     function setActive(pathname) {
         var key = computeActiveNav(pathname);
         document.querySelectorAll("a[data-spa-link]").forEach(function (a) {
-            a.className = (a.getAttribute("data-nav-key") === key) ? ACTIVE_CLASSES : INACTIVE_CLASSES;
+            var navKey = a.getAttribute("data-nav-key");
+            var isSuperAdmin = navKey && navKey.indexOf("superadmin") === 0;
+            var active = isSuperAdmin ? ACTIVE_CLASSES_DARK : ACTIVE_CLASSES;
+            var inactive = isSuperAdmin ? INACTIVE_CLASSES_DARK : INACTIVE_CLASSES;
+            a.className = (navKey === key) ? active : inactive;
         });
     }
 

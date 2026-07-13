@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="~{fragments/layout :: pageHead(${company.name} + ' — Super Admin')}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebarSuperAdmin}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" th:attr="data-title=${company.name} + ' — Super Admin'" class="max-w-7xl mx-auto">
+
+        <div class="flex items-center justify-between mb-6">
+            <a th:href="@{/super-admin/companies}" data-spa-link data-nav-key="superadmin-companies"
+               class="text-sm text-gray-500 hover:text-gray-900 flex items-center gap-1">
+                ← Retour aux entreprises
+            </a>
+        </div>
+
+        <!-- Bannière entreprise -->
+        <div class="rounded-2xl p-8 mb-8 text-white" style="background: linear-gradient(135deg, #3341ff, #252eff);">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <h1 class="text-2xl font-bold" th:text="${company.name}">Nom Entreprise</h1>
+                        <span th:if="${company.active}" class="px-3 py-1 rounded-full bg-white/20 text-10 font-bold uppercase tracking-wide">Active</span>
+                        <span th:unless="${company.active}" class="px-3 py-1 rounded-full bg-red-500/30 text-10 font-bold uppercase tracking-wide">Suspendue</span>
+                    </div>
+                    <p class="text-sm text-white/80" th:text="${company.email}">email</p>
+                    <p class="text-sm text-white/80" th:text="${company.city ?: 'Ville non renseignée'}">Ville</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-10 uppercase tracking-widest text-white/70 font-bold">Abonnement</p>
+                    <th:block th:if="${subscription != null}">
+                        <p class="text-lg font-bold" th:text="${subscription.planName}">Offre</p>
+                        <p class="text-xs text-white/70" th:text="'jusqu\'au ' + ${#temporals.format(subscription.endDate, 'dd/MM/yyyy')}">fin</p>
+                    </th:block>
+                    <p th:unless="${subscription != null}" class="text-lg font-bold">Aucun abonnement</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl border border-gray-100">
+                <p class="text-12 text-gray-500 mb-1">Chiffre d'affaires (mois)</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${#numbers.formatDecimal(revenueThisMonth, 0, 0)} + ' FCFA'">0</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100">
+                <p class="text-12 text-gray-500 mb-1">Ventes (mois)</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${salesThisMonth}">0</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100">
+                <p class="text-12 text-gray-500 mb-1">Personnel</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${staffCount}">0</p>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100">
+                <p class="text-12 text-gray-500 mb-1">Boutiques / sites</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${#lists.size(sites)}">0</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Alertes stock bas -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                <h3 class="text-[14px] font-bold text-gray-900 mb-4 flex items-center gap-2"><span class="text-red-500">⚠</span> Alertes stock bas</h3>
+                <div class="space-y-3 max-h-80 overflow-y-auto">
+                    <div th:each="sl : ${lowStock}" class="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
+                        <div>
+                            <p class="font-medium text-gray-900" th:text="${sl.product.name}">Produit</p>
+                            <p class="text-12 text-gray-400" th:text="${sl.site.name}">Site</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold" th:text="${sl.quantity} + ' / ' + ${sl.product.minThreshold}">0</span>
+                    </div>
+                    <p th:if="${#lists.isEmpty(lowStock)}" class="text-center text-gray-400 text-sm py-6">Aucune alerte de stock bas.</p>
+                </div>
+            </div>
+
+            <!-- Boutiques / sites actifs -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-6">
+                <h3 class="text-[14px] font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🏬</span> Boutiques &amp; sites</h3>
+                <div class="space-y-3 max-h-80 overflow-y-auto">
+                    <div th:each="s : ${sites}" class="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
+                        <div>
+                            <p class="font-medium text-gray-900" th:text="${s.name}">Site</p>
+                            <p class="text-12 text-gray-400" th:text="${s.city ?: '—'}">Ville</p>
+                        </div>
+                        <span th:if="${s.active}" class="px-2.5 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold">Actif</span>
+                        <span th:unless="${s.active}" class="px-2.5 py-1 rounded-full bg-gray-100 text-gray-400 text-xs font-bold">Inactif</span>
+                    </div>
+                    <p th:if="${#lists.isEmpty(sites)}" class="text-center text-gray-400 text-sm py-6">Aucun site enregistré.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activité récente -->
+        <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-8">
+            <h3 class="text-[14px] font-bold text-gray-900 mb-4 flex items-center gap-2"><span>🧾</span> Activité récente</h3>
+            <table class="w-full text-sm">
+                <thead class="text-gray-400 text-xs uppercase tracking-widest text-left">
+                    <tr>
+                        <th class="pb-2">Référence</th>
+                        <th class="pb-2">Site</th>
+                        <th class="pb-2">Date</th>
+                        <th class="pb-2 text-right">Montant</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    <tr th:each="sale : ${recentSales}">
+                        <td class="py-2 font-medium text-gray-900" th:text="${sale.reference}">FAC-000001</td>
+                        <td class="py-2 text-gray-500" th:text="${sale.site.name}">Site</td>
+                        <td class="py-2 text-gray-500" th:text="${#temporals.format(sale.saleDate, 'dd/MM/yyyy HH:mm')}">date</td>
+                        <td class="py-2 text-right font-semibold text-gray-900" th:text="${#numbers.formatDecimal(sale.totalAmount, 0, 0)} + ' FCFA'">0</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentSales)}">
+                        <td colspan="4" class="py-6 text-center text-gray-400">Aucune vente enregistrée.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modules à venir -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-50 rounded-2xl border border-dashed border-gray-200 p-6 text-center text-gray-400">
+                <p class="text-2xl mb-2">🤖</p>
+                <p class="font-bold text-gray-500">Pilote de Stock IA</p>
+                <p class="text-xs mt-1">Bientôt disponible</p>
+            </div>
+            <div class="bg-gray-50 rounded-2xl border border-dashed border-gray-200 p-6 text-center text-gray-400">
+                <p class="text-2xl mb-2">🚚</p>
+                <p class="font-bold text-gray-500">Portail Fournisseurs</p>
+                <p class="text-xs mt-1">Bientôt disponible</p>
+            </div>
+        </div>
+    </div>
+    </main>
+</body>
+</html>

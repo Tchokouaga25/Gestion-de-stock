@@ -189,5 +189,61 @@
     </div>
 </th:block>
 
+<!--
+  Sidebar dédiée au Super-Administrateur (console multi-tenant), inspirée du design
+  "Nexus SaaS" : fond sombre, distincte de la sidebar claire utilisée côté entreprise.
+  Réutilise les mêmes liens/data-nav-key que le bloc super-admin de la sidebar partagée.
+-->
+<th:block th:fragment="sidebarSuperAdmin">
+    <aside class="w-[260px] bg-[#1E293B] text-slate-200 flex flex-col fixed inset-y-0 left-0 z-50 p-6">
+        <div class="mb-8 px-2">
+            <span class="font-bold text-xl tracking-tight text-white">AfriStock</span>
+            <p class="text-12 text-slate-400">Console Super-Admin</p>
+        </div>
+        <nav class="flex-1 space-y-1 overflow-y-auto">
+            <div class="text-slate-500 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>
+
+            <a th:href="@{/super-admin/companies}" data-spa-link data-nav-key="superadmin-companies"
+               th:class="${activeNav == 'superadmin-companies'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5'">
+                <span>🏢</span> Entreprises
+            </a>
+            <a th:href="@{/super-admin/plans}" data-spa-link data-nav-key="superadmin-plans"
+               th:class="${activeNav == 'superadmin-plans'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5'">
+                <span>💼</span> Offres
+            </a>
+            <a th:href="@{/super-admin/features}" data-spa-link data-nav-key="superadmin-features"
+               th:class="${activeNav == 'superadmin-features'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5'">
+                <span>🧩</span> Fonctionnalités
+            </a>
+        </nav>
+
+        <div class="pt-4 border-t border-white/10">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-red-400 hover:bg-white/5">
+                    <span>🚪</span> Déconnexion
+                </button>
+            </form>
+        </div>
+    </aside>
+</th:block>
+
+<!-- Topbar dédié au Super-Admin : titre de page + recherche (non fonctionnelle pour l'instant) + icônes statiques. -->
+<th:block th:fragment="topbarSuperAdmin(pageTitle, pageSubtitle)">
+    <header class="flex justify-between items-center mb-8 gap-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900" th:text="${pageTitle}">Titre</h1>
+            <p class="text-sm text-gray-500 mt-1" th:text="${pageSubtitle}">Sous-titre</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="hidden md:flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-gray-100 text-gray-400 text-sm w-64">
+                <span>🔍</span>
+                <span>Rechercher...</span>
+            </div>
+            <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-400">🔔</div>
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">SA</div>
+        </div>
+    </header>
+</th:block>
+
 </body>
 </html>

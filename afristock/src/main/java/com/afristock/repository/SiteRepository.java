@@ -8,4 +8,5 @@ import java.util.List;
 public interface SiteRepository extends JpaRepository<Site, Long> {
     List<Site> findByTenantIdOrderByName(Long tenantId);
     boolean existsByNameAndTenantId(String name, Long tenantId);
+    long countByTenantId(Long tenantId);
 }
