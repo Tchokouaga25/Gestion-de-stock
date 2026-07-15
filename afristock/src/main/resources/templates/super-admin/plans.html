@@ -7,24 +7,24 @@
     <div th:fragment="content" data-title="Offres — Super Admin" class="max-w-4xl mx-auto">
         <div th:replace="~{fragments/layout :: topbarSuperAdmin('Offres d\'abonnement', 'Créez et consultez les offres proposées aux entreprises clientes.')}"></div>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <form th:action="@{/super-admin/plans}" th:object="${newPlan}" method="post"
-              class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 grid grid-cols-2 md:grid-cols-5 gap-3 items-end">
-            <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Code</label>
-                <input type="text" th:field="*{code}" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
-            <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Nom</label>
-                <input type="text" th:field="*{name}" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
-            <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Prix / mois</label>
-                <input type="number" step="1" th:field="*{monthlyPrice}" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
-            <div><label class="block text-xs font-bold text-gray-500 uppercase mb-2">Max users</label>
-                <input type="number" th:field="*{maxUsers}" class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/></div>
-            <button type="submit" class="px-4 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Ajouter</button>
+              class="card p-6 mb-6 grid grid-cols-2 md:grid-cols-5 gap-3 items-end">
+            <div><label class="form-label">Code</label>
+                <input type="text" th:field="*{code}" required class="form-input"/></div>
+            <div><label class="form-label">Nom</label>
+                <input type="text" th:field="*{name}" required class="form-input"/></div>
+            <div><label class="form-label">Prix / mois</label>
+                <input type="number" step="1" th:field="*{monthlyPrice}" class="form-input"/></div>
+            <div><label class="form-label">Max users</label>
+                <input type="number" th:field="*{maxUsers}" class="form-input"/></div>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
         </form>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div th:each="p : ${plans}" class="bg-white rounded-2xl border border-gray-100 p-6">
+            <div th:each="p : ${plans}" class="workspace-card p-6">
                 <div class="flex justify-between items-start">
                     <h3 class="text-lg font-bold text-gray-900" th:text="${p.name}">Nom</h3>
                     <span class="text-xs text-gray-400" th:text="${p.code}">CODE</span>

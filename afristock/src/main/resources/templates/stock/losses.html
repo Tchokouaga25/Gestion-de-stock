@@ -11,57 +11,57 @@
                 <h1 class="text-2xl font-bold text-gray-900">Pertes (périmés / avariés)</h1>
                 <p class="text-sm text-gray-500 mt-1">Déclarer une perte ajuste automatiquement le stock du site.</p>
             </div>
-            <a th:href="@{/stock}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Stock par site</a>
+            <a th:href="@{/stock}" class="btn btn-secondary">Stock par site</a>
         </header>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <form th:action="@{/losses}" method="post" sec:authorize="hasAuthority('STOCK_WRITE')"
-              class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 grid grid-cols-5 gap-3 items-end">
+              class="card p-6 mb-6 grid grid-cols-5 gap-3 items-end">
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Produit</label>
-                <select name="productId" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm">
+                <label class="form-label">Produit</label>
+                <select name="productId" required class="form-input">
                     <option th:each="p : ${products}" th:value="${p.id}" th:text="${p.name}">Produit</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Site</label>
-                <select name="siteId" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm">
+                <label class="form-label">Site</label>
+                <select name="siteId" required class="form-input">
                     <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}">Site</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Type</label>
-                <select name="type" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm">
+                <label class="form-label">Type</label>
+                <select name="type" required class="form-input">
                     <option th:each="t : ${types}" th:value="${t}" th:text="${t.name() == 'PERIME'} ? 'Périmé' : 'Avarié'">Type</option>
                 </select>
             </div>
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Quantité</label>
-                <input type="number" name="quantity" min="1" required class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                <label class="form-label">Quantité</label>
+                <input type="number" name="quantity" min="1" required class="form-input"/>
             </div>
-            <button type="submit" class="px-4 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Déclarer</button>
+            <button type="submit" class="btn btn-primary">Déclarer</button>
         </form>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Date</th><th class="px-6 py-4">Produit</th><th class="px-6 py-4">Site</th><th class="px-6 py-4">Type</th><th class="px-6 py-4 text-right">Qté</th><th class="px-6 py-4">Motif</th></tr>
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Produit</th><th>Site</th><th>Type</th><th class="text-right">Qté</th><th>Motif</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="l : ${losses}">
-                        <td class="px-6 py-4 text-gray-600" th:text="${#temporals.format(l.declaredAt, 'dd/MM/yyyy HH:mm')}">Date</td>
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${l.product.name}">Produit</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${l.site.name}">Site</td>
-                        <td class="px-6 py-4">
-                            <span th:if="${l.type.name() == 'PERIME'}" class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-bold">Périmé</span>
-                            <span th:unless="${l.type.name() == 'PERIME'}" class="px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">Avarié</span>
+                        <td th:text="${#temporals.format(l.declaredAt, 'dd/MM/yyyy HH:mm')}">Date</td>
+                        <td class="font-semibold text-gray-900" th:text="${l.product.name}">Produit</td>
+                        <td th:text="${l.site.name}">Site</td>
+                        <td>
+                            <span th:if="${l.type.name() == 'PERIME'}" class="badge badge-warning">Périmé</span>
+                            <span th:unless="${l.type.name() == 'PERIME'}" class="badge badge-danger">Avarié</span>
                         </td>
-                        <td class="px-6 py-4 text-right text-gray-900 font-bold" th:text="${l.quantity}">0</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${l.reason}">Motif</td>
+                        <td class="text-right font-bold" th:text="${l.quantity}">0</td>
+                        <td th:text="${l.reason}">Motif</td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(losses)}"><td colspan="6" class="px-6 py-10 text-center text-gray-400">Aucune perte déclarée.</td></tr>
+                    <tr th:if="${#lists.isEmpty(losses)}"><td colspan="6" class="table-empty">Aucune perte déclarée.</td></tr>
                 </tbody>
             </table>
         </div>

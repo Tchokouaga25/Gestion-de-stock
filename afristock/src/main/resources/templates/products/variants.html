@@ -11,49 +11,49 @@
                 <h1 class="text-2xl font-bold text-gray-900">Variantes</h1>
                 <p class="text-sm text-gray-500 mt-1" th:text="'Produit : ' + ${product.name}">Produit</p>
             </div>
-            <a th:href="@{/products}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Retour aux produits</a>
+            <a th:href="@{/products}" class="btn btn-secondary">Retour aux produits</a>
         </header>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <form th:action="@{/products/{id}/variants/save(id=${product.id})}" th:object="${newVariant}" method="post"
               sec:authorize="hasAuthority('PRODUCT_WRITE')"
-              class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex gap-3 items-end">
+              class="card p-6 mb-6 flex gap-3 items-end">
             <div class="flex-1">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Libellé</label>
-                <input type="text" th:field="*{name}" required placeholder="ex: 500ml, Taille L" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                <label class="form-label">Libellé</label>
+                <input type="text" th:field="*{name}" required placeholder="ex: 500ml, Taille L" class="form-input"/>
             </div>
             <div class="flex-1">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Code-barres</label>
-                <input type="text" th:field="*{barcode}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                <label class="form-label">Code-barres</label>
+                <input type="text" th:field="*{barcode}" class="form-input"/>
             </div>
             <div class="w-40">
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Ajust. prix</label>
-                <input type="number" step="0.01" th:field="*{priceAdjustment}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                <label class="form-label">Ajust. prix</label>
+                <input type="number" step="0.01" th:field="*{priceAdjustment}" class="form-input"/>
             </div>
-            <button type="submit" class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Ajouter</button>
+            <button type="submit" class="btn btn-primary">Ajouter</button>
         </form>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Libellé</th><th class="px-6 py-4">Code-barres</th><th class="px-6 py-4 text-right">Ajust. prix</th><th class="px-6 py-4 text-right">Action</th></tr>
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th>Libellé</th><th>Code-barres</th><th class="text-right">Ajust. prix</th><th class="text-right">Action</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="v : ${variants}">
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${v.name}">Libellé</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${v.barcode}">Code</td>
-                        <td class="px-6 py-4 text-right text-gray-700" th:text="${v.priceAdjustment}">0</td>
-                        <td class="px-6 py-4 text-right">
+                        <td class="font-semibold text-gray-900" th:text="${v.name}">Libellé</td>
+                        <td th:text="${v.barcode}">Code</td>
+                        <td class="text-right" th:text="${v.priceAdjustment}">0</td>
+                        <td class="text-right">
                             <form th:action="@{/products/{id}/variants/delete/{vid}(id=${product.id},vid=${v.id})}" method="post" class="inline"
                                   sec:authorize="hasAuthority('PRODUCT_WRITE')"
                                   onsubmit="return confirm('Supprimer cette variante ?');">
-                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Supprimer</button>
+                                <button class="btn-ghost-danger">Supprimer</button>
                             </form>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(variants)}"><td colspan="4" class="px-6 py-10 text-center text-gray-400">Aucune variante.</td></tr>
+                    <tr th:if="${#lists.isEmpty(variants)}"><td colspan="4" class="table-empty">Aucune variante.</td></tr>
                 </tbody>
             </table>
         </div>

@@ -10,6 +10,8 @@ import com.afristock.repository.SaleRepository;
 import com.afristock.repository.SiteRepository;
 import com.afristock.security.TenantContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,12 @@ public class SaleService {
     @Transactional(readOnly = true)
     public List<Sale> getAll() {
         return saleRepository.findByTenantIdOrderBySaleDateDesc(TenantContext.getCurrentTenant());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Sale> getPage(int page, int size) {
+        return saleRepository.findByTenantIdOrderBySaleDateDesc(
+                TenantContext.getCurrentTenant(), PageRequest.of(Math.max(page, 0), size));
     }
 
     @Transactional(readOnly = true)

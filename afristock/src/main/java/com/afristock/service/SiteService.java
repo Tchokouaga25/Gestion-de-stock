@@ -1,13 +1,20 @@
 package com.afristock.service;
 
 import com.afristock.model.entity.Site;
+import com.afristock.repository.EmployeeRepository;
+import com.afristock.repository.SaleRepository;
 import com.afristock.repository.SiteRepository;
+import com.afristock.repository.StockLevelRepository;
 import com.afristock.security.TenantContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Gestion des sites (boutiques / entrepôts) de l'entreprise courante.
@@ -18,10 +25,44 @@ import java.util.List;
 public class SiteService {
 
     private final SiteRepository siteRepository;
+    private final EmployeeRepository employeeRepository;
+    private final SaleRepository saleRepository;
+    private final StockLevelRepository stockLevelRepository;
+
+    public record SiteStats(Site site, double revenueThisMonth, long lowStockAlerts, long staffCount) {}
 
     @Transactional(readOnly = true)
     public List<Site> getAll() {
         return siteRepository.findByTenantIdOrderByName(TenantContext.getCurrentTenant());
+    }
+
+    /** Cartes boutiques avec KPIs agrégés (ventes du mois, alertes stock, personnel), sans N+1. */
+    @Transactional(readOnly = true)
+    public List<SiteStats> getSiteCardStats() {
+        Long tenantId = TenantContext.getCurrentTenant();
+        LocalDateTime monthStart = LocalDate.now().withDayOfMonth(1).atStartOfDay();
+        LocalDateTime monthEnd = monthStart.plusMonths(1);
+
+        Map<Long, Double> revenueBySite = new HashMap<>();
+        for (Object[] row : saleRepository.revenueBySiteForPeriod(tenantId, monthStart, monthEnd)) {
+            if (row[0] != null) {
+                revenueBySite.put((Long) row[0], ((Number) row[1]).doubleValue());
+            }
+        }
+        Map<Long, Long> lowStockBySite = new HashMap<>();
+        for (Object[] row : stockLevelRepository.countLowStockBySite(tenantId)) {
+            if (row[0] != null) {
+                lowStockBySite.put((Long) row[0], ((Number) row[1]).longValue());
+            }
+        }
+
+        return getAll().stream()
+                .map(site -> new SiteStats(
+                        site,
+                        revenueBySite.getOrDefault(site.getId(), 0.0),
+                        lowStockBySite.getOrDefault(site.getId(), 0L),
+                        employeeRepository.countBySiteIdAndTenantId(site.getId(), tenantId)))
+                .toList();
     }
 
     @Transactional(readOnly = true)

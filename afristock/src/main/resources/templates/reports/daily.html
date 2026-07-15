@@ -12,39 +12,121 @@
             </div>
             <div class="flex gap-3 no-print">
                 <form th:action="@{/reports}" method="get" class="flex gap-2 items-center">
-                    <input type="date" name="date" th:value="${report.date}" class="px-3 py-2 border border-gray-200 rounded-xl text-sm"/>
-                    <button class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Voir</button>
+                    <input type="date" name="date" th:value="${report.date}" class="form-input"/>
+                    <button class="btn btn-secondary">Voir</button>
                 </form>
-                <a th:href="@{/reports/sales.xlsx(date=${report.date})}" class="px-4 py-2 bg-green-50 text-green-700 rounded-xl text-sm font-medium">Excel ventes</a>
-                <a th:href="@{/reports/stock.xlsx}" class="px-4 py-2 bg-green-50 text-green-700 rounded-xl text-sm font-medium">Excel stock</a>
-                <button onclick="window.print()" class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Imprimer / PDF</button>
+                <a th:href="@{/reports/sales.xlsx(date=${report.date})}" class="btn btn-secondary">
+                    <i data-lucide="download"></i> Excel ventes
+                </a>
+                <a th:href="@{/reports/stock.xlsx}" class="btn btn-secondary">
+                    <i data-lucide="download"></i> Excel stock
+                </a>
+                <button onclick="window.print()" class="btn btn-primary">
+                    <i data-lucide="printer"></i> Imprimer / PDF
+                </button>
             </div>
         </header>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white rounded-2xl border border-gray-100 p-5"><div class="text-xs text-gray-400 uppercase tracking-widest">Ventes</div><div class="text-2xl font-bold text-gray-900 mt-1" th:text="${report.salesCount}">0</div></div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5"><div class="text-xs text-gray-400 uppercase tracking-widest">Chiffre d'affaires</div><div class="text-2xl font-bold text-gray-900 mt-1" th:text="${#numbers.formatDecimal(report.revenue, 0, 0)}">0</div></div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5"><div class="text-xs text-gray-400 uppercase tracking-widest">Bénéfice brut</div><div class="text-2xl font-bold text-green-600 mt-1" th:text="${#numbers.formatDecimal(report.grossProfit, 0, 0)}">0</div></div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5"><div class="text-xs text-gray-400 uppercase tracking-widest">Articles vendus</div><div class="text-2xl font-bold text-gray-900 mt-1" th:text="${report.itemsSold}">0</div></div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-blue-50 text-blue-600"><i data-lucide="shopping-cart"></i></div>
+                <p class="stat-tile__label">Ventes</p>
+                <p class="stat-tile__value" th:text="${report.salesCount}">0</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-purple-50 text-purple-600"><i data-lucide="wallet"></i></div>
+                <p class="stat-tile__label">Chiffre d'affaires</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(report.revenue, 0, 0)}">0</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-emerald-50 text-emerald-600"><i data-lucide="trending-up"></i></div>
+                <p class="stat-tile__label">Bénéfice brut</p>
+                <p class="stat-tile__value text-emerald-600" th:text="${#numbers.formatDecimal(report.grossProfit, 0, 0)}">0</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-orange-50 text-orange-600"><i data-lucide="package"></i></div>
+                <p class="stat-tile__label">Articles vendus</p>
+                <p class="stat-tile__value" th:text="${report.itemsSold}">0</p>
+            </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Facture</th><th class="px-6 py-4">Heure</th><th class="px-6 py-4">Client</th><th class="px-6 py-4">Paiement</th><th class="px-6 py-4 text-right">Total</th></tr>
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th>Facture</th><th>Heure</th><th>Client</th><th>Paiement</th><th class="text-right">Total</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="s : ${report.sales}">
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${s.reference}">FAC</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${#temporals.format(s.saleDate, 'HH:mm')}">Heure</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${s.customer != null ? s.customer.name : 'Comptoir'}">Client</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${s.paymentMethod}">Paiement</td>
-                        <td class="px-6 py-4 text-right text-gray-900 font-bold" th:text="${#numbers.formatDecimal(s.totalAmount, 0, 0)}">0</td>
+                        <td class="font-semibold text-gray-900" th:text="${s.reference}">FAC</td>
+                        <td th:text="${#temporals.format(s.saleDate, 'HH:mm')}">Heure</td>
+                        <td th:text="${s.customer != null ? s.customer.name : 'Comptoir'}">Client</td>
+                        <td th:text="${s.paymentMethod}">Paiement</td>
+                        <td class="text-right font-bold text-gray-900" th:text="${#numbers.formatDecimal(s.totalAmount, 0, 0)}">0</td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(report.sales)}"><td colspan="5" class="px-6 py-10 text-center text-gray-400">Aucune vente ce jour.</td></tr>
+                    <tr th:if="${#lists.isEmpty(report.sales)}"><td colspan="5" class="table-empty">Aucune vente ce jour.</td></tr>
                 </tbody>
             </table>
         </div>
+
+        <div class="workspace-card mt-8" th:if="${!#lists.isEmpty(report.siteBreakdown)}">
+            <div class="workspace-card__header">
+                <h3 class="workspace-card__title">Performance par boutique</h3>
+            </div>
+            <div class="workspace-card__body">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                    <div style="position: relative; height: 260px;">
+                        <canvas id="siteChart"></canvas>
+                    </div>
+                    <div class="table-shell">
+                        <table>
+                            <thead>
+                                <tr><th>Boutique</th><th class="text-right">CA du jour</th><th class="text-right">Alertes</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="b : ${report.siteBreakdown}">
+                                    <td class="font-semibold text-gray-900" th:text="${b.siteName}">Boutique</td>
+                                    <td class="text-right" th:text="${#numbers.formatDecimal(b.revenue, 0, 0)} + ' F'">0 F</td>
+                                    <td class="text-right" th:text="${b.lowStockCount}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IIFE ré-exécuté à chaque navigation SPA (voir spa-nav.js::reExecuteScripts) : on détruit
+             l'instance Chart.js précédente avant d'en recréer une pour éviter les fuites mémoire. -->
+        <script th:inline="javascript">
+        (function () {
+            const breakdown = /*[[${report.siteBreakdown}]]*/ [];
+            const canvas = document.getElementById('siteChart');
+            if (!canvas || !window.Chart) return;
+            if (canvas._chartInstance) canvas._chartInstance.destroy();
+            canvas._chartInstance = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: breakdown.map(b => b.siteName),
+                    datasets: [{
+                        label: "Chiffre d'affaires",
+                        data: breakdown.map(b => b.revenue),
+                        backgroundColor: '#2563eb',
+                        borderRadius: 4,
+                        maxBarThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(148,163,184,0.15)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        })();
+        </script>
     </div>
     </main>
 </body>

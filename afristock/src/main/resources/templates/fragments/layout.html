@@ -13,35 +13,49 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${pageTitle}">Afristock</title>
+    <script>
+        // Applique la classe "dark" avant le premier rendu pour éviter un flash clair/sombre ;
+        // doit s'exécuter avant le CDN Tailwind (non-defer) pour que les utilitaires dark: marchent dès le 1er paint.
+        (function () {
+            if (window.localStorage.getItem("afristock-theme") === "dark") {
+                document.documentElement.classList.add("dark");
+            }
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
-                        brand: { 600: '#3341ff', 700: '#252eff' }
+                        brand: { 600: '#2563eb', 700: '#1d4ed8' }
                     }
                 }
             }
         }
     </script>
+    <link rel="stylesheet" th:href="@{/css/app.css}"/>
     <style>
-        body { background-color: #F8FAFC; }
         .text-10 { font-size: 10px; }
         .text-12 { font-size: 12px; }
     </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <script th:src="@{/js/spa-nav.js}" defer></script>
+    <script th:src="@{/js/theme.js}" defer></script>
+    <script th:src="@{/js/toast.js}" defer></script>
 </th:block>
 
 <th:block th:fragment="sidebar">
-    <aside class="w-[260px] bg-white text-gray-900 flex flex-col fixed inset-y-0 left-0 z-50 p-6 border-r border-gray-100">
-        <div class="mb-8 px-2">
-            <span class="font-bold text-xl tracking-tight text-gray-900">StockPro</span>
-            <p class="text-12 text-gray-400">Gestion de Stock</p>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="sidebar-brand-name">AfriStock</span>
+            <p class="sidebar-brand-sub">Gestion de Stock</p>
         </div>
-        <nav class="flex-1 space-y-1 overflow-y-auto">
+        <nav class="sidebar-nav">
 
             <!-- Menu "entreprise" : jamais affiché au Super-Admin (pas de société), même si un
                  feature flag global est actif par défaut (FeatureService.isEnabled renvoie true
@@ -49,131 +63,131 @@
             <div sec:authorize="!hasRole('SUPER_ADMIN')">
 
             <a th:href="@{/dashboard}" data-spa-link data-nav-key="dashboard"
-               th:class="${activeNav == 'dashboard'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                <span>📊</span> Dashboard
+               th:class="${activeNav == 'dashboard'} ? 'sidebar-link active' : 'sidebar-link'">
+                <i data-lucide="layout-dashboard"></i> Dashboard
             </a>
 
             <a th:href="@{/sites}" data-spa-link data-nav-key="sites"
-               th:class="${activeNav == 'sites'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'sites'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('SITES')}"
                sec:authorize="hasAuthority('SITE_READ')">
-                <span>🏬</span> Sites
+                <i data-lucide="store"></i> Sites
             </a>
 
             <a th:href="@{/suppliers}" data-spa-link data-nav-key="suppliers"
-               th:class="${activeNav == 'suppliers'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'suppliers'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('SUPPLIERS')}"
                sec:authorize="hasAuthority('SUPPLIER_READ')">
-                <span>🚚</span> Fournisseurs
+                <i data-lucide="truck"></i> Fournisseurs
             </a>
 
             <a th:href="@{/customers}" data-spa-link data-nav-key="customers"
-               th:class="${activeNav == 'customers'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'customers'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('CUSTOMERS')}"
                sec:authorize="hasAuthority('CUSTOMER_READ')">
-                <span>🧑‍🤝‍🧑</span> Clients
+                <i data-lucide="users"></i> Clients
             </a>
 
             <a th:href="@{/products}" data-spa-link data-nav-key="products"
-               th:class="${activeNav == 'products'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'products'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('PRODUCTS')}">
-                <span>📦</span> Inventaire
+                <i data-lucide="package"></i> Inventaire
             </a>
 
             <a th:href="@{/sales}" data-spa-link data-nav-key="sales"
-               th:class="${activeNav == 'sales'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'sales'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('SALES')}"
                sec:authorize="hasAuthority('SALE_READ')">
-                <span>🧾</span> Ventes
+                <i data-lucide="receipt"></i> Ventes
             </a>
 
             <a th:href="@{/purchases}" data-spa-link data-nav-key="purchases"
-               th:class="${activeNav == 'purchases'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'purchases'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('PURCHASES')}"
                sec:authorize="hasAuthority('PURCHASE_READ')">
-                <span>🛒</span> Achats
+                <i data-lucide="shopping-cart"></i> Achats
             </a>
 
             <a th:href="@{/stock}" data-spa-link data-nav-key="stock"
-               th:class="${activeNav == 'stock'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'stock'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('STOCK')}"
                sec:authorize="hasAuthority('STOCK_READ')">
-                <span>🏷️</span> Stock par site
+                <i data-lucide="tag"></i> Stock par site
             </a>
 
             <a th:href="@{/movements/new}" data-spa-link data-nav-key="movements"
-               th:class="${activeNav == 'movements'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'movements'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('STOCK')}">
-                <span>🔄</span> Mouvements
+                <i data-lucide="refresh-cw"></i> Mouvements
             </a>
 
             <div class="pt-6">
                 <a th:href="@{/profile}" data-spa-link data-nav-key="profile"
-                   th:class="${activeNav == 'profile'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                    <span>👤</span> Mon Profil
+                   th:class="${activeNav == 'profile'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="user"></i> Mon Profil
                 </a>
             </div>
 
             <div sec:authorize="hasAuthority('ADMIN_PME')" class="pt-2">
-                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Administration</div>
+                <div class="sidebar-section-label">Administration</div>
                 <a th:href="@{/admin/users}" data-spa-link data-nav-key="admin-users"
-                   th:class="${activeNav == 'admin-users'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                    <span>👥</span> Collaborateurs
+                   th:class="${activeNav == 'admin-users'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="user-cog"></i> Collaborateurs
                 </a>
                 <a th:href="@{/products/categories}" data-spa-link data-nav-key="admin-categories"
-                   th:class="${activeNav == 'admin-categories'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                    <span>📂</span> Catégories
+                   th:class="${activeNav == 'admin-categories'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="folder"></i> Catégories
                 </a>
                 <a th:href="@{/subscription}" data-spa-link data-nav-key="subscription"
-                   th:class="${activeNav == 'subscription'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                    <span>💳</span> Mon abonnement
+                   th:class="${activeNav == 'subscription'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="credit-card"></i> Mon abonnement
                 </a>
             </div>
 
             <a th:href="@{/accounting}" data-spa-link data-nav-key="accounting"
-               th:class="${activeNav == 'accounting'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'accounting'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('ACCOUNTING')}"
                sec:authorize="hasAuthority('ACCOUNTING_READ')">
-                <span>💰</span> Comptabilité
+                <i data-lucide="wallet"></i> Comptabilité
             </a>
 
             <a th:href="@{/hr/employees}" data-spa-link data-nav-key="hr"
-               th:class="${activeNav == 'hr'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'hr'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('HR')}"
                sec:authorize="hasAuthority('HR_READ')">
-                <span>👔</span> RH
+                <i data-lucide="briefcase"></i> RH
             </a>
 
             <a th:href="@{/reports}" data-spa-link data-nav-key="reports"
-               th:class="${activeNav == 'reports'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
+               th:class="${activeNav == 'reports'} ? 'sidebar-link active' : 'sidebar-link'"
                th:if="${@featureService.isEnabled('REPORTS')}"
                sec:authorize="hasAuthority('REPORT_READ')">
-                <span>📈</span> Rapports
+                <i data-lucide="bar-chart-3"></i> Rapports
             </a>
 
             </div>
 
             <div sec:authorize="hasRole('SUPER_ADMIN')" class="pt-2">
-                <div class="text-gray-400 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>
+                <div class="sidebar-section-label">Plateforme</div>
                 <a th:href="@{/super-admin/companies}" data-spa-link data-nav-key="superadmin-companies"
-                   th:class="${activeNav == 'superadmin-companies'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                    <span>🏢</span> Entreprises
+                   th:class="${activeNav == 'superadmin-companies'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="building-2"></i> Entreprises
                 </a>
                 <a th:href="@{/super-admin/plans}" data-spa-link data-nav-key="superadmin-plans"
-                   th:class="${activeNav == 'superadmin-plans'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                    <span>💼</span> Offres
+                   th:class="${activeNav == 'superadmin-plans'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="layers"></i> Offres
                 </a>
                 <a th:href="@{/super-admin/features}" data-spa-link data-nav-key="superadmin-features"
-                   th:class="${activeNav == 'superadmin-features'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-100'">
-                    <span>🧩</span> Fonctionnalités
+                   th:class="${activeNav == 'superadmin-features'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="puzzle"></i> Fonctionnalités
                 </a>
             </div>
         </nav>
 
-        <div class="pt-4 border-t border-gray-100">
+        <div class="sidebar-footer">
             <form th:action="@{/logout}" method="post">
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-red-500 hover:bg-red-50">
-                    <span>🚪</span> Déconnexion
+                <button type="submit" class="sidebar-link danger" style="width: 100%; border: none; background: none; cursor: pointer;">
+                    <i data-lucide="log-out"></i> Déconnexion
                 </button>
             </form>
         </div>
@@ -182,45 +196,85 @@
 
 <th:block th:fragment="topbar" th:if="${companyName != null}">
     <div class="flex items-center gap-4">
-        <div class="bg-white px-4 py-2 rounded-xl border border-gray-100 flex items-center gap-2">
-            <span class="text-10 font-bold text-gray-400 uppercase tracking-widest">Entreprise :</span>
-            <span class="text-12 font-bold text-gray-900" th:text="${companyName}">Nom Compagnie</span>
+        <div class="topbar-pill">
+            <span class="topbar-pill__label">Entreprise :</span>
+            <span class="topbar-pill__value" th:text="${companyName}">Nom Compagnie</span>
         </div>
+        <button id="theme-toggle" type="button" class="topbar-icon-btn" aria-label="Basculer le thème">
+            <i data-lucide="sun" class="icon-sun"></i>
+            <i data-lucide="moon" class="icon-moon"></i>
+        </button>
     </div>
 </th:block>
 
 <!--
-  Sidebar dédiée au Super-Administrateur (console multi-tenant), inspirée du design
-  "Nexus SaaS" : fond sombre, distincte de la sidebar claire utilisée côté entreprise.
-  Réutilise les mêmes liens/data-nav-key que le bloc super-admin de la sidebar partagée.
+  Fragment de pagination réutilisable : page = org.springframework.data.domain.Page,
+  baseUrl = chemin de la page en cours (ex: '/sales') sans query params, q = filtre de recherche
+  optionnel à préserver d'une page à l'autre (null si la page n'a pas de recherche). Les liens
+  portent data-spa-link pour rester dans le flux de navigation SPA.
+-->
+<th:block th:fragment="pagination(page, baseUrl, q)" th:if="${page != null and page.totalPages > 1}">
+    <nav class="pagination">
+        <a th:href="@{${baseUrl}(page=${page.number - 1}, q=${q})}"
+           th:class="${page.first} ? 'pagination__link disabled' : 'pagination__link'"
+           data-spa-link>&laquo;</a>
+        <th:block th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}">
+            <a th:href="@{${baseUrl}(page=${i}, q=${q})}"
+               th:text="${i + 1}"
+               th:class="${i == page.number} ? 'pagination__link active' : 'pagination__link'"
+               data-spa-link>1</a>
+        </th:block>
+        <a th:href="@{${baseUrl}(page=${page.number + 1}, q=${q})}"
+           th:class="${page.last} ? 'pagination__link disabled' : 'pagination__link'"
+           data-spa-link>&raquo;</a>
+    </nav>
+</th:block>
+
+<!--
+  Avatar par initiales, déterministe (pas d'upload de fichier) : fullName = nom complet,
+  sizeClass = 'avatar-initials--sm' ou 'avatar-initials--md'.
+-->
+<th:block th:fragment="avatarInitials(fullName, sizeClass)">
+    <span th:with="parts=${#strings.arraySplit(#strings.trim(fullName ?: '?'),' ')},
+                   initials=${#strings.substring(parts[0],0,1) + (parts.length > 1 ? #strings.substring(parts[parts.length - 1],0,1) : '')},
+                   colorIdx=${#strings.length(fullName ?: '?') % 6}"
+          th:class="'avatar-initials ' + ${sizeClass} + ' avatar-initials--' + ${colorIdx}"
+          th:text="${#strings.toUpperCase(initials)}">AB</span>
+</th:block>
+
+<!--
+  Sidebar dédiée au Super-Administrateur (console multi-tenant), design "Nexus SaaS" :
+  mêmes classes .sidebar/.sidebar-link que la sidebar entreprise (identité visuelle unifiée),
+  seuls les liens diffèrent. Réutilise les mêmes data-nav-key que le bloc super-admin de la
+  sidebar partagée.
 -->
 <th:block th:fragment="sidebarSuperAdmin">
-    <aside class="w-[260px] bg-[#1E293B] text-slate-200 flex flex-col fixed inset-y-0 left-0 z-50 p-6">
-        <div class="mb-8 px-2">
-            <span class="font-bold text-xl tracking-tight text-white">AfriStock</span>
-            <p class="text-12 text-slate-400">Console Super-Admin</p>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <span class="sidebar-brand-name">AfriStock</span>
+            <p class="sidebar-brand-sub">Console Super-Admin</p>
         </div>
-        <nav class="flex-1 space-y-1 overflow-y-auto">
-            <div class="text-slate-500 text-10 font-bold uppercase tracking-widest px-4 mb-2">Plateforme</div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-label">Plateforme</div>
 
             <a th:href="@{/super-admin/companies}" data-spa-link data-nav-key="superadmin-companies"
-               th:class="${activeNav == 'superadmin-companies'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5'">
-                <span>🏢</span> Entreprises
+               th:class="${activeNav == 'superadmin-companies'} ? 'sidebar-link active' : 'sidebar-link'">
+                <i data-lucide="building-2"></i> Entreprises
             </a>
             <a th:href="@{/super-admin/plans}" data-spa-link data-nav-key="superadmin-plans"
-               th:class="${activeNav == 'superadmin-plans'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5'">
-                <span>💼</span> Offres
+               th:class="${activeNav == 'superadmin-plans'} ? 'sidebar-link active' : 'sidebar-link'">
+                <i data-lucide="layers"></i> Offres
             </a>
             <a th:href="@{/super-admin/features}" data-spa-link data-nav-key="superadmin-features"
-               th:class="${activeNav == 'superadmin-features'} ? 'flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-slate-300 hover:text-white hover:bg-white/5'">
-                <span>🧩</span> Fonctionnalités
+               th:class="${activeNav == 'superadmin-features'} ? 'sidebar-link active' : 'sidebar-link'">
+                <i data-lucide="puzzle"></i> Fonctionnalités
             </a>
         </nav>
 
-        <div class="pt-4 border-t border-white/10">
+        <div class="sidebar-footer">
             <form th:action="@{/logout}" method="post">
-                <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-red-400 hover:bg-white/5">
-                    <span>🚪</span> Déconnexion
+                <button type="submit" class="sidebar-link danger" style="width: 100%; border: none; background: none; cursor: pointer;">
+                    <i data-lucide="log-out"></i> Déconnexion
                 </button>
             </form>
         </div>
@@ -231,16 +285,16 @@
 <th:block th:fragment="topbarSuperAdmin(pageTitle, pageSubtitle)">
     <header class="flex justify-between items-center mb-8 gap-6">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900" th:text="${pageTitle}">Titre</h1>
-            <p class="text-sm text-gray-500 mt-1" th:text="${pageSubtitle}">Sous-titre</p>
+            <h1 class="text-2xl font-bold text-slate-900" th:text="${pageTitle}">Titre</h1>
+            <p class="text-sm text-slate-500 mt-1" th:text="${pageSubtitle}">Sous-titre</p>
         </div>
         <div class="flex items-center gap-3">
-            <div class="hidden md:flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-gray-100 text-gray-400 text-sm w-64">
-                <span>🔍</span>
-                <span>Rechercher...</span>
-            </div>
-            <div class="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-400">🔔</div>
-            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">SA</div>
+            <button id="theme-toggle" type="button" class="topbar-icon-btn" aria-label="Basculer le thème">
+                <i data-lucide="sun" class="icon-sun"></i>
+                <i data-lucide="moon" class="icon-moon"></i>
+            </button>
+            <div class="topbar-icon-btn"><i data-lucide="bell"></i></div>
+            <div class="topbar-avatar">SA</div>
         </div>
     </header>
 </th:block>

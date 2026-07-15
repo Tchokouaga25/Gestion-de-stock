@@ -12,6 +12,8 @@ import com.afristock.service.CompanyAdminService;
 import com.afristock.service.FeatureService;
 import com.afristock.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,22 +53,39 @@ public class SuperAdminController {
     // --- Gestion des entreprises ---
 
     @GetMapping("/companies")
-    public String companies(Model model) {
-        var companies = companyAdminService.getAllCompanies();
+    public String companies(@RequestParam(required = false) String q,
+                            @RequestParam(defaultValue = "0") int page,
+                            Model model) {
+        Page<Company> companies = companyAdminService.getCompanies(q, PageRequest.of(page, 12));
         Map<Long, Subscription> subs = new HashMap<>();
         Map<Long, Long> siteCounts = new HashMap<>();
         Map<Long, Long> staffCounts = new HashMap<>();
-        for (Company c : companies) {
+        for (Company c : companies.getContent()) {
             subscriptionService.forCompany(c.getId()).ifPresent(s -> subs.put(c.getId(), s));
             siteCounts.put(c.getId(), siteRepository.countByTenantId(c.getId()));
             staffCounts.put(c.getId(), employeeRepository.countByTenantId(c.getId()));
         }
-        model.addAttribute("companies", companies);
+        model.addAttribute("page", companies);
+        model.addAttribute("q", q);
         model.addAttribute("subscriptions", subs);
         model.addAttribute("siteCounts", siteCounts);
         model.addAttribute("staffCounts", staffCounts);
         model.addAttribute("plans", subscriptionService.getPlans());
         return "super-admin/companies";
+    }
+
+    @PostMapping("/companies/{id}/branding")
+    public String updateBranding(@PathVariable Long id,
+                                 @RequestParam(required = false) String logoUrl,
+                                 @RequestParam(required = false) String sector,
+                                 RedirectAttributes ra) {
+        try {
+            companyAdminService.updateBranding(id, logoUrl, sector);
+            ra.addFlashAttribute("success", "Fiche entreprise mise à jour.");
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/super-admin/companies/" + id;
     }
 
     /** Fiche entreprise en lecture seule (drill-down). Toutes les requêtes passent un tenantId

@@ -12,34 +12,35 @@
                 <p class="text-sm text-gray-500 mt-1">Commandes fournisseurs, réceptions et dettes.</p>
             </div>
             <div class="flex gap-3">
-                <a th:href="@{/purchases/new}" sec:authorize="hasAuthority('PURCHASE_WRITE')"
-                   class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">+ Nouvelle commande</a>
+                <a th:href="@{/purchases/new}" sec:authorize="hasAuthority('PURCHASE_WRITE')" class="btn btn-primary">
+                    <i data-lucide="plus"></i> Nouvelle commande
+                </a>
             </div>
         </header>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Commande</th><th class="px-6 py-4">Date</th><th class="px-6 py-4">Fournisseur</th><th class="px-6 py-4">Statut</th><th class="px-6 py-4 text-right">Total</th><th class="px-6 py-4 text-right">Dette</th><th class="px-6 py-4 text-right">Action</th></tr>
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th>Commande</th><th>Date</th><th>Fournisseur</th><th>Statut</th><th class="text-right">Total</th><th class="text-right">Dette</th><th class="text-right">Action</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="o : ${orders}">
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${o.reference}">CMD</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${#temporals.format(o.orderDate, 'dd/MM/yyyy')}">Date</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${o.supplier.name}">Fournisseur</td>
-                        <td class="px-6 py-4">
-                            <span th:if="${o.status.name() == 'RECUE'}" class="px-2.5 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold">Reçue</span>
-                            <span th:if="${o.status.name() == 'BROUILLON'}" class="px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-bold">Brouillon</span>
-                            <span th:if="${o.status.name() == 'ANNULEE'}" class="px-2.5 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">Annulée</span>
+                        <td class="font-semibold text-gray-900" th:text="${o.reference}">CMD</td>
+                        <td th:text="${#temporals.format(o.orderDate, 'dd/MM/yyyy')}">Date</td>
+                        <td th:text="${o.supplier.name}">Fournisseur</td>
+                        <td>
+                            <span th:if="${o.status.name() == 'RECUE'}" class="badge badge-success">Reçue</span>
+                            <span th:if="${o.status.name() == 'BROUILLON'}" class="badge badge-neutral">Brouillon</span>
+                            <span th:if="${o.status.name() == 'ANNULEE'}" class="badge badge-danger">Annulée</span>
                         </td>
-                        <td class="px-6 py-4 text-right text-gray-900 font-bold" th:text="${#numbers.formatDecimal(o.totalAmount, 0, 0)}">0</td>
-                        <td class="px-6 py-4 text-right" th:classappend="${o.balanceDue > 0} ? 'text-red-600 font-bold' : 'text-gray-400'" th:text="${#numbers.formatDecimal(o.balanceDue, 0, 0)}">0</td>
-                        <td class="px-6 py-4 text-right"><a th:href="@{/purchases/{id}(id=${o.id})}" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">Ouvrir</a></td>
+                        <td class="text-right text-gray-900 font-bold" th:text="${#numbers.formatDecimal(o.totalAmount, 0, 0)}">0</td>
+                        <td class="text-right" th:classappend="${o.balanceDue > 0} ? 'text-red-600 font-bold' : 'text-gray-400'" th:text="${#numbers.formatDecimal(o.balanceDue, 0, 0)}">0</td>
+                        <td class="text-right"><a th:href="@{/purchases/{id}(id=${o.id})}" class="btn-ghost-info">Ouvrir</a></td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(orders)}"><td colspan="7" class="px-6 py-10 text-center text-gray-400">Aucune commande.</td></tr>
+                    <tr th:if="${#lists.isEmpty(orders)}"><td colspan="7" class="table-empty">Aucune commande.</td></tr>
                 </tbody>
             </table>
         </div>

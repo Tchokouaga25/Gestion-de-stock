@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Ressources humaines (Phase 7) : employés, congés/absences, pointage.
@@ -27,11 +29,49 @@ public class HrService {
     private final LeaveRepository leaveRepository;
     private final AttendanceRepository attendanceRepository;
 
+    public record HrKpis(long headcount, long onLeaveToday, double attendanceRate) {}
+
+    public record EmployeeRow(Employee employee, double attendanceRate) {}
+
     // --- Employés ---
 
     @Transactional(readOnly = true)
     public List<Employee> getEmployees() {
         return employeeRepository.findByTenantIdOrderByLastNameAscFirstNameAsc(TenantContext.getCurrentTenant());
+    }
+
+    @Transactional(readOnly = true)
+    public HrKpis getKpis() {
+        Long tenantId = TenantContext.getCurrentTenant();
+        long headcount = employeeRepository.countByTenantId(tenantId);
+        long onLeaveToday = leaveRepository.countOnLeaveToday(tenantId, LocalDate.now());
+        LocalDate from = LocalDate.now().minusDays(30);
+        LocalDate to = LocalDate.now();
+        long total = attendanceRepository.countForPeriod(tenantId, from, to);
+        long present = attendanceRepository.countPresentForPeriod(tenantId, from, to);
+        double attendanceRate = total > 0 ? (present * 100.0 / total) : 0.0;
+        return new HrKpis(headcount, onLeaveToday, attendanceRate);
+    }
+
+    // Taux de présence par employé sur toute la période pointée (proxy honnête d'un score de
+    // "performance" faute d'un champ dédié sur Employee).
+    @Transactional(readOnly = true)
+    public List<EmployeeRow> getEmployeesWithStats() {
+        Long tenantId = TenantContext.getCurrentTenant();
+        Map<Long, long[]> statsByEmployee = new HashMap<>();
+        for (Object[] row : attendanceRepository.attendanceStatsByEmployee(tenantId)) {
+            Long employeeId = (Long) row[0];
+            long total = ((Number) row[1]).longValue();
+            long present = ((Number) row[2]).longValue();
+            statsByEmployee.put(employeeId, new long[]{total, present});
+        }
+        return getEmployees().stream()
+                .map(e -> {
+                    long[] stats = statsByEmployee.get(e.getId());
+                    double rate = (stats != null && stats[0] > 0) ? (stats[1] * 100.0 / stats[0]) : 0.0;
+                    return new EmployeeRow(e, rate);
+                })
+                .toList();
     }
 
     @Transactional(readOnly = true)

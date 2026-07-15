@@ -36,6 +36,12 @@ public class StockLevelService {
         return stockLevelRepository.findLowStock(TenantContext.getCurrentTenant());
     }
 
+    /** Valorisation totale du stock (quantité x prix d'achat), tous sites confondus. */
+    @Transactional(readOnly = true)
+    public double getTotalStockValue() {
+        return stockLevelRepository.sumStockValue(TenantContext.getCurrentTenant());
+    }
+
     @Transactional(readOnly = true)
     public List<StockLevel> getBySite(Long siteId) {
         return stockLevelRepository.findBySiteIdAndTenantId(siteId, TenantContext.getCurrentTenant());

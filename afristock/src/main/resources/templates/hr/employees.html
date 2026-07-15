@@ -12,36 +12,71 @@
                 <p class="text-sm text-gray-500 mt-1">Gestion du personnel.</p>
             </div>
             <div class="flex gap-3">
-                <a th:href="@{/hr/leaves}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Congés</a>
-                <a th:href="@{/hr/attendance}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Pointage</a>
+                <a th:href="@{/hr/leaves}" class="btn btn-secondary">
+                    <i data-lucide="calendar-days"></i> Congés
+                </a>
+                <a th:href="@{/hr/attendance}" class="btn btn-secondary">
+                    <i data-lucide="clock"></i> Pointage
+                </a>
                 <a th:href="@{/hr/employees/add}" sec:authorize="hasAuthority('HR_WRITE')"
-                   class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">+ Nouvel employé</a>
+                   class="btn btn-primary">
+                    <i data-lucide="plus"></i> Nouvel employé
+                </a>
             </div>
         </header>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Nom</th><th class="px-6 py-4">Poste</th><th class="px-6 py-4">Contrat</th><th class="px-6 py-4">Téléphone</th><th class="px-6 py-4 text-right">Salaire</th><th class="px-6 py-4 text-right">Actions</th></tr>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-blue-50 text-blue-600"><i data-lucide="users"></i></div>
+                <p class="stat-tile__label">Effectif</p>
+                <p class="stat-tile__value" th:text="${kpis.headcount()}">0</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-amber-50 text-amber-600"><i data-lucide="calendar-days"></i></div>
+                <p class="stat-tile__label">En congé aujourd'hui</p>
+                <p class="stat-tile__value" th:text="${kpis.onLeaveToday()}">0</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-emerald-50 text-emerald-600"><i data-lucide="check-circle"></i></div>
+                <p class="stat-tile__label">Taux de présence (30j)</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(kpis.attendanceRate(), 1, 0)} + ' %'">0 %</p>
+            </div>
+        </div>
+
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th></th><th>Nom</th><th>Email</th><th>Poste</th><th>Contrat</th><th>Téléphone</th><th class="text-right">Salaire</th><th>Taux de présence</th><th class="text-right">Actions</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
-                    <tr th:each="e : ${employees}">
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${e.fullName}">Nom</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${e.position}">Poste</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${e.contractType}">Contrat</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${e.phone}">Téléphone</td>
-                        <td class="px-6 py-4 text-right text-gray-700" th:text="${e.baseSalary != null ? #numbers.formatDecimal(e.baseSalary, 0, 0) : '—'}">0</td>
-                        <td class="px-6 py-4 text-right space-x-2">
-                            <a th:href="@{/hr/employees/edit/{id}(id=${e.id})}" sec:authorize="hasAuthority('HR_WRITE')" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">Modifier</a>
+                <tbody>
+                    <tr th:each="row : ${employeeRows}" th:with="e=${row.employee()}">
+                        <td><span th:replace="~{fragments/layout :: avatarInitials(${e.fullName}, 'avatar-initials--sm')}">AB</span></td>
+                        <td class="font-semibold text-gray-900" th:text="${e.fullName}">Nom</td>
+                        <td th:text="${e.email}">email@exemple.com</td>
+                        <td th:text="${e.position}">Poste</td>
+                        <td th:text="${e.contractType}">Contrat</td>
+                        <td th:text="${e.phone}">Téléphone</td>
+                        <td class="text-right" th:text="${e.baseSalary != null ? #numbers.formatDecimal(e.baseSalary, 0, 0) : '—'}">0</td>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <div class="perf-bar">
+                                    <div th:class="'perf-bar__fill' + (${row.attendanceRate()} >= 80 ? '' : (${row.attendanceRate()} >= 50 ? ' perf-bar__fill--warning' : ' perf-bar__fill--danger'))"
+                                         th:style="'width:' + ${row.attendanceRate()} + '%'"></div>
+                                </div>
+                                <span class="text-12 text-gray-500" th:text="${#numbers.formatDecimal(row.attendanceRate(), 1, 0)} + ' %'">0 %</span>
+                            </div>
+                        </td>
+                        <td class="text-right space-x-2">
+                            <a th:href="@{/hr/employees/edit/{id}(id=${e.id})}" sec:authorize="hasAuthority('HR_WRITE')" class="btn-ghost">Modifier</a>
                             <form th:action="@{/hr/employees/delete/{id}(id=${e.id})}" method="post" class="inline" sec:authorize="hasAuthority('HR_WRITE')" onsubmit="return confirm('Supprimer cet employé ?');">
-                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Supprimer</button>
+                                <button class="btn-ghost-danger">Supprimer</button>
                             </form>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(employees)}"><td colspan="6" class="px-6 py-10 text-center text-gray-400">Aucun employé.</td></tr>
+                    <tr th:if="${#lists.isEmpty(employeeRows)}"><td colspan="9" class="table-empty">Aucun employé.</td></tr>
                 </tbody>
             </table>
         </div>

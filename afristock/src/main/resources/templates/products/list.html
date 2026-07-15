@@ -12,58 +12,59 @@
                 <p class="text-sm text-gray-500 mt-1">Catalogue de l'entreprise.</p>
             </div>
             <div class="flex gap-3">
-                <a th:href="@{/products/categories}" sec:authorize="hasAuthority('PRODUCT_WRITE')" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Catégories</a>
-                <a th:href="@{/products/brands}" sec:authorize="hasAuthority('PRODUCT_WRITE')" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Marques</a>
-                <a th:href="@{/products/add}" sec:authorize="hasAuthority('PRODUCT_WRITE')"
-                   class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">+ Nouveau produit</a>
+                <a th:href="@{/products/categories}" sec:authorize="hasAuthority('PRODUCT_WRITE')" class="btn btn-secondary">Catégories</a>
+                <a th:href="@{/products/brands}" sec:authorize="hasAuthority('PRODUCT_WRITE')" class="btn btn-secondary">Marques</a>
+                <a th:href="@{/products/add}" sec:authorize="hasAuthority('PRODUCT_WRITE')" class="btn btn-primary">
+                    <i data-lucide="plus"></i> Nouveau produit
+                </a>
             </div>
         </header>
 
         <form th:action="@{/products}" method="get" class="mb-6">
             <input type="text" name="search" placeholder="Rechercher un produit..."
-                   class="w-full max-w-sm px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                   class="form-input" style="max-width: 24rem;"/>
         </form>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
+        <div class="table-shell">
+            <table>
+                <thead>
                     <tr>
-                        <th class="px-6 py-4">Référence</th>
-                        <th class="px-6 py-4">Nom</th>
-                        <th class="px-6 py-4">Marque</th>
-                        <th class="px-6 py-4">Catégorie</th>
-                        <th class="px-6 py-4 text-right">Prix vente</th>
-                        <th class="px-6 py-4 text-right">Stock</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
+                        <th>Référence</th>
+                        <th>Nom</th>
+                        <th>Marque</th>
+                        <th>Catégorie</th>
+                        <th class="text-right">Prix vente</th>
+                        <th class="text-right">Stock</th>
+                        <th class="text-right">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="p : ${products}">
-                        <td class="px-6 py-4 text-gray-600" th:text="${p.reference}">REF</td>
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${p.name}">Nom</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${p.brand != null ? p.brand.name : '—'}">Marque</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${p.category != null ? p.category.name : '—'}">Catégorie</td>
-                        <td class="px-6 py-4 text-right text-gray-700" th:text="${p.salePrice}">0</td>
-                        <td class="px-6 py-4 text-right">
-                            <span th:classappend="${p.minThreshold != null and p.currentQuantity != null and p.currentQuantity <= p.minThreshold} ? 'text-red-600 font-bold' : 'text-gray-700'"
+                        <td th:text="${p.reference}">REF</td>
+                        <td class="font-semibold text-gray-900" th:text="${p.name}">Nom</td>
+                        <td th:text="${p.brand != null ? p.brand.name : '—'}">Marque</td>
+                        <td th:text="${p.category != null ? p.category.name : '—'}">Catégorie</td>
+                        <td class="text-right" th:text="${p.salePrice}">0</td>
+                        <td class="text-right">
+                            <span th:classappend="${p.minThreshold != null and p.currentQuantity != null and p.currentQuantity <= p.minThreshold} ? 'text-red-600 font-bold' : ''"
                                   th:text="${p.currentQuantity}">0</span>
                         </td>
-                        <td class="px-6 py-4 text-right space-x-2">
-                            <a th:href="@{/products/{id}/variants(id=${p.id})}" class="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-medium">Variantes</a>
+                        <td class="text-right space-x-2">
+                            <a th:href="@{/products/{id}/variants(id=${p.id})}" class="btn-ghost-info">Variantes</a>
                             <a th:href="@{/products/edit/{id}(id=${p.id})}" sec:authorize="hasAuthority('PRODUCT_WRITE')"
-                               class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">Modifier</a>
+                               class="btn-ghost">Modifier</a>
                             <form th:action="@{/products/delete/{id}(id=${p.id})}" method="post" class="inline"
                                   sec:authorize="hasAuthority('PRODUCT_DELETE')"
                                   onsubmit="return confirm('Supprimer ce produit ?');">
-                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Supprimer</button>
+                                <button class="btn-ghost-danger">Supprimer</button>
                             </form>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(products)}">
-                        <td colspan="7" class="px-6 py-10 text-center text-gray-400">Aucun produit.</td>
+                        <td colspan="7" class="table-empty">Aucun produit.</td>
                     </tr>
                 </tbody>
             </table>

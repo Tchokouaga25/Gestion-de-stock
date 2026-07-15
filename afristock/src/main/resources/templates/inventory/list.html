@@ -12,27 +12,27 @@
                 <p class="text-sm text-gray-500 mt-1">Comptages physiques et ajustements par site.</p>
             </div>
             <div class="flex gap-3">
-                <a th:href="@{/stock}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Stock</a>
+                <a th:href="@{/stock}" class="btn btn-secondary">Stock</a>
                 <a th:href="@{/inventory/new}" sec:authorize="hasAuthority('STOCK_WRITE')"
-                   class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">+ Nouvel inventaire</a>
+                   class="btn btn-primary"><i data-lucide="plus"></i> Nouvel inventaire</a>
             </div>
         </header>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Date</th><th class="px-6 py-4">Site</th><th class="px-6 py-4">Note</th><th class="px-6 py-4 text-right">Action</th></tr>
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Site</th><th>Note</th><th class="text-right">Action</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="s : ${sessions}">
-                        <td class="px-6 py-4 text-gray-600" th:text="${#temporals.format(s.countedAt, 'dd/MM/yyyy HH:mm')}">Date</td>
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${s.site.name}">Site</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${s.note}">Note</td>
-                        <td class="px-6 py-4 text-right"><a th:href="@{/inventory/{id}(id=${s.id})}" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">Détail</a></td>
+                        <td th:text="${#temporals.format(s.countedAt, 'dd/MM/yyyy HH:mm')}">Date</td>
+                        <td class="font-semibold text-gray-900" th:text="${s.site.name}">Site</td>
+                        <td th:text="${s.note}">Note</td>
+                        <td class="text-right"><a th:href="@{/inventory/{id}(id=${s.id})}" class="btn-ghost-info">Détail</a></td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(sessions)}"><td colspan="4" class="px-6 py-10 text-center text-gray-400">Aucun inventaire.</td></tr>
+                    <tr th:if="${#lists.isEmpty(sessions)}"><td colspan="4" class="table-empty">Aucun inventaire.</td></tr>
                 </tbody>
             </table>
         </div>

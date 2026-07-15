@@ -28,7 +28,8 @@ public class HrController {
     @GetMapping("/employees")
     @PreAuthorize("hasAuthority('HR_READ')")
     public String employees(Model model) {
-        model.addAttribute("employees", hrService.getEmployees());
+        model.addAttribute("kpis", hrService.getKpis());
+        model.addAttribute("employeeRows", hrService.getEmployeesWithStats());
         return "hr/employees";
     }
 

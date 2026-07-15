@@ -10,20 +10,20 @@
                 <h1 class="text-2xl font-bold text-gray-900" th:text="'Inventaire — ' + ${session.site.name}">Inventaire</h1>
                 <p class="text-sm text-gray-500 mt-1" th:text="${#temporals.format(session.countedAt, 'dd/MM/yyyy HH:mm')} + ' — ' + (${session.note} ?: '')">Date</p>
             </div>
-            <a th:href="@{/inventory}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">← Inventaires</a>
+            <a th:href="@{/inventory}" class="btn btn-secondary"><i data-lucide="arrow-left"></i> Inventaires</a>
         </header>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Produit</th><th class="px-6 py-4 text-right">Avant</th><th class="px-6 py-4 text-right">Compté</th><th class="px-6 py-4 text-right">Écart</th></tr>
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th>Produit</th><th class="text-right">Avant</th><th class="text-right">Compté</th><th class="text-right">Écart</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="l : ${session.lines}">
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${l.product.name}">Produit</td>
-                        <td class="px-6 py-4 text-right text-gray-500" th:text="${l.previousQuantity}">0</td>
-                        <td class="px-6 py-4 text-right text-gray-900" th:text="${l.countedQuantity}">0</td>
-                        <td class="px-6 py-4 text-right font-bold"
+                        <td class="font-semibold text-gray-900" th:text="${l.product.name}">Produit</td>
+                        <td class="text-right text-gray-500" th:text="${l.previousQuantity}">0</td>
+                        <td class="text-right text-gray-900" th:text="${l.countedQuantity}">0</td>
+                        <td class="text-right font-bold"
                             th:classappend="${l.difference < 0} ? 'text-red-600' : (${l.difference > 0} ? 'text-green-600' : 'text-gray-400')"
                             th:text="${l.difference > 0 ? '+' : ''} + ${l.difference}">0</td>
                     </tr>

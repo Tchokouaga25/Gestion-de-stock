@@ -8,22 +8,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
-        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        display: ['Sora', 'sans-serif'],
-                        body: ['DM Sans', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
                         navy: {
-                            950: '#030d1f', 900: '#071530', 800: '#0c2347',
-                            600: '#1a4a8a', 500: '#2563d4', 400: '#3b82f6', 100: '#dbeafe',
+                            950: '#0f172a', 900: '#1e293b', 800: '#334155',
+                            600: '#2563eb', 500: '#3b82f6', 400: '#60a5fa', 100: '#dbeafe',
                         },
-                        accent: { DEFAULT: '#00d4a0', dark: '#00a37c' },
+                        accent: { DEFAULT: '#2563eb', dark: '#1d4ed8' },
                     },
                 }
             }
@@ -31,7 +32,7 @@
     </script>
     <style>
         body {
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .font-display,
@@ -41,12 +42,12 @@
         h4,
         label,
         legend {
-            font-family: 'Sora', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .bg-grid-anim {
-            background-image: linear-gradient(rgba(37, 99, 212, .06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(37, 99, 212, .06) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(37, 99, 235, .06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, .06) 1px, transparent 1px);
             background-size: 48px 48px;
             animation: gridSlide 22s linear infinite;
         }
@@ -132,7 +133,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, #1a4a8a, #2563d4);
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
             opacity: 0;
             transition: opacity .22s;
         }
@@ -143,7 +144,7 @@
 
         .btn-dark:not(:disabled):hover {
             transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(3, 13, 31, .3);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, .3);
         }
 
         .btn-dark:disabled {
@@ -177,13 +178,13 @@
         }
 
         .af-check input:checked~.af-box {
-            background: #2563d4;
-            border-color: #2563d4;
+            background: #2563eb;
+            border-color: #2563eb;
         }
 
         .af-check input:focus-visible~.af-box {
-            box-shadow: 0 0 0 3px rgba(37, 99, 212, .25);
-            border-color: #2563d4;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .25);
+            border-color: #2563eb;
         }
 
         /* Left panel step connector + nav states */
@@ -214,10 +215,10 @@
         }
 
         li[data-nav-step].is-active .nav-circle {
-            background: #2563d4;
+            background: #2563eb;
             color: #fff;
             border-color: transparent;
-            box-shadow: 0 0 0 4px rgba(37, 99, 212, .2);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, .2);
         }
 
         li[data-nav-step].is-active .nav-title {
@@ -229,8 +230,8 @@
         }
 
         li[data-nav-step].is-done .nav-circle {
-            background: #00d4a0;
-            color: #030d1f;
+            background: #2563eb;
+            color: #0f172a;
             border-color: transparent;
             box-shadow: none;
         }
@@ -257,17 +258,17 @@
         }
 
         .step-dot.is-active {
-            background: #030d1f;
+            background: #0f172a;
             color: #fff;
-            border-color: #030d1f;
-            box-shadow: 0 0 0 4px rgba(3, 13, 31, .1);
+            border-color: #0f172a;
+            box-shadow: 0 0 0 4px rgba(15, 23, 42, .1);
             transform: scale(1.08);
         }
 
         .step-dot.is-done {
-            background: #00d4a0;
-            color: #030d1f;
-            border-color: #00d4a0;
+            background: #2563eb;
+            color: #0f172a;
+            border-color: #2563eb;
         }
 
         .step-line {
@@ -283,7 +284,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: #00d4a0;
+            background: #2563eb;
             transform: scaleX(0);
             transform-origin: left;
             transition: transform .4s ease;
@@ -432,7 +433,7 @@
         <!-- ════════════════════════════════════════
          LEFT — Brand panel
     ════════════════════════════════════════ -->
-        <aside class="relative hidden lg:flex flex-col justify-between p-12 bg-[#030d1f] overflow-hidden">
+        <aside class="relative hidden lg:flex flex-col justify-between p-12 bg-[#0f172a] overflow-hidden">
 
             <div class="absolute inset-0 bg-grid-anim" aria-hidden="true"></div>
             <div class="absolute bottom-0 right-0 w-80 h-80 rounded-full pointer-events-none"
@@ -534,10 +535,10 @@
                 <!-- Mobile logo -->
                 <div class="lg:hidden flex justify-center mb-8">
                     <a th:href="@{/}" href="../accueil.html" class="inline-flex items-center gap-3 no-underline">
-                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-[#030d1f] font-display font-black"
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-[#0f172a] font-display font-black"
                             th:style="'background-image: url(' + @{/images/logos.png} + '); background-size: contain; background-repeat: no-repeat; background-position: center;'">
                         </div>
-                        <span class="font-display text-xl font-extrabold text-[#030d1f] tracking-tight">Afristock</span>
+                        <span class="font-display text-xl font-extrabold text-[#0f172a] tracking-tight">Afristock</span>
                     </a>
                 </div>
 
@@ -545,12 +546,12 @@
                 <div class="mb-5 flex items-start justify-between gap-4">
                     <div>
                         <div class="flex items-center gap-2 mb-3">
-                            <div class="w-8 h-0.5 rounded-full bg-[#00d4a0]" aria-hidden="true"></div>
+                            <div class="w-8 h-0.5 rounded-full bg-[#2563eb]" aria-hidden="true"></div>
                             <span
-                                class="font-display text-[15px] font-semibold tracking-[.08em] uppercase text-[#00a37c]">Inscription
+                                class="font-display text-[15px] font-semibold tracking-[.08em] uppercase text-[#1d4ed8]">Inscription
                                 gratuite</span>
                         </div>
-                        <h1 class="font-display text-[20px] font-extrabold text-[#030d1f] tracking-tight leading-tight">
+                        <h1 class="font-display text-[20px] font-extrabold text-[#0f172a] tracking-tight leading-tight">
                             Commencez dès aujourd'hui</h1>
                     </div>
                 </div>
@@ -727,7 +728,7 @@
                         </fieldset>
 
                         <button type="button" id="step1NextBtn" disabled
-                            class="btn-dark w-full py-2.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer mt-6 flex items-center justify-center gap-2">
+                            class="btn-dark w-full py-2.5 bg-[#0f172a] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer mt-6 flex items-center justify-center gap-2">
                             Continuer
                             <svg class="w-4 h-4" aria-hidden="true">
                                 <use href="#icon-arrow-right"></use>
@@ -737,7 +738,7 @@
 
                     <!-- ══ STEP 2 — Votre entreprise ══ -->
                     <section class="wizard-step is-hidden" data-step="2">
-                        <h2 class="font-display text-lg font-bold text-[#030d1f] mb-1" tabindex="-1">Votre entreprise
+                        <h2 class="font-display text-lg font-bold text-[#0f172a] mb-1" tabindex="-1">Votre entreprise
                         </h2>
                         <p class="text-sm text-slate-500 mb-5">Elle apparaîtra sur vos factures et documents.</p>
 
@@ -826,7 +827,7 @@
                                 Retour
                             </button>
                             <button type="button" id="step2NextBtn" disabled
-                                class="btn-dark flex-1 py-3.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer flex items-center justify-center gap-2">
+                                class="btn-dark flex-1 py-3.5 bg-[#0f172a] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer flex items-center justify-center gap-2">
                                 Continuer
                                 <svg class="w-4 h-4" aria-hidden="true">
                                     <use href="#icon-arrow-right"></use>
@@ -837,7 +838,7 @@
 
                     <!-- ══ STEP 3 — Confirmation ══ -->
                     <section class="wizard-step is-hidden" data-step="3">
-                        <h2 class="font-display text-lg font-bold text-[#030d1f] mb-1" tabindex="-1">Vérifiez et
+                        <h2 class="font-display text-lg font-bold text-[#0f172a] mb-1" tabindex="-1">Vérifiez et
                             confirmez</h2>
                         <p class="text-sm text-slate-500 mb-5">Dernière étape avant de créer votre espace Afristock.</p>
 
@@ -900,7 +901,7 @@
                                 Retour
                             </button>
                             <button type="submit" id="submitBtn" disabled
-                                class="btn-dark flex-1 py-3.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer">
+                                class="btn-dark flex-1 py-3.5 bg-[#0f172a] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer">
                                 <span id="submitLabel" class="relative z-10 flex items-center justify-center gap-2">
                                     Créer mon compte gratuitement
                                     <svg class="w-4 h-4" aria-hidden="true">
@@ -945,7 +946,7 @@
             if (/[0-9]/.test(val)) score++;
             if (/[^A-Za-z0-9]/.test(val)) score++;
 
-            const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#00d4a0'];
+            const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#2563eb'];
             const labels = ['Faible', 'Moyen', 'Bon', 'Excellent'];
             const ids = ['s1', 's2', 's3', 's4'];
 

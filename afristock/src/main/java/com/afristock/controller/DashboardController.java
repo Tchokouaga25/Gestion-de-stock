@@ -2,13 +2,17 @@ package com.afristock.controller;
 
 import com.afristock.model.entity.PurchaseOrder;
 import com.afristock.model.entity.Sale;
+import com.afristock.model.entity.Site;
 import com.afristock.model.entity.StockLevel;
+import com.afristock.model.entity.StockMovement;
 import com.afristock.model.entity.User;
 import com.afristock.model.enums.PurchaseStatus;
 import com.afristock.repository.CustomerRepository;
 import com.afristock.repository.ProductRepository;
 import com.afristock.repository.PurchaseOrderRepository;
 import com.afristock.repository.SaleRepository;
+import com.afristock.repository.SiteRepository;
+import com.afristock.repository.StockMovementRepository;
 import com.afristock.repository.UserRepository;
 import com.afristock.service.StockLevelService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +22,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -31,6 +38,11 @@ public class DashboardController {
     private final SaleRepository saleRepository;
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final StockLevelService stockLevelService;
+    private final SiteRepository siteRepository;
+    private final StockMovementRepository stockMovementRepository;
+
+    /** Élément unifié d'activité récente (vente ou mouvement de stock), pour affichage chronologique. */
+    public record ActivityItem(String type, String label, String detail, LocalDateTime at, Double amount) {}
 
     @GetMapping
     public String dashboard(Model model, Authentication authentication) {
@@ -75,6 +87,28 @@ public class DashboardController {
 
         List<Sale> recentSales = sales.stream().limit(5).toList();
 
+        List<Site> activeSites = siteRepository.findByTenantIdOrderByName(tenantId).stream()
+                .filter(Site::isActive)
+                .limit(3)
+                .toList();
+
+        double totalStockValue = stockLevelService.getTotalStockValue();
+
+        List<StockMovement> recentMovements = stockMovementRepository.findByTenantIdOrderByCreatedAtDesc(tenantId)
+                .stream().limit(5).toList();
+        List<ActivityItem> recentActivity = Stream.concat(
+                        recentSales.stream().map(s -> new ActivityItem(
+                                "sale", s.getReference(),
+                                s.getCustomer() != null ? s.getCustomer().getName() : "Comptoir",
+                                s.getSaleDate(), s.getTotalAmount())),
+                        recentMovements.stream().map(m -> new ActivityItem(
+                                "movement", m.getProduct().getName(),
+                                m.getType() + (m.getSite() != null ? " · " + m.getSite().getName() : ""),
+                                m.getCreatedAt(), null)))
+                .sorted(Comparator.comparing(ActivityItem::at, Comparator.nullsLast(Comparator.reverseOrder())))
+                .limit(8)
+                .toList();
+
         model.addAttribute("user", userWithCompany);
         model.addAttribute("companyName", userWithCompany.getCompany().getName());
         model.addAttribute("totalProducts", totalProducts);
@@ -87,6 +121,9 @@ public class DashboardController {
         model.addAttribute("lowStockLevels", lowStockLevels);
         model.addAttribute("unpaidSales", unpaidSales);
         model.addAttribute("recentSales", recentSales);
+        model.addAttribute("activeSites", activeSites);
+        model.addAttribute("totalStockValue", totalStockValue);
+        model.addAttribute("recentActivity", recentActivity);
         model.addAttribute("welcomeMessage",
                 "Bienvenue sur votre tableau de bord, " + userWithCompany.getFirstName());
 

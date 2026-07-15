@@ -10,45 +10,50 @@
                 <h1 class="text-2xl font-bold text-gray-900">Caisse du jour</h1>
                 <p class="text-sm text-gray-500 mt-1">Récapitulatif des encaissements d'aujourd'hui.</p>
             </div>
-            <a th:href="@{/sales}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Ventes</a>
+            <a th:href="@{/sales}" class="btn btn-secondary">Ventes</a>
         </header>
 
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-xs text-gray-400 uppercase tracking-widest">Total encaissé</div>
-                <div class="text-xl font-bold text-gray-900 mt-1" th:text="${#numbers.formatDecimal(summary.totalEncaisse, 0, 0)}">0</div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-blue-50 text-blue-600"><i data-lucide="wallet"></i></div>
+                <p class="stat-tile__label">Total encaissé</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(summary.totalEncaisse, 0, 0)}">0</p>
             </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-xs text-gray-400 uppercase tracking-widest">Espèces</div>
-                <div class="text-xl font-bold text-gray-900 mt-1" th:text="${#numbers.formatDecimal(summary.especes, 0, 0)}">0</div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-emerald-50 text-emerald-600"><i data-lucide="banknote"></i></div>
+                <p class="stat-tile__label">Espèces</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(summary.especes, 0, 0)}">0</p>
             </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-xs text-gray-400 uppercase tracking-widest">Mobile Money</div>
-                <div class="text-xl font-bold text-gray-900 mt-1" th:text="${#numbers.formatDecimal(summary.mobileMoney, 0, 0)}">0</div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-purple-50 text-purple-600"><i data-lucide="smartphone"></i></div>
+                <p class="stat-tile__label">Mobile Money</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(summary.mobileMoney, 0, 0)}">0</p>
             </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-xs text-gray-400 uppercase tracking-widest">Carte</div>
-                <div class="text-xl font-bold text-gray-900 mt-1" th:text="${#numbers.formatDecimal(summary.carte, 0, 0)}">0</div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-orange-50 text-orange-600"><i data-lucide="credit-card"></i></div>
+                <p class="stat-tile__label">Carte</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(summary.carte, 0, 0)}">0</p>
             </div>
-            <div class="bg-white rounded-2xl border border-gray-100 p-5">
-                <div class="text-xs text-gray-400 uppercase tracking-widest">Crédit dû</div>
-                <div class="text-xl font-bold text-red-600 mt-1" th:text="${#numbers.formatDecimal(summary.creditDu, 0, 0)}">0</div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-red-50 text-red-600"><i data-lucide="alert-triangle"></i></div>
+                <p class="stat-tile__label">Crédit dû</p>
+                <p class="stat-tile__value text-red-600" th:text="${#numbers.formatDecimal(summary.creditDu, 0, 0)}">0</p>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr><th class="px-6 py-4">Facture</th><th class="px-6 py-4">Heure</th><th class="px-6 py-4">Paiement</th><th class="px-6 py-4 text-right">Encaissé</th></tr>
+        <div class="table-shell">
+            <table>
+                <thead>
+                    <tr><th>Facture</th><th>Heure</th><th>Paiement</th><th class="text-right">Encaissé</th></tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody>
                     <tr th:each="s : ${summary.sales}">
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${s.reference}">FAC</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${#temporals.format(s.saleDate, 'HH:mm')}">Heure</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${s.paymentMethod}">Paiement</td>
-                        <td class="px-6 py-4 text-right text-gray-900 font-bold" th:text="${#numbers.formatDecimal(s.amountPaid, 0, 0)}">0</td>
+                        <td class="font-semibold text-gray-900" th:text="${s.reference}">FAC</td>
+                        <td th:text="${#temporals.format(s.saleDate, 'HH:mm')}">Heure</td>
+                        <td th:text="${s.paymentMethod}">Paiement</td>
+                        <td class="text-right text-gray-900 font-bold" th:text="${#numbers.formatDecimal(s.amountPaid, 0, 0)}">0</td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(summary.sales)}"><td colspan="4" class="px-6 py-10 text-center text-gray-400">Aucune vente aujourd'hui.</td></tr>
+                    <tr th:if="${#lists.isEmpty(summary.sales)}"><td colspan="4" class="table-empty">Aucune vente aujourd'hui.</td></tr>
                 </tbody>
             </table>
         </div>

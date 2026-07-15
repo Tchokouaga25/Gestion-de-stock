@@ -14,11 +14,15 @@
             }
         </style>
         <div class="no-print flex justify-between items-center mb-6">
-            <a th:href="@{/sales}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">← Retour</a>
-            <button onclick="window.print()" class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Imprimer / PDF</button>
+            <a th:href="@{/sales}" class="btn btn-secondary">
+                <i data-lucide="arrow-left"></i> Retour
+            </a>
+            <button onclick="window.print()" class="btn btn-primary">
+                <i data-lucide="printer"></i> Imprimer / PDF
+            </button>
         </div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 p-10">
+        <div class="card p-10">
             <div class="flex justify-between items-start mb-8">
                 <div>
                     <h1 class="text-2xl font-bold text-gray-900" th:text="${sale.company != null ? sale.company.name : 'Facture'}">Entreprise</h1>

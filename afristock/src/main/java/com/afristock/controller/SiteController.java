@@ -26,7 +26,7 @@ public class SiteController {
     @GetMapping
     @PreAuthorize("hasAuthority('SITE_READ')")
     public String list(Model model) {
-        model.addAttribute("sites", siteService.getAll());
+        model.addAttribute("siteStats", siteService.getSiteCardStats());
         return "sites/list";
     }
 

@@ -9,29 +9,39 @@
             <h1 class="text-2xl font-bold text-gray-900">Mon abonnement</h1>
         </header>
 
-        <div th:if="${subscription == null}" class="bg-white rounded-2xl border border-gray-100 p-10 text-center text-gray-400">
-            Aucun abonnement actif. Contactez l'administrateur de la plateforme.
+        <div th:if="${subscription == null}" class="workspace-card">
+            <div class="workspace-card__body text-center text-gray-400">
+                Aucun abonnement actif. Contactez l'administrateur de la plateforme.
+            </div>
         </div>
 
-        <div th:if="${subscription != null}" class="bg-white rounded-2xl border border-gray-100 p-8">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <div class="text-xs text-gray-400 uppercase tracking-widest">Offre</div>
-                    <div class="text-2xl font-bold text-gray-900" th:text="${subscription.planName}">Offre</div>
+        <div th:if="${subscription != null}" class="workspace-card">
+            <div class="workspace-card__body">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <div class="text-xs text-gray-400 uppercase tracking-widest">Offre</div>
+                        <div class="text-2xl font-bold text-gray-900" th:text="${subscription.planName}">Offre</div>
+                    </div>
+                    <span th:switch="${subscription.effectiveStatus.name()}">
+                        <span th:case="'ACTIF'" class="badge badge-success">Actif</span>
+                        <span th:case="'ESSAI'" class="badge badge-info">Essai gratuit</span>
+                        <span th:case="'EXPIRE'" class="badge badge-danger">Expiré</span>
+                    </span>
                 </div>
-                <span th:switch="${subscription.effectiveStatus.name()}">
-                    <span th:case="'ACTIF'" class="px-3 py-1 rounded-full bg-green-50 text-green-600 text-xs font-bold">Actif</span>
-                    <span th:case="'ESSAI'" class="px-3 py-1 rounded-full bg-orange-50 text-orange-600 text-xs font-bold">Essai gratuit</span>
-                    <span th:case="'EXPIRE'" class="px-3 py-1 rounded-full bg-red-50 text-red-600 text-xs font-bold">Expiré</span>
-                </span>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="stat-tile">
+                        <div class="stat-tile__label">Début</div>
+                        <div class="stat-tile__value" th:text="${#temporals.format(subscription.startDate, 'dd/MM/yyyy')}">Date</div>
+                    </div>
+                    <div class="stat-tile">
+                        <div class="stat-tile__label">Échéance</div>
+                        <div class="stat-tile__value" th:text="${#temporals.format(subscription.endDate, 'dd/MM/yyyy')}">Date</div>
+                    </div>
+                </div>
+                <p th:if="${subscription.expired}" class="alert alert-error mt-6">
+                    Votre abonnement a expiré. Veuillez le renouveler auprès de l'administrateur de la plateforme.
+                </p>
             </div>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-                <div><div class="text-gray-400">Début</div><div class="font-medium text-gray-900" th:text="${#temporals.format(subscription.startDate, 'dd/MM/yyyy')}">Date</div></div>
-                <div><div class="text-gray-400">Échéance</div><div class="font-medium text-gray-900" th:text="${#temporals.format(subscription.endDate, 'dd/MM/yyyy')}">Date</div></div>
-            </div>
-            <p th:if="${subscription.expired}" class="mt-6 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm">
-                Votre abonnement a expiré. Veuillez le renouveler auprès de l'administrateur de la plateforme.
-            </p>
         </div>
     </div>
     </main>

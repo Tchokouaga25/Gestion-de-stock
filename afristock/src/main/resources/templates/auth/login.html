@@ -8,33 +8,103 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
-        href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        display: ['Sora', 'sans-serif'],
-                        body: ['DM Sans', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     colors: {
                         navy: {
-                            950: '#030d1f', 900: '#071530', 800: '#0c2347',
-                            600: '#1a4a8a', 500: '#2563d4', 400: '#3b82f6', 100: '#dbeafe',
+                            950: '#0f172a', 900: '#1e293b', 800: '#334155',
+                            600: '#2563eb', 500: '#3b82f6', 400: '#60a5fa', 100: '#dbeafe',
                         },
-                        accent: { DEFAULT: '#00d4a0', dark: '#00a37c' },
+                        accent: { DEFAULT: '#2563eb', dark: '#1d4ed8' },
                     },
                 }
             }
         }
     </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Input */
+        .af-input {
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .af-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
+            outline: none;
+        }
+
+        /* Buttons */
+        .btn-dark {
+            position: relative;
+            overflow: hidden;
+            transition: transform .2s, box-shadow .2s, opacity .2s;
+        }
+
+        .btn-dark::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            opacity: 0;
+            transition: opacity .22s;
+        }
+
+        .btn-dark:not(:disabled):hover::before {
+            opacity: 1;
+        }
+
+        .btn-dark:not(:disabled):hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, .3);
+        }
+
+        .btn-dark:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        .btn-dark span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Checkbox */
+        .af-check .af-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .af-check input:checked~.af-box {
+            background: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .af-check input:focus-visible~.af-box {
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .25);
+            border-color: #2563eb;
+        }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
 </head>
 
 <body class="bg-center bg-cover no-repeat min-h-screen flex items-center justify-center p-6"
     th:style="'background-image: url(' + @{/images/background2.jpg} + ')'">
-    <div class="absolute inset-0 bg-[#030d1f]/10"></div>
+    <div class="absolute inset-0 bg-[#0f172a]/10"></div>
     <!-- On ajoute w-full et une hauteur fixe h-[500px] pour tester -->
     <div class="relative z-10 w-full max-w-4xl grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl h-[550px]">
 
@@ -49,9 +119,9 @@
             <!-- Header -->
             <div class="w-full mb-5">
                 <div class="flex items-center gap-2 mb-3">
-                    <div class="w-8 h-0.5 rounded-full bg-[#00d4a0]"></div>
+                    <div class="w-8 h-0.5 rounded-full bg-[#2563eb]"></div>
                     <span
-                        class="font-display text-[15px] font-semibold tracking-[.08em] uppercase text-[#00a37c]">Connexion</span>
+                        class="font-display text-[15px] font-semibold tracking-[.08em] uppercase text-[#1d4ed8]">Connexion</span>
                 </div>
                 <p class="text-sm text-slate-500">
                     Pas encore de compte ?
@@ -63,15 +133,15 @@
             <!-- Thymeleaf alerts -->
             <div th:if="${message}"
                 class="mb-2 flex items-center gap-2 text-sm text-blue-700 bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl">
-                <span>ℹ</span> <span th:text="${message}"></span>
+                <i data-lucide="info" style="width:16px;height:16px;"></i> <span th:text="${message}"></span>
             </div>
             <div th:if="${error}"
                 class="mb-2 flex items-center gap-2 text-sm text-red-700 bg-red-50 border border-red-200 px-4 py-3 rounded-xl">
-                <span>⚠</span> <span th:text="${error}"></span>
+                <i data-lucide="alert-triangle" style="width:16px;height:16px;"></i> <span th:text="${error}"></span>
             </div>
             <div th:if="${success}"
                 class="mb-2 flex items-center gap-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 px-4 py-3 rounded-xl">
-                <span>✓</span> <span th:text="${success}"></span>
+                <i data-lucide="check" style="width:16px;height:16px;"></i> <span th:text="${success}"></span>
             </div>
 
             <!-- Social login -->
@@ -114,8 +184,9 @@
                     <label class="font-display text-xs font-semibold text-slate-700 mb-1 " for="username">Adresse
                         email</label>
                     <div class="relative">
-                        <span
-                            class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">✉</span>
+                        <i data-lucide="mail"
+                            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                            style="width:15px;height:15px;"></i>
                         <input type="email" id="username" name="username" placeholder="vous@entreprise.com"
                             autocomplete="email" required autofocus
                             class="af-input w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
@@ -127,13 +198,16 @@
                     <label class="font-display text-xs font-semibold text-slate-700 mb-1" for="password">Mot de
                         passe</label>
                     <div class="relative">
-                        <span
-                            class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-[13px] pointer-events-none select-none">🔒</span>
+                        <i data-lucide="lock"
+                            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                            style="width:15px;height:15px;"></i>
                         <input type="password" id="password" name="password" placeholder="••••••••••"
                             autocomplete="current-password" required
                             class="af-input w-full pl-9 pr-10 py-3 text-sm border border-slate-200 rounded-xl bg-white text-slate-800 placeholder-slate-400">
                         <button type="button" onclick="togglePwd('password',this)"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors bg-transparent border-none cursor-pointer text-sm p-1">👁</button>
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition-colors bg-transparent border-none cursor-pointer p-1">
+                            <i data-lucide="eye" style="width:15px;height:15px;"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -150,14 +224,15 @@
 
                 <!-- Submit -->
                 <button type="submit"
-                    class="btn-dark w-full py-2.5 bg-[#030d1f] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer mt-1">
-                    <span class="relative z-10 flex items-center justify-center gap-2">Se connecter →</span>
+                    class="btn-dark w-full py-2.5 bg-[#0f172a] text-white rounded-xl font-display text-sm font-bold tracking-wide border-none cursor-pointer mt-1">
+                    <span class="relative z-10 flex items-center justify-center gap-2">Se connecter <i data-lucide="arrow-right" style="width:15px;height:15px;"></i></span>
                 </button>
 
             </form>
 
         </div>
     </div>
+    <script>lucide.createIcons();</script>
 </body>
 
 </html>

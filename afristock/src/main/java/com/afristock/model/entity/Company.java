@@ -26,6 +26,8 @@ public class Company {
 
     private String phone;
     private String city;
+    private String logoUrl;
+    private String sector;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

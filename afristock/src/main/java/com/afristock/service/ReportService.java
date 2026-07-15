@@ -1,8 +1,10 @@
 package com.afristock.service;
 
 import com.afristock.model.entity.Sale;
+import com.afristock.model.entity.Site;
 import com.afristock.model.entity.StockLevel;
 import com.afristock.repository.SaleRepository;
+import com.afristock.repository.SiteRepository;
 import com.afristock.repository.StockLevelRepository;
 import com.afristock.security.TenantContext;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,9 @@ import java.io.UncheckedIOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Rapports (Phase 8) : rapport de fin de journée + exports Excel (Apache POI).
@@ -34,6 +38,7 @@ public class ReportService {
 
     private final SaleRepository saleRepository;
     private final StockLevelRepository stockLevelRepository;
+    private final SiteRepository siteRepository;
 
     public DailyReport dailyReport(LocalDate date) {
         Long tenantId = TenantContext.getCurrentTenant();
@@ -43,11 +48,38 @@ public class ReportService {
         double revenue = saleRepository.revenueForPeriod(tenantId, from, to);
         long itemsSold = saleRepository.itemsSoldForPeriod(tenantId, from, to);
         double grossProfit = saleRepository.grossProfitForPeriod(tenantId, from, to);
-        return new DailyReport(date, sales, sales.size(), revenue, itemsSold, grossProfit);
+        List<SiteBreakdown> siteBreakdown = siteBreakdown(tenantId, from, to);
+        return new DailyReport(date, sales, sales.size(), revenue, itemsSold, grossProfit, siteBreakdown);
+    }
+
+    private List<SiteBreakdown> siteBreakdown(Long tenantId, LocalDateTime from, LocalDateTime to) {
+        Map<Long, Double> revenueBySite = new HashMap<>();
+        for (Object[] row : saleRepository.revenueBySiteForPeriod(tenantId, from, to)) {
+            if (row[0] != null) {
+                revenueBySite.put((Long) row[0], ((Number) row[1]).doubleValue());
+            }
+        }
+        Map<Long, Long> lowStockBySite = new HashMap<>();
+        for (Object[] row : stockLevelRepository.countLowStockBySite(tenantId)) {
+            if (row[0] != null) {
+                lowStockBySite.put((Long) row[0], ((Number) row[1]).longValue());
+            }
+        }
+        List<Site> sites = siteRepository.findByTenantIdOrderByName(tenantId);
+        return sites.stream()
+                .map(site -> new SiteBreakdown(
+                        site.getName(),
+                        revenueBySite.getOrDefault(site.getId(), 0.0),
+                        lowStockBySite.getOrDefault(site.getId(), 0L)))
+                .toList();
     }
 
     public record DailyReport(LocalDate date, List<Sale> sales, int salesCount,
-                              double revenue, long itemsSold, double grossProfit) {
+                              double revenue, long itemsSold, double grossProfit,
+                              List<SiteBreakdown> siteBreakdown) {
+    }
+
+    public record SiteBreakdown(String siteName, double revenue, long lowStockCount) {
     }
 
     /** Export Excel des ventes d'une journée. */

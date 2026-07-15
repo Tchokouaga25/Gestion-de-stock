@@ -15,4 +15,14 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("SELECT a FROM Attendance a JOIN FETCH a.employee " +
             "WHERE a.tenantId = :tenantId AND a.workDate = :date ORDER BY a.employee.lastName")
     List<Attendance> findForDate(Long tenantId, LocalDate date);
+
+    @Query("SELECT COUNT(a) FROM Attendance a WHERE a.tenantId = :tenantId AND a.workDate BETWEEN :from AND :to")
+    long countForPeriod(Long tenantId, LocalDate from, LocalDate to);
+
+    @Query("SELECT COUNT(a) FROM Attendance a WHERE a.tenantId = :tenantId AND a.workDate BETWEEN :from AND :to AND a.present = true")
+    long countPresentForPeriod(Long tenantId, LocalDate from, LocalDate to);
+
+    @Query("SELECT a.employee.id, COUNT(a), SUM(CASE WHEN a.present = true THEN 1 ELSE 0 END) " +
+            "FROM Attendance a WHERE a.tenantId = :tenantId GROUP BY a.employee.id")
+    List<Object[]> attendanceStatsByEmployee(Long tenantId);
 }

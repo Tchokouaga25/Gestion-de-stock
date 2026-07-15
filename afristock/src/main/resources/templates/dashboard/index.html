@@ -12,51 +12,75 @@
         <!-- HEADER -->
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-                <p class="text-12 text-gray-500 mt-1">Vue d'ensemble de votre gestion de stock</p>
+                <h1 class="text-2xl font-bold text-gray-900">Dashboard — <span th:text="${companyName}">Entreprise</span></h1>
+                <p class="text-12 text-gray-500 mt-1" th:text="${welcomeMessage}">Vue d'ensemble de votre gestion de stock</p>
             </div>
             <div th:replace="~{fragments/layout :: topbar}"></div>
         </header>
 
         <!-- STATS GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-4">📦</div>
-                <p class="text-12 text-gray-500 mb-1">Produits</p>
-                <p class="text-2xl font-bold text-gray-900" th:text="${totalProducts}">0</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-blue-50 text-blue-600"><i data-lucide="package"></i></div>
+                <p class="stat-tile__label">Produits</p>
+                <p class="stat-tile__value" th:text="${totalProducts}">0</p>
                 <p class="text-12 text-gray-400 mt-1"><span th:text="${totalStockUnits}">0</span> unités en stock</p>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4">👥</div>
-                <p class="text-12 text-gray-500 mb-1">Clients</p>
-                <p class="text-2xl font-bold text-gray-900" th:text="${totalActiveCustomers}">0</p>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-emerald-50 text-emerald-600"><i data-lucide="users"></i></div>
+                <p class="stat-tile__label">Clients</p>
+                <p class="stat-tile__value" th:text="${totalActiveCustomers}">0</p>
                 <p class="text-12 text-gray-400 mt-1">Clients actifs</p>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl mb-4">🛒</div>
-                <p class="text-12 text-gray-500 mb-1">Commandes</p>
-                <p class="text-2xl font-bold text-gray-900" th:text="${totalOrders}">0</p>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-purple-50 text-purple-600"><i data-lucide="shopping-cart"></i></div>
+                <p class="stat-tile__label">Commandes</p>
+                <p class="stat-tile__value" th:text="${totalOrders}">0</p>
                 <p class="text-12 text-gray-400 mt-1"><span th:text="${ordersEnCours}">0</span> en cours</p>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="w-10 h-10 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center text-xl mb-4">📈</div>
-                <p class="text-12 text-gray-500 mb-1">Chiffre d'affaires</p>
-                <p class="text-2xl font-bold text-gray-900" th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)} + ' €'">0 €</p>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-orange-50 text-orange-600"><i data-lucide="trending-up"></i></div>
+                <p class="stat-tile__label">Chiffre d'affaires</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)} + ' €'">0 €</p>
                 <p class="text-12 text-gray-400 mt-1"><span th:text="${invoiceCount}">0</span> factures</p>
+            </div>
+
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-teal-50 text-teal-600"><i data-lucide="wallet"></i></div>
+                <p class="stat-tile__label">Valorisation du stock</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(totalStockValue, 1, 0)} + ' €'">0 €</p>
+                <p class="text-12 text-gray-400 mt-1">Aux prix d'achat</p>
             </div>
         </div>
 
-        <!-- ALERTES + COMMANDES RECENTES -->
+        <!-- BOUTIQUES ACTIVES -->
+        <div class="mb-10" th:if="${!activeSites.isEmpty()}">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-[14px] font-bold text-gray-900">Boutiques actives</h3>
+                <a th:href="@{/sites}" data-spa-link class="text-12 text-brand-600 font-bold">Voir tout →</a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a th:each="site : ${activeSites}" th:href="@{/sites}" data-spa-link class="workspace-card p-5 block hover:border-brand-500 transition-all">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i data-lucide="store" class="text-brand-600" style="width:16px;height:16px;"></i>
+                        <span class="font-bold text-gray-900 text-[13px]" th:text="${site.name}">Boutique</span>
+                    </div>
+                    <p class="text-12 text-gray-400" th:text="${site.city}">Ville</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- ALERTES + ACTIVITE RECENTE -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
 
             <!-- COLONNE GAUCHE : ALERTES -->
             <div class="space-y-6">
                 <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
                     <div class="flex items-center gap-2 mb-3">
-                        <span class="text-red-500">⚠</span>
+                        <i data-lucide="alert-triangle" class="text-red-500" style="width:16px;height:16px;"></i>
                         <h3 class="text-[14px] font-bold text-gray-900">Stock faible</h3>
                     </div>
                     <p class="text-12 text-gray-600 mb-3" th:text="${lowStockLevels.size()} + ' produit(s) sous le seuil minimum'">0 produit(s) sous le seuil minimum</p>
@@ -70,31 +94,35 @@
 
                 <div class="bg-amber-50 border border-amber-100 rounded-2xl p-6">
                     <div class="flex items-center gap-2 mb-1">
-                        <span class="text-amber-600">📄</span>
+                        <i data-lucide="file-text" class="text-amber-600" style="width:16px;height:16px;"></i>
                         <h3 class="text-[14px] font-bold text-gray-900">Factures impayées</h3>
                     </div>
                     <p class="text-12 text-gray-600" th:text="${unpaidSales.size()} + ' facture(s) en attente de paiement'">0 facture(s) en attente de paiement</p>
                 </div>
             </div>
 
-            <!-- COLONNE DROITE : COMMANDES RECENTES -->
-            <div class="bg-white border border-gray-100 rounded-2xl p-6">
-                <h3 class="text-[14px] font-bold text-gray-900 mb-4">Commandes récentes</h3>
-                <div class="space-y-4" th:if="${!recentSales.isEmpty()}">
-                    <div class="flex items-center justify-between" th:each="sale : ${recentSales}">
-                        <div>
-                            <p class="text-12 font-bold text-gray-900" th:text="${sale.reference}">FAC-000001</p>
-                            <p class="text-12 text-gray-400" th:text="${sale.customer != null ? sale.customer.name : 'Client comptoir'}">Client</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-12 font-bold text-gray-900" th:text="${#numbers.formatDecimal(sale.totalAmount, 1, 2)} + ' €'">0 €</p>
-                            <span th:if="${sale.balanceDue == 0}" class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-600">Payée</span>
-                            <span th:if="${sale.balanceDue > 0 and sale.amountPaid > 0}" class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-600">Partiellement payée</span>
-                            <span th:if="${sale.balanceDue > 0 and sale.amountPaid == 0}" class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-600">Impayée</span>
+            <!-- COLONNE DROITE : ACTIVITE RECENTE -->
+            <div class="workspace-card">
+                <div class="workspace-card__header">
+                    <h3 class="workspace-card__title">Activité récente</h3>
+                </div>
+                <div class="workspace-card__body">
+                    <div class="space-y-4" th:if="${!recentActivity.isEmpty()}">
+                        <div class="flex items-center justify-between" th:each="item : ${recentActivity}">
+                            <div class="flex items-center gap-2">
+                                <i th:data-lucide="${item.type() == 'sale'} ? 'receipt' : 'refresh-cw'"
+                                   class="text-gray-400" style="width:14px;height:14px;"></i>
+                                <div>
+                                    <p class="text-12 font-bold text-gray-900" th:text="${item.label()}">FAC-000001</p>
+                                    <p class="text-12 text-gray-400" th:text="${item.detail()}">Détail</p>
+                                </div>
+                            </div>
+                            <p class="text-12 font-bold text-gray-900" th:if="${item.amount() != null}"
+                               th:text="${#numbers.formatDecimal(item.amount(), 1, 2)} + ' €'">0 €</p>
                         </div>
                     </div>
+                    <p class="text-12 text-gray-400" th:if="${recentActivity.isEmpty()}">Aucune activité récente.</p>
                 </div>
-                <p class="text-12 text-gray-400" th:if="${recentSales.isEmpty()}">Aucune vente récente.</p>
             </div>
         </div>
 
@@ -104,17 +132,17 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <a sec:authorize="hasAuthority('ADMIN_PME')" th:href="@{/products/add}" class="flex items-center justify-between p-5 bg-brand-600 text-white rounded-[24px] hover:bg-brand-700 transition-all shadow-lg shadow-brand-600/20">
                     <div class="flex items-center gap-3">
-                        <span class="text-xl">✨</span>
+                        <i data-lucide="sparkles"></i>
                         <span class="text-12 font-bold">Nouveau Produit</span>
                     </div>
-                    <span>→</span>
+                    <i data-lucide="arrow-right"></i>
                 </a>
                 <a th:href="@{/movements/new}" class="flex items-center justify-between p-5 bg-white border border-gray-100 text-gray-900 rounded-[24px] hover:border-brand-500 transition-all shadow-sm">
                     <div class="flex items-center gap-3">
-                        <span class="text-xl">🚛</span>
+                        <i data-lucide="truck"></i>
                         <span class="text-12 font-bold">Saisir Mouvement</span>
                     </div>
-                    <span>→</span>
+                    <i data-lucide="arrow-right"></i>
                 </a>
             </div>
         </div>

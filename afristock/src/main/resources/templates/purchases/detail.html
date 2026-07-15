@@ -11,13 +11,15 @@
                 <h1 class="text-2xl font-bold text-gray-900" th:text="${order.reference}">CMD</h1>
                 <p class="text-sm text-gray-500 mt-1" th:text="${order.supplier.name} + ' → ' + ${order.site.name}">Fournisseur</p>
             </div>
-            <a th:href="@{/purchases}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">← Achats</a>
+            <a th:href="@{/purchases}" class="btn btn-secondary">
+                <i data-lucide="arrow-left"></i> Achats
+            </a>
         </header>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6">
+        <div class="card p-6 mb-6">
             <table class="w-full text-sm mb-4">
                 <thead class="text-gray-500 text-left text-xs uppercase tracking-widest border-b border-gray-200">
                     <tr><th class="py-2">Produit</th><th class="py-2 text-right">Qté</th><th class="py-2 text-right">Coût U.</th><th class="py-2 text-right">Total</th></tr>
@@ -40,15 +42,15 @@
 
         <div class="flex flex-wrap gap-3" sec:authorize="hasAuthority('PURCHASE_WRITE')">
             <form th:if="${order.status.name() == 'BROUILLON'}" th:action="@{/purchases/{id}/receive(id=${order.id})}" method="post">
-                <button class="px-5 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Réceptionner (crédite le stock)</button>
+                <button class="btn btn-primary">Réceptionner (crédite le stock)</button>
             </form>
             <form th:if="${order.status.name() == 'BROUILLON'}" th:action="@{/purchases/{id}/cancel(id=${order.id})}" method="post"
                   onsubmit="return confirm('Annuler cette commande ?');">
-                <button class="px-5 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium">Annuler</button>
+                <button class="btn-ghost-danger">Annuler</button>
             </form>
             <form th:if="${order.balanceDue > 0 and order.status.name() != 'ANNULEE'}" th:action="@{/purchases/{id}/pay(id=${order.id})}" method="post" class="flex gap-2 items-center">
-                <input type="number" name="amount" min="1" step="1" placeholder="Montant" class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm w-40"/>
-                <button class="px-5 py-2.5 bg-green-50 text-green-600 rounded-xl text-sm font-medium">Payer</button>
+                <input type="number" name="amount" min="1" step="1" placeholder="Montant" class="form-input w-40"/>
+                <button class="btn-ghost-info">Payer</button>
             </form>
         </div>
     </div>

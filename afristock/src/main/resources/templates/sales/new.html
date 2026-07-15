@@ -7,45 +7,47 @@
     <div th:fragment="content" data-title="Nouvelle vente — Afristock" class="max-w-4xl mx-auto">
         <header class="flex justify-between items-center mb-8">
             <h1 class="text-2xl font-bold text-gray-900">Nouvelle vente</h1>
-            <a th:href="@{/sales}" class="px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium">Historique</a>
+            <a th:href="@{/sales}" class="btn btn-secondary">Historique</a>
         </header>
 
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <form th:action="@{/sales}" method="post" class="space-y-6">
-            <div class="bg-white rounded-2xl border border-gray-100 p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="card p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Site</label>
-                    <select name="siteId" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <label class="form-label">Site</label>
+                    <select name="siteId" required class="form-input">
                         <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}">Site</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Client</label>
-                    <select name="customerId" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <label class="form-label">Client</label>
+                    <select name="customerId" class="form-input">
                         <option value="">Comptoir (anonyme)</option>
                         <option th:each="c : ${customers}" th:value="${c.id}" th:text="${c.name}">Client</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Type</label>
-                    <select name="saleType" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <label class="form-label">Type</label>
+                    <select name="saleType" class="form-input">
                         <option th:each="t : ${saleTypes}" th:value="${t}"
                                 th:text="${t.name() == 'GROS'} ? 'Gros' : 'Détail'">Type</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Paiement</label>
-                    <select name="paymentMethod" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm">
+                    <label class="form-label">Paiement</label>
+                    <select name="paymentMethod" class="form-input">
                         <option th:each="m : ${paymentMethods}" th:value="${m}" th:text="${m}">Paiement</option>
                     </select>
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl border border-gray-100 p-6">
+            <div class="card p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="font-bold text-gray-900">Articles</h2>
-                    <button type="button" onclick="addLine()" class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">+ Ligne</button>
+                    <button type="button" onclick="addLine()" class="btn-ghost">
+                        <i data-lucide="plus"></i> Ligne
+                    </button>
                 </div>
                 <table class="w-full text-sm">
                     <thead class="text-gray-500 text-left text-xs uppercase tracking-widest">
@@ -53,6 +55,7 @@
                     </thead>
                     <tbody id="lines"></tbody>
                 </table>
+                <p class="text-12 text-gray-400 mt-2">Recherchez un produit par nom ou par référence (SKU). Le stock disponible est affiché dans la liste.</p>
                 <div class="text-right mt-4">
                     <span class="text-sm text-gray-500">Total : </span>
                     <span id="totalDisplay" class="text-xl font-bold text-gray-900">0</span>
@@ -60,12 +63,12 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl border border-gray-100 p-6 flex items-end gap-4">
+            <div class="card p-6 flex items-end gap-4">
                 <div class="flex-1">
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Montant encaissé (FCFA)</label>
-                    <input type="number" name="amountPaid" min="0" step="1" id="amountPaid" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                    <label class="form-label">Montant encaissé (FCFA)</label>
+                    <input type="number" name="amountPaid" min="0" step="1" id="amountPaid" class="form-input"/>
                 </div>
-                <button type="submit" class="px-6 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Valider la vente</button>
+                <button type="submit" class="btn btn-primary">Valider la vente</button>
             </div>
         </form>
 
@@ -75,39 +78,97 @@
     <script th:inline="javascript">
     (function () {
         const products = /*[[${products}]]*/ [];
-        // On extrait id, nom, prix des produits injectés par Thymeleaf.
-        const productData = products.map(p => ({ id: p.id, name: p.name, price: p.salePrice || 0 }));
+        // On extrait id, nom, référence (SKU) et stock des produits injectés par Thymeleaf.
+        const productData = products.map(p => ({
+            id: p.id, name: p.name, reference: p.reference || '',
+            price: p.salePrice || 0, stock: p.currentQuantity || 0
+        }));
 
-        function optionsHtml() {
-            return productData.map(p => `<option value="${p.id}" data-price="${p.price}">${p.name}</option>`).join('');
+        function matches(p, q) {
+            const needle = q.trim().toLowerCase();
+            if (!needle) return true;
+            return p.name.toLowerCase().includes(needle) || p.reference.toLowerCase().includes(needle);
+        }
+
+        function dropdownItemHtml(p) {
+            const stockBadge = p.stock > 0
+                ? `<span class="badge badge-neutral">${p.stock} en stock</span>`
+                : `<span class="badge badge-danger">Rupture</span>`;
+            return `<div class="product-dropdown__item" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}"
+                         data-price="${p.price}" data-stock="${p.stock}">
+                        <span>${p.name} <span class="text-gray-400">${p.reference ? '· ' + p.reference : ''}</span></span>
+                        <span class="flex items-center gap-2">${stockBadge}<span>${p.price.toLocaleString('fr-FR')} FCFA</span></span>
+                    </div>`;
+        }
+
+        function renderDropdown(tr, query) {
+            const dropdown = tr.querySelector('.product-dropdown');
+            const found = productData.filter(p => matches(p, query)).slice(0, 30);
+            dropdown.innerHTML = found.length
+                ? found.map(dropdownItemHtml).join('')
+                : `<div class="product-dropdown__item product-dropdown__empty">Aucun produit trouvé</div>`;
+            dropdown.classList.remove('hidden');
+        }
+
+        function selectProduct(tr, item) {
+            tr.querySelector('input[name="productId"]').value = item.dataset.id;
+            tr.dataset.price = item.dataset.price;
+            tr.dataset.stock = item.dataset.stock;
+            const search = tr.querySelector('.product-search');
+            search.value = item.dataset.name;
+            tr.querySelector('.product-dropdown').classList.add('hidden');
+            recompute();
         }
 
         function addLine() {
             const tr = document.createElement('tr');
             tr.className = 'border-t border-gray-100';
+            tr.dataset.price = '0';
+            tr.dataset.stock = '0';
             tr.innerHTML = `
-                <td class="py-2"><select name="productId" onchange="recompute()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">${optionsHtml()}</select></td>
+                <td class="py-2 relative">
+                    <input type="text" class="product-search form-input" placeholder="Rechercher par nom ou référence…" autocomplete="off"/>
+                    <input type="hidden" name="productId" value=""/>
+                    <div class="product-dropdown hidden"></div>
+                    <p class="stock-warning text-red-500 text-xs mt-1 hidden">Quantité supérieure au stock disponible.</p>
+                </td>
                 <td class="py-2"><input type="number" name="quantity" min="1" value="1" oninput="recompute()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"/></td>
                 <td class="py-2 text-right price-cell text-gray-600">0</td>
                 <td class="py-2 text-right"><button type="button" onclick="this.closest('tr').remove(); recompute();" class="text-red-500">✕</button></td>`;
             document.getElementById('lines').appendChild(tr);
+
+            const search = tr.querySelector('.product-search');
+            search.addEventListener('input', function () { renderDropdown(tr, this.value); });
+            search.addEventListener('focus', function () { renderDropdown(tr, this.value); });
+            tr.querySelector('.product-dropdown').addEventListener('click', function (e) {
+                const item = e.target.closest('.product-dropdown__item[data-id]');
+                if (item) selectProduct(tr, item);
+            });
+
             recompute();
         }
 
         function recompute() {
             let total = 0;
             document.querySelectorAll('#lines tr').forEach(tr => {
-                const sel = tr.querySelector('select[name="productId"]');
                 const qty = parseInt(tr.querySelector('input[name="quantity"]').value) || 0;
-                const price = parseFloat(sel.selectedOptions[0]?.dataset.price) || 0;
+                const price = parseFloat(tr.dataset.price) || 0;
+                const stock = parseInt(tr.dataset.stock) || 0;
                 const line = price * qty;
                 tr.querySelector('.price-cell').textContent = line.toLocaleString('fr-FR');
+                tr.querySelector('.stock-warning').classList.toggle('hidden', !(tr.querySelector('input[name="productId"]').value && qty > stock));
                 total += line;
             });
             document.getElementById('totalDisplay').textContent = total.toLocaleString('fr-FR');
             const paid = document.getElementById('amountPaid');
             if (!paid.dataset.touched) paid.value = total;
         }
+
+        // Ferme les dropdowns ouverts au clic en dehors d'une ligne produit.
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('#lines td.relative')) return;
+            document.querySelectorAll('.product-dropdown').forEach(d => d.classList.add('hidden'));
+        });
 
         window.addLine = addLine;
         window.recompute = recompute;

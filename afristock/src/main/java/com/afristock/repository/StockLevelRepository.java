@@ -26,4 +26,15 @@ public interface StockLevelRepository extends JpaRepository<StockLevel, Long> {
             "WHERE sl.tenantId = :tenantId AND p.minThreshold IS NOT NULL " +
             "AND sl.quantity <= p.minThreshold ORDER BY sl.site.name, p.name")
     List<StockLevel> findLowStock(Long tenantId);
+
+    /** Nombre de lignes de stock en alerte, par site (0..N lignes : [siteId, count]). */
+    @Query("SELECT sl.site.id, COUNT(sl) FROM StockLevel sl JOIN sl.product p " +
+            "WHERE sl.tenantId = :tenantId AND p.minThreshold IS NOT NULL " +
+            "AND sl.quantity <= p.minThreshold GROUP BY sl.site.id")
+    List<Object[]> countLowStockBySite(Long tenantId);
+
+    /** Valorisation totale du stock (quantité * prix d'achat) pour l'entreprise courante. */
+    @Query("SELECT COALESCE(SUM(sl.quantity * COALESCE(sl.product.purchasePrice, 0)), 0) FROM StockLevel sl " +
+            "WHERE sl.tenantId = :tenantId")
+    double sumStockValue(Long tenantId);
 }

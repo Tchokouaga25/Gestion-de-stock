@@ -30,8 +30,8 @@ public class SaleController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('SALE_READ')")
-    public String list(Model model) {
-        model.addAttribute("sales", saleService.getAll());
+    public String list(@RequestParam(defaultValue = "0") int page, Model model) {
+        model.addAttribute("page", saleService.getPage(page, 20));
         return "sales/list";
     }
 

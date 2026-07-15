@@ -8,47 +8,47 @@
 
         <div th:replace="~{fragments/layout :: topbarSuperAdmin('Fonctionnalités', 'Activez, modifiez ou supprimez les fonctionnalités disponibles pour les entreprises clientes.')}"></div>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <!-- Ajouter une fonctionnalité -->
-        <details class="bg-white rounded-2xl border border-gray-100 mb-8 group">
+        <details class="card mb-8 group">
             <summary class="cursor-pointer list-none px-6 py-4 flex items-center justify-between select-none">
-                <span class="text-sm font-bold text-gray-900">➕ Ajouter une fonctionnalité</span>
-                <span class="text-gray-400 text-xs group-open:rotate-180 transition-transform">▼</span>
+                <span class="text-sm font-bold text-gray-900 flex items-center gap-2"><i data-lucide="plus"></i> Ajouter une fonctionnalité</span>
+                <i data-lucide="chevron-down" class="text-gray-400 group-open:rotate-180 transition-transform"></i>
             </summary>
             <form th:action="@{/super-admin/features}" th:object="${newFeature}" method="post"
                   class="px-6 pb-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end border-t border-gray-100 pt-4">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Code technique</label>
+                    <label class="form-label">Code technique</label>
                     <input type="text" name="code" required placeholder="EX_MODULE"
-                           class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                           class="form-input"/>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Nom</label>
+                    <label class="form-label">Nom</label>
                     <input type="text" name="name" required placeholder="Nom affiché"
-                           class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                           class="form-input"/>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Catégorie</label>
+                    <label class="form-label">Catégorie</label>
                     <input type="text" name="category" placeholder="Ex: Ventes"
-                           class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                           class="form-input"/>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Description</label>
+                    <label class="form-label">Description</label>
                     <input type="text" name="description" placeholder="Description courte"
-                           class="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm"/>
+                           class="form-input"/>
                 </div>
                 <div class="md:col-span-4">
-                    <button type="submit" class="px-4 py-2.5 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">Créer la fonctionnalité</button>
+                    <button type="submit" class="btn btn-primary">Créer la fonctionnalité</button>
                 </div>
             </form>
         </details>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div th:each="f : ${features}" class="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col">
+            <div th:each="f : ${features}" class="workspace-card p-6 flex flex-col">
                 <div class="flex justify-between items-start mb-3">
-                    <span class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold" th:text="${f.category ?: 'Général'}">Catégorie</span>
+                    <span class="badge badge-info" th:text="${f.category ?: 'Général'}">Catégorie</span>
 
                     <!-- Toggle visuel (checkbox caché + label stylé, sans JS) -->
                     <form th:action="@{/super-admin/features/{id}/toggle(id=${f.id})}" method="post">
@@ -69,23 +69,23 @@
 
                 <div class="flex gap-2 mt-5">
                     <details class="flex-1 group/edit">
-                        <summary class="cursor-pointer list-none w-full px-4 py-2 bg-gray-50 text-gray-700 rounded-xl text-sm font-medium text-center select-none">
-                            ✏️ Modifier
+                        <summary class="btn-ghost w-full justify-center select-none">
+                            <i data-lucide="pencil"></i> Modifier
                         </summary>
                         <form th:action="@{/super-admin/features/{id}/update(id=${f.id})}" method="post" class="mt-3 space-y-2">
                             <input type="text" name="name" th:value="${f.name}" required
-                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"/>
+                                   class="form-input"/>
                             <input type="text" name="category" th:value="${f.category}" placeholder="Catégorie"
-                                   class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"/>
+                                   class="form-input"/>
                             <textarea name="description" placeholder="Description" rows="2"
-                                      class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm" th:text="${f.description}"></textarea>
-                            <button type="submit" class="w-full px-3 py-2 bg-indigo-50 text-indigo-600 rounded-lg text-sm font-medium">Enregistrer</button>
+                                      class="form-input" th:text="${f.description}"></textarea>
+                            <button type="submit" class="btn-ghost-info w-full justify-center">Enregistrer</button>
                         </form>
                     </details>
 
                     <form th:action="@{/super-admin/features/{id}/delete(id=${f.id})}" method="post"
                           onsubmit="return confirm('Supprimer définitivement cette fonctionnalité ?');">
-                        <button type="submit" class="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-sm font-medium">🗑️ Supprimer</button>
+                        <button type="submit" class="btn-ghost-danger"><i data-lucide="trash-2"></i> Supprimer</button>
                     </form>
                 </div>
             </div>

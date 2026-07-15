@@ -1,6 +1,8 @@
 package com.afristock.repository;
 
 import com.afristock.model.entity.Sale;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,6 +13,8 @@ import java.util.Optional;
 public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     List<Sale> findByTenantIdOrderBySaleDateDesc(Long tenantId);
+
+    Page<Sale> findByTenantIdOrderBySaleDateDesc(Long tenantId, Pageable pageable);
 
     long countByTenantId(Long tenantId);
 
@@ -33,4 +37,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query("SELECT COALESCE(SUM((i.unitPrice - COALESCE(i.product.purchasePrice, 0)) * i.quantity), 0) FROM SaleItem i " +
             "WHERE i.sale.tenantId = :tenantId AND i.sale.saleDate >= :from AND i.sale.saleDate < :to")
     double grossProfitForPeriod(Long tenantId, LocalDateTime from, LocalDateTime to);
+
+    /** Chiffre d'affaires par site sur la période (0..N lignes : [siteId, revenue]). */
+    @Query("SELECT s.site.id, COALESCE(SUM(s.totalAmount), 0) FROM Sale s " +
+            "WHERE s.tenantId = :tenantId AND s.saleDate >= :from AND s.saleDate < :to GROUP BY s.site.id")
+    List<Object[]> revenueBySiteForPeriod(Long tenantId, LocalDateTime from, LocalDateTime to);
 }

@@ -1,0 +1,2 @@
+ALTER TABLE companies ADD COLUMN logo_url VARCHAR(500);
+ALTER TABLE companies ADD COLUMN sector VARCHAR(100);

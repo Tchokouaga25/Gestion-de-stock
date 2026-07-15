@@ -13,53 +13,59 @@
             </div>
             <div class="flex gap-3">
                 <a th:href="@{/sites/add}" sec:authorize="hasAuthority('SITE_WRITE')"
-                   class="px-4 py-2 text-white rounded-xl text-sm font-medium" style="background-color:#3341ff">+ Nouveau site</a>
+                   class="btn btn-primary">
+                    <i data-lucide="plus"></i> Nouveau site
+                </a>
             </div>
         </header>
 
-        <div th:if="${success}" class="mb-4 px-4 py-3 rounded-xl bg-green-50 text-green-700 text-sm" th:text="${success}"></div>
-        <div th:if="${error}" class="mb-4 px-4 py-3 rounded-xl bg-red-50 text-red-700 text-sm" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-gray-500 text-left text-xs uppercase tracking-widest">
-                    <tr>
-                        <th class="px-6 py-4">Nom</th>
-                        <th class="px-6 py-4">Type</th>
-                        <th class="px-6 py-4">Ville</th>
-                        <th class="px-6 py-4">Téléphone</th>
-                        <th class="px-6 py-4">Statut</th>
-                        <th class="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    <tr th:each="s : ${sites}">
-                        <td class="px-6 py-4 font-semibold text-gray-900" th:text="${s.name}">Nom</td>
-                        <td class="px-6 py-4">
-                            <span th:if="${s.type.name() == 'ENTREPOT'}" class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-600 text-xs font-bold">Entrepôt</span>
-                            <span th:unless="${s.type.name() == 'ENTREPOT'}" class="px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold">Boutique</span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${s.city}">Ville</td>
-                        <td class="px-6 py-4 text-gray-600" th:text="${s.phone}">Téléphone</td>
-                        <td class="px-6 py-4">
-                            <span th:if="${s.active}" class="text-green-600 text-xs font-bold">Actif</span>
-                            <span th:unless="${s.active}" class="text-gray-400 text-xs font-bold">Inactif</span>
-                        </td>
-                        <td class="px-6 py-4 text-right space-x-2">
-                            <a th:href="@{/sites/edit/{id}(id=${s.id})}" sec:authorize="hasAuthority('SITE_WRITE')"
-                               class="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium">Modifier</a>
-                            <form th:action="@{/sites/delete/{id}(id=${s.id})}" method="post" class="inline"
-                                  sec:authorize="hasAuthority('SITE_DELETE')"
-                                  onsubmit="return confirm('Supprimer ce site ?');">
-                                <button class="px-3 py-1.5 bg-red-50 text-red-600 rounded-lg text-xs font-medium">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(sites)}">
-                        <td colspan="6" class="px-6 py-10 text-center text-gray-400">Aucun site. Créez votre première boutique ou votre entrepôt.</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div th:if="${#lists.isEmpty(siteStats)}" class="card p-10 text-center text-gray-400">
+            Aucun site. Créez votre première boutique ou votre entrepôt.
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="workspace-card" th:each="stat : ${siteStats}" th:with="s=${stat.site()}">
+                <div class="workspace-card__header">
+                    <div>
+                        <p class="workspace-card__title" th:text="${s.name}">Nom</p>
+                        <p class="text-12 text-gray-400 mt-1" th:text="${s.city}">Ville</p>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span th:if="${s.type.name() == 'ENTREPOT'}" class="badge badge-warning">Entrepôt</span>
+                        <span th:unless="${s.type.name() == 'ENTREPOT'}" class="badge badge-info">Boutique</span>
+                        <span th:if="${s.active}" class="badge badge-success">Actif</span>
+                        <span th:unless="${s.active}" class="badge badge-neutral">Inactif</span>
+                    </div>
+                </div>
+                <div class="workspace-card__body">
+                    <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div>
+                            <p class="text-10 text-gray-400 uppercase font-bold tracking-wide">Ventes du mois</p>
+                            <p class="font-bold text-gray-900" th:text="${#numbers.formatDecimal(stat.revenueThisMonth(), 0, 0)} + ' F'">0 F</p>
+                        </div>
+                        <div>
+                            <p class="text-10 text-gray-400 uppercase font-bold tracking-wide">Alertes stock</p>
+                            <p class="font-bold" th:classappend="${stat.lowStockAlerts() > 0} ? 'text-red-600' : 'text-gray-900'" th:text="${stat.lowStockAlerts()}">0</p>
+                        </div>
+                        <div>
+                            <p class="text-10 text-gray-400 uppercase font-bold tracking-wide">Personnel</p>
+                            <p class="font-bold text-gray-900" th:text="${stat.staffCount()}">0</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <a th:href="@{/sites/edit/{id}(id=${s.id})}" sec:authorize="hasAuthority('SITE_WRITE')"
+                           class="btn-ghost flex-1 text-center">Modifier</a>
+                        <form th:action="@{/sites/delete/{id}(id=${s.id})}" method="post" class="flex-1"
+                              sec:authorize="hasAuthority('SITE_DELETE')"
+                              onsubmit="return confirm('Supprimer ce site ?');">
+                            <button class="btn-ghost-danger w-full">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     </main>
