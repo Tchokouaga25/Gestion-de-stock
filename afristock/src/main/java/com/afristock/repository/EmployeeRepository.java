@@ -9,4 +9,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByTenantIdOrderByLastNameAscFirstNameAsc(Long tenantId);
     long countByTenantId(Long tenantId);
     long countBySiteIdAndTenantId(Long siteId, Long tenantId);
+    List<Employee> findBySiteIdAndTenantIdOrderByLastNameAscFirstNameAsc(Long siteId, Long tenantId);
 }

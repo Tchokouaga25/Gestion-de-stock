@@ -42,4 +42,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query("SELECT s.site.id, COALESCE(SUM(s.totalAmount), 0) FROM Sale s " +
             "WHERE s.tenantId = :tenantId AND s.saleDate >= :from AND s.saleDate < :to GROUP BY s.site.id")
     List<Object[]> revenueBySiteForPeriod(Long tenantId, LocalDateTime from, LocalDateTime to);
+
+    /** Ventes d'un site sur une période donnée (espace boutique), les plus récentes en premier. */
+    @Query("SELECT s FROM Sale s WHERE s.tenantId = :tenantId AND s.site.id = :siteId " +
+            "AND s.saleDate >= :from AND s.saleDate < :to ORDER BY s.saleDate DESC")
+    List<Sale> findForSiteAndPeriod(Long tenantId, Long siteId, LocalDateTime from, LocalDateTime to);
 }

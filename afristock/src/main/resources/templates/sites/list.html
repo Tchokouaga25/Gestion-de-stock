@@ -6,12 +6,13 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" data-title="Sites — Afristock" class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-8">
+        <header class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Sites</h1>
-                <p class="text-sm text-gray-500 mt-1">Boutiques et entrepôts de votre entreprise.</p>
+                <p class="text-12 text-gray-500 mt-1">Boutiques et entrepôts de votre entreprise.</p>
             </div>
-            <div class="flex gap-3">
+            <div class="flex items-center gap-3">
+                <div th:replace="~{fragments/layout :: topbar}"></div>
                 <a th:href="@{/sites/add}" sec:authorize="hasAuthority('SITE_WRITE')"
                    class="btn btn-primary">
                     <i data-lucide="plus"></i> Nouveau site
@@ -22,6 +23,28 @@
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
+        <!-- Bannière entreprise -->
+        <div class="rounded-3xl bg-gradient-to-r from-brand-600 to-brand-700 text-white p-8 mb-8
+                    flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 shadow-lg shadow-brand-600/20">
+            <div>
+                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight uppercase" th:text="${companyName}">Entreprise</h2>
+                <p class="text-white/80 mt-2 max-w-xl text-sm"
+                   th:text="'Gestion de l\'entrepôt central et des ' + ${#lists.size(siteStats)} + ' boutique(s) de proximité.'">Sous-titre</p>
+            </div>
+            <div class="flex gap-4">
+                <div class="bg-white/15 rounded-2xl px-5 py-3 text-center min-w-[150px]">
+                    <p class="text-10 font-bold uppercase tracking-widest text-white/70">Valorisation</p>
+                    <p class="text-xl font-extrabold mt-1">
+                        <span th:text="${#numbers.formatDecimal(totalStockValue, 0, 0)}">0</span> F
+                    </p>
+                </div>
+                <div class="bg-white/15 rounded-2xl px-5 py-3 text-center min-w-[110px]">
+                    <p class="text-10 font-bold uppercase tracking-widest text-white/70">Alertes</p>
+                    <p class="text-xl font-extrabold mt-1" th:text="${totalAlerts}">0</p>
+                </div>
+            </div>
+        </div>
+
         <div th:if="${#lists.isEmpty(siteStats)}" class="card p-10 text-center text-gray-400">
             Aucun site. Créez votre première boutique ou votre entrepôt.
         </div>
@@ -29,33 +52,45 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="workspace-card" th:each="stat : ${siteStats}" th:with="s=${stat.site()}">
                 <div class="workspace-card__header">
-                    <div>
-                        <p class="workspace-card__title" th:text="${s.name}">Nom</p>
-                        <p class="text-12 text-gray-400 mt-1" th:text="${s.city}">Ville</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                            <i data-lucide="store"></i>
+                        </div>
+                        <div>
+                            <p class="workspace-card__title" th:text="${s.name}">Nom</p>
+                            <p class="text-10 text-gray-400 font-bold uppercase tracking-wide" th:text="${s.city}">Ville</p>
+                        </div>
                     </div>
                     <div class="flex flex-col items-end gap-1">
                         <span th:if="${s.type.name() == 'ENTREPOT'}" class="badge badge-warning">Entrepôt</span>
                         <span th:unless="${s.type.name() == 'ENTREPOT'}" class="badge badge-info">Boutique</span>
-                        <span th:if="${s.active}" class="badge badge-success">Actif</span>
                         <span th:unless="${s.active}" class="badge badge-neutral">Inactif</span>
                     </div>
                 </div>
                 <div class="workspace-card__body">
-                    <div class="grid grid-cols-3 gap-3 mb-4">
-                        <div>
-                            <p class="text-10 text-gray-400 uppercase font-bold tracking-wide">Ventes du mois</p>
-                            <p class="font-bold text-gray-900" th:text="${#numbers.formatDecimal(stat.revenueThisMonth(), 0, 0)} + ' F'">0 F</p>
+                    <div class="space-y-3 mb-5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-12 text-gray-400">Ventes aujourd'hui</span>
+                            <span class="font-bold text-emerald-600"
+                                  th:text="'+' + ${#numbers.formatDecimal(stat.revenueToday(), 0, 0)} + ' F'">+0 F</span>
                         </div>
-                        <div>
-                            <p class="text-10 text-gray-400 uppercase font-bold tracking-wide">Alertes stock</p>
-                            <p class="font-bold" th:classappend="${stat.lowStockAlerts() > 0} ? 'text-red-600' : 'text-gray-900'" th:text="${stat.lowStockAlerts()}">0</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-12 text-gray-400">Alertes Stock</span>
+                            <span class="font-bold" th:classappend="${stat.lowStockAlerts() > 0} ? 'text-red-600' : 'text-gray-900'"
+                                  th:text="${stat.lowStockAlerts()} + ' article(s) bas'">0 article(s) bas</span>
                         </div>
-                        <div>
-                            <p class="text-10 text-gray-400 uppercase font-bold tracking-wide">Personnel</p>
-                            <p class="font-bold text-gray-900" th:text="${stat.staffCount()}">0</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-12 text-gray-400">Personnel présent</span>
+                            <span class="font-bold text-gray-900" th:text="${stat.staffCount()} + ' membre(s)'">0 membre(s)</span>
                         </div>
                     </div>
-                    <div class="flex gap-2">
+
+                    <a th:href="@{/sites/{id}(id=${s.id})}" data-spa-link
+                       class="btn-ghost block w-full text-center hover:bg-brand-50 hover:text-brand-700 transition-all">
+                        Accéder à l'espace boutique
+                    </a>
+
+                    <div class="flex gap-2 mt-2">
                         <a th:href="@{/sites/edit/{id}(id=${s.id})}" sec:authorize="hasAuthority('SITE_WRITE')"
                            class="btn-ghost flex-1 text-center">Modifier</a>
                         <form th:action="@{/sites/delete/{id}(id=${s.id})}" method="post" class="flex-1"

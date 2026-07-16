@@ -3,6 +3,7 @@ package com.afristock.controller;
 import com.afristock.model.entity.Site;
 import com.afristock.model.enums.SiteType;
 import com.afristock.service.SiteService;
+import com.afristock.service.StockLevelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,12 +23,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SiteController {
 
     private final SiteService siteService;
+    private final StockLevelService stockLevelService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('SITE_READ')")
     public String list(Model model) {
-        model.addAttribute("siteStats", siteService.getSiteCardStats());
+        model.addAttribute("siteStats", siteService.getShopCardStats());
+        model.addAttribute("totalStockValue", stockLevelService.getTotalStockValue());
+        model.addAttribute("totalAlerts", stockLevelService.getLowStock().size());
         return "sites/list";
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('SITE_READ')")
+    public String detail(@PathVariable Long id, Model model, RedirectAttributes ra) {
+        try {
+            model.addAttribute("shop", siteService.getShopDetail(id));
+            return "sites/detail";
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", e.getMessage());
+            return "redirect:/sites";
+        }
     }
 
     @GetMapping("/add")

@@ -1,10 +1,16 @@
 package com.afristock.service;
 
+import com.afristock.model.entity.Employee;
+import com.afristock.model.entity.Sale;
+import com.afristock.model.entity.SaleItem;
 import com.afristock.model.entity.Site;
+import com.afristock.model.entity.StockLevel;
+import com.afristock.model.entity.StockMovement;
 import com.afristock.repository.EmployeeRepository;
 import com.afristock.repository.SaleRepository;
 import com.afristock.repository.SiteRepository;
 import com.afristock.repository.StockLevelRepository;
+import com.afristock.repository.StockMovementRepository;
 import com.afristock.security.TenantContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,23 +34,39 @@ public class SiteService {
     private final EmployeeRepository employeeRepository;
     private final SaleRepository saleRepository;
     private final StockLevelRepository stockLevelRepository;
+    private final StockMovementRepository stockMovementRepository;
 
-    public record SiteStats(Site site, double revenueThisMonth, long lowStockAlerts, long staffCount) {}
+    public record ShopCardStats(Site site, double revenueToday, long lowStockAlerts, long staffCount) {}
+
+    /**
+     * Agrégat complet pour l'espace boutique (page de détail d'un site) : activité du jour,
+     * alertes stock, valorisation et personnel affecté.
+     */
+    public record ShopDetail(
+            Site site,
+            List<Sale> salesToday,
+            double revenueToday,
+            double grossProfitToday,
+            long itemsSoldToday,
+            List<StockLevel> lowStockItems,
+            double stockValue,
+            List<Employee> staff,
+            List<StockMovement> recentMovements) {}
 
     @Transactional(readOnly = true)
     public List<Site> getAll() {
         return siteRepository.findByTenantIdOrderByName(TenantContext.getCurrentTenant());
     }
 
-    /** Cartes boutiques avec KPIs agrégés (ventes du mois, alertes stock, personnel), sans N+1. */
+    /** Cartes boutiques avec KPIs agrégés (ventes du jour, alertes stock, personnel), sans N+1. */
     @Transactional(readOnly = true)
-    public List<SiteStats> getSiteCardStats() {
+    public List<ShopCardStats> getShopCardStats() {
         Long tenantId = TenantContext.getCurrentTenant();
-        LocalDateTime monthStart = LocalDate.now().withDayOfMonth(1).atStartOfDay();
-        LocalDateTime monthEnd = monthStart.plusMonths(1);
+        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
+        LocalDateTime todayEnd = todayStart.plusDays(1);
 
         Map<Long, Double> revenueBySite = new HashMap<>();
-        for (Object[] row : saleRepository.revenueBySiteForPeriod(tenantId, monthStart, monthEnd)) {
+        for (Object[] row : saleRepository.revenueBySiteForPeriod(tenantId, todayStart, todayEnd)) {
             if (row[0] != null) {
                 revenueBySite.put((Long) row[0], ((Number) row[1]).doubleValue());
             }
@@ -57,12 +79,45 @@ public class SiteService {
         }
 
         return getAll().stream()
-                .map(site -> new SiteStats(
+                .map(site -> new ShopCardStats(
                         site,
                         revenueBySite.getOrDefault(site.getId(), 0.0),
                         lowStockBySite.getOrDefault(site.getId(), 0L),
                         employeeRepository.countBySiteIdAndTenantId(site.getId(), tenantId)))
                 .toList();
+    }
+
+    /** Tableau de bord détaillé d'un site (« espace boutique ») : activité du jour et ressources. */
+    @Transactional(readOnly = true)
+    public ShopDetail getShopDetail(Long siteId) {
+        Long tenantId = TenantContext.getCurrentTenant();
+        Site site = loadOwned(siteId);
+
+        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
+        LocalDateTime todayEnd = todayStart.plusDays(1);
+
+        List<Sale> salesToday = saleRepository.findForSiteAndPeriod(tenantId, siteId, todayStart, todayEnd);
+        double revenueToday = salesToday.stream().mapToDouble(Sale::getTotalAmount).sum();
+        long itemsSoldToday = salesToday.stream()
+                .flatMap(s -> s.getItems().stream())
+                .mapToLong(SaleItem::getQuantity)
+                .sum();
+        double grossProfitToday = salesToday.stream()
+                .flatMap(s -> s.getItems().stream())
+                .mapToDouble(i -> (i.getUnitPrice() - (i.getProduct().getPurchasePrice() != null ? i.getProduct().getPurchasePrice() : 0))
+                        * i.getQuantity())
+                .sum();
+
+        List<StockLevel> lowStockItems = stockLevelRepository.findLowStockBySite(tenantId, siteId);
+        double stockValue = stockLevelRepository.sumStockValueBySite(tenantId, siteId);
+        List<Employee> staff = employeeRepository.findBySiteIdAndTenantIdOrderByLastNameAscFirstNameAsc(siteId, tenantId);
+        List<StockMovement> recentMovements = stockMovementRepository
+                .findBySiteIdAndTenantIdOrderByCreatedAtDesc(siteId, tenantId).stream()
+                .limit(8)
+                .toList();
+
+        return new ShopDetail(site, salesToday, revenueToday, grossProfitToday, itemsSoldToday,
+                lowStockItems, stockValue, staff, recentMovements);
     }
 
     @Transactional(readOnly = true)

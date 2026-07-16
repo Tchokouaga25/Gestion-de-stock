@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="~{fragments/layout :: pageHead(${shop.site().name} + ' — Afristock')}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" th:data-title="${shop.site().name} + ' — Afristock'" class="max-w-6xl mx-auto"
+         th:with="s=${shop.site()}">
+
+        <a th:href="@{/sites}" data-spa-link class="text-12 text-gray-400 hover:text-brand-600 flex items-center gap-1 mb-4">
+            <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Retour aux sites
+        </a>
+
+        <header class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="store" style="width:24px;height:24px;"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-2xl font-bold text-gray-900" th:text="${s.name}">Nom du site</h1>
+                        <span th:if="${s.type.name() == 'ENTREPOT'}" class="badge badge-warning">Entrepôt</span>
+                        <span th:unless="${s.type.name() == 'ENTREPOT'}" class="badge badge-info">Boutique</span>
+                        <span th:if="${s.active}" class="badge badge-success">Actif</span>
+                        <span th:unless="${s.active}" class="badge badge-neutral">Inactif</span>
+                    </div>
+                    <p class="text-12 text-gray-500 mt-1">
+                        <span th:text="${s.address ?: s.city}">Adresse</span>
+                        <span th:if="${s.phone != null and !s.phone.isEmpty()}"> · <span th:text="${s.phone}">Téléphone</span></span>
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div th:replace="~{fragments/layout :: topbar}"></div>
+                <a th:href="@{/sites/edit/{id}(id=${s.id})}" sec:authorize="hasAuthority('SITE_WRITE')" class="btn btn-secondary">
+                    <i data-lucide="pencil"></i> Modifier
+                </a>
+            </div>
+        </header>
+
+        <!-- KPIs du jour -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-emerald-50 text-emerald-600"><i data-lucide="banknote"></i></div>
+                <p class="stat-tile__label">Ventes aujourd'hui</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(shop.revenueToday(), 0, 0)} + ' F'">0 F</p>
+                <p class="text-12 text-gray-400 mt-1" th:text="${#lists.size(shop.salesToday())} + ' facture(s)'">0 facture(s)</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-blue-50 text-blue-600"><i data-lucide="trending-up"></i></div>
+                <p class="stat-tile__label">Marge brute du jour</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(shop.grossProfitToday(), 0, 0)} + ' F'">0 F</p>
+                <p class="text-12 text-gray-400 mt-1" th:text="${shop.itemsSoldToday()} + ' article(s) vendu(s)'">0 article(s)</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-red-50 text-red-600"><i data-lucide="alert-triangle"></i></div>
+                <p class="stat-tile__label">Alertes stock</p>
+                <p class="stat-tile__value" th:text="${#lists.size(shop.lowStockItems())}">0</p>
+                <p class="text-12 text-gray-400 mt-1">Sous le seuil minimum</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-teal-50 text-teal-600"><i data-lucide="wallet"></i></div>
+                <p class="stat-tile__label">Valorisation du site</p>
+                <p class="stat-tile__value" th:text="${#numbers.formatDecimal(shop.stockValue(), 0, 0)} + ' F'">0 F</p>
+                <p class="text-12 text-gray-400 mt-1">Aux prix d'achat</p>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile__icon bg-purple-50 text-purple-600"><i data-lucide="users"></i></div>
+                <p class="stat-tile__label">Personnel</p>
+                <p class="stat-tile__value" th:text="${#lists.size(shop.staff())}">0</p>
+                <p class="text-12 text-gray-400 mt-1">Affecté à ce site</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Alertes stock -->
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="alert-triangle" class="text-red-500" style="width:16px;height:16px;"></i>
+                    <h3 class="text-[14px] font-bold text-gray-900">Alertes stock</h3>
+                </div>
+                <p class="text-12 text-gray-600 mb-3" th:text="${#lists.size(shop.lowStockItems())} + ' produit(s) sous le seuil minimum'">0 produit(s)</p>
+                <ul class="space-y-1" th:if="${!shop.lowStockItems().isEmpty()}">
+                    <li class="text-12 text-gray-700" th:each="sl : ${shop.lowStockItems()}">
+                        • <span th:text="${sl.product.name}">Produit</span>
+                        (<span th:text="${sl.quantity}">0</span>/<span th:text="${sl.product.minThreshold}">0</span>)
+                    </li>
+                </ul>
+                <p class="text-12 text-gray-400" th:if="${shop.lowStockItems().isEmpty()}">Aucune alerte pour ce site.</p>
+            </div>
+
+            <!-- Ventes du jour -->
+            <div class="workspace-card">
+                <div class="workspace-card__header">
+                    <h3 class="workspace-card__title">Ventes du jour</h3>
+                </div>
+                <div class="workspace-card__body">
+                    <div class="space-y-3" th:if="${!shop.salesToday().isEmpty()}">
+                        <div class="flex items-center justify-between" th:each="sale : ${shop.salesToday()}">
+                            <div>
+                                <p class="text-12 font-bold text-gray-900" th:text="${sale.reference}">FAC-000001</p>
+                                <p class="text-12 text-gray-400"
+                                   th:text="${#temporals.format(sale.saleDate, 'HH:mm')} + ' · ' + ${sale.customer != null ? sale.customer.name : 'Comptoir'}">Détail</p>
+                            </div>
+                            <p class="text-12 font-bold text-gray-900" th:text="${#numbers.formatDecimal(sale.totalAmount, 0, 0)} + ' F'">0 F</p>
+                        </div>
+                    </div>
+                    <p class="text-12 text-gray-400" th:if="${shop.salesToday().isEmpty()}">Aucune vente enregistrée aujourd'hui.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mouvements de stock récents -->
+        <div class="mb-8">
+            <h3 class="text-[14px] font-bold text-gray-900 mb-4">Mouvements de stock récents</h3>
+            <div class="table-shell">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Type</th>
+                            <th class="text-right">Quantité</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="m : ${shop.recentMovements()}">
+                            <td class="font-semibold text-gray-900" th:text="${m.product.name}">Produit</td>
+                            <td>
+                                <span th:if="${m.type.name() == 'ENTRY'}" class="badge badge-success">Entrée</span>
+                                <span th:if="${m.type.name() == 'EXIT'}" class="badge badge-danger">Sortie</span>
+                                <span th:if="${m.type.name() == 'ADJUSTMENT'}" class="badge badge-neutral">Ajustement</span>
+                            </td>
+                            <td class="text-right" th:text="${m.quantity}">0</td>
+                            <td th:text="${#temporals.format(m.createdAt, 'dd/MM/yyyy HH:mm')}">Date</td>
+                        </tr>
+                        <tr th:if="${shop.recentMovements().isEmpty()}"><td colspan="4" class="table-empty">Aucun mouvement récent.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Personnel de la boutique -->
+        <div>
+            <h3 class="text-[14px] font-bold text-gray-900 mb-4">Personnel de la boutique</h3>
+            <div th:if="${shop.staff().isEmpty()}" class="card p-8 text-center text-gray-400 text-12">
+                Aucun employé affecté à ce site.
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" th:if="${!shop.staff().isEmpty()}">
+                <div class="workspace-card p-4 flex items-center gap-3" th:each="emp : ${shop.staff()}">
+                    <span th:replace="~{fragments/layout :: avatarInitials(${emp.fullName}, 'avatar-initials--md')}"></span>
+                    <div>
+                        <p class="text-12 font-bold text-gray-900" th:text="${emp.fullName}">Nom</p>
+                        <p class="text-12 text-gray-400" th:text="${emp.position ?: 'Poste non renseigné'}">Poste</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </main>
+</body>
+</html>
