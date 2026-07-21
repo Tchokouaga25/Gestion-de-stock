@@ -13092,3 +13092,4297 @@ Hibernate:
         features f1_0 
     where
         f1_0.code=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at 
+    from
+        companies c1_0 
+    where
+        ? is null 
+        or ?='' 
+        or lower(c1_0.name) like lower(('%'||?||'%')) escape '' 
+        or lower(c1_0.email) like lower(('%'||?||'%')) escape '' 
+        or lower(c1_0.city) like lower(('%'||?||'%')) escape '' 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.end_date,
+        s1_0.plan_name,
+        s1_0.start_date,
+        s1_0.status,
+        s1_0.updated_at 
+    from
+        subscriptions s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(e1_0.id) 
+    from
+        employees e1_0 
+    where
+        e1_0.company_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.end_date,
+        s1_0.plan_name,
+        s1_0.start_date,
+        s1_0.status,
+        s1_0.updated_at 
+    from
+        subscriptions s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(e1_0.id) 
+    from
+        employees e1_0 
+    where
+        e1_0.company_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.end_date,
+        s1_0.plan_name,
+        s1_0.start_date,
+        s1_0.status,
+        s1_0.updated_at 
+    from
+        subscriptions s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(e1_0.id) 
+    from
+        employees e1_0 
+    where
+        e1_0.company_id=?
+Hibernate: 
+    select
+        sp1_0.id,
+        sp1_0.active,
+        sp1_0.code,
+        sp1_0.created_at,
+        sp1_0.description,
+        sp1_0.max_users,
+        sp1_0.monthly_price,
+        sp1_0.name,
+        sp1_0.updated_at 
+    from
+        subscription_plans sp1_0 
+    order by
+        sp1_0.monthly_price
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price 
+    from
+        products p1_0 
+    where
+        p1_0.company_id = ? 
+        and p1_0.company_id=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.active,
+        c1_0.address,
+        c1_0.city,
+        c1_0.company_id,
+        c1_0.created_at,
+        c1_0.credit_limit,
+        c1_0.email,
+        c1_0.loyalty_points,
+        c1_0.name,
+        c1_0.notes,
+        c1_0.phone,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        customers c1_0 
+    where
+        c1_0.company_id = ? 
+        and c1_0.company_id=? 
+    order by
+        c1_0.name
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+    order by
+        po1_0.order_date desc
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+    order by
+        s1_0.sale_date desc
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+    order by
+        s1_0.name
+Hibernate: 
+    select
+        coalesce(sum((sl1_0.quantity*coalesce(p1_0.purchase_price, 0))), 0) 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=?
+Hibernate: 
+    select
+        sm1_0.id,
+        sm1_0.company_id,
+        sm1_0.created_at,
+        sm1_0.product_id,
+        sm1_0.quantity,
+        sm1_0.reason,
+        sm1_0.site_id,
+        sm1_0.type,
+        sm1_0.user_id 
+    from
+        stock_movements sm1_0 
+    where
+        sm1_0.company_id = ? 
+        and sm1_0.company_id=? 
+    order by
+        sm1_0.created_at desc
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id is null 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id is null 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        s1_0.site_id,
+        coalesce(sum(s1_0.total_amount), 0) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.sale_date>=? 
+        and s1_0.sale_date<? 
+    group by
+        s1_0.site_id
+Hibernate: 
+    select
+        sl1_0.site_id,
+        count(sl1_0.id) 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    group by
+        sl1_0.site_id
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+    order by
+        s1_0.name
+Hibernate: 
+    select
+        count(e1_0.id) 
+    from
+        employees e1_0 
+    left join
+        sites s1_0 
+            on s1_0.id=e1_0.site_id 
+    where
+        e1_0.company_id = ? 
+        and s1_0.id=? 
+        and e1_0.company_id=?
+Hibernate: 
+    select
+        coalesce(sum((sl1_0.quantity*coalesce(p1_0.purchase_price, 0))), 0) 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.active,
+        c1_0.address,
+        c1_0.city,
+        c1_0.company_id,
+        c1_0.created_at,
+        c1_0.credit_limit,
+        c1_0.email,
+        c1_0.loyalty_points,
+        c1_0.name,
+        c1_0.notes,
+        c1_0.phone,
+        c1_0.type,
+        c1_0.updated_at 
+    from
+        customers c1_0 
+    where
+        c1_0.company_id = ? 
+        and c1_0.company_id=? 
+    order by
+        c1_0.name
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price 
+    from
+        products p1_0 
+    where
+        p1_0.company_id = ? 
+        and p1_0.company_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.company_id,
+        c1_0.description,
+        c1_0.name 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price 
+    from
+        products p1_0 
+    where
+        p1_0.company_id = ? 
+        and p1_0.company_id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.company_id,
+        c1_0.description,
+        c1_0.name 
+    from
+        categories c1_0 
+    where
+        c1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price 
+    from
+        products p1_0 
+    where
+        p1_0.company_id = ? 
+        and p1_0.company_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+    order by
+        s1_0.name
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price 
+    from
+        products p1_0 
+    where
+        p1_0.company_id = ? 
+        and p1_0.company_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+    order by
+        s1_0.name
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        sl1_0.id,
+        sl1_0.company_id,
+        sl1_0.created_at,
+        sl1_0.product_id,
+        p1_0.id,
+        p1_0.barcode,
+        p1_0.brand_id,
+        p1_0.category_id,
+        p1_0.company_id,
+        p1_0.current_quantity,
+        p1_0.description,
+        p1_0.image_url,
+        p1_0.min_threshold,
+        p1_0.name,
+        p1_0.purchase_price,
+        p1_0.reference,
+        p1_0.sale_price,
+        p1_0.unit,
+        p1_0.wholesale_price,
+        sl1_0.quantity,
+        sl1_0.site_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at,
+        sl1_0.updated_at 
+    from
+        stock_levels sl1_0 
+    join
+        products p1_0 
+            on p1_0.id=sl1_0.product_id 
+    join
+        sites s1_0 
+            on s1_0.id=sl1_0.site_id 
+    where
+        sl1_0.company_id = ? 
+        and sl1_0.company_id=? 
+        and p1_0.min_threshold is not null 
+        and sl1_0.quantity<=p1_0.min_threshold 
+    order by
+        s1_0.name,
+        p1_0.name
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(l1_0.id) 
+    from
+        leaves l1_0 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=?
+Hibernate: 
+    select
+        l1_0.id,
+        l1_0.company_id,
+        l1_0.created_at,
+        l1_0.employee_id,
+        e1_0.id,
+        e1_0.active,
+        e1_0.base_salary,
+        e1_0.company_id,
+        e1_0.contract_type,
+        e1_0.created_at,
+        e1_0.email,
+        e1_0.first_name,
+        e1_0.hire_date,
+        e1_0.last_name,
+        e1_0.phone,
+        e1_0.position,
+        e1_0.site_id,
+        e1_0.updated_at,
+        l1_0.end_date,
+        l1_0.reason,
+        l1_0.start_date,
+        l1_0.status,
+        l1_0.type,
+        l1_0.updated_at 
+    from
+        leaves l1_0 
+    join
+        employees e1_0 
+            on e1_0.id=l1_0.employee_id 
+    where
+        l1_0.company_id = ? 
+        and l1_0.company_id=? 
+        and l1_0.status=? 
+    order by
+        l1_0.start_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(po1_0.id) 
+    from
+        purchase_orders po1_0 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=?
+Hibernate: 
+    select
+        po1_0.id,
+        po1_0.amount_paid,
+        po1_0.company_id,
+        po1_0.created_at,
+        po1_0.order_date,
+        po1_0.received_date,
+        po1_0.reference,
+        po1_0.site_id,
+        s2_0.id,
+        s2_0.active,
+        s2_0.address,
+        s2_0.city,
+        s2_0.company_id,
+        s2_0.created_at,
+        s2_0.name,
+        s2_0.phone,
+        s2_0.type,
+        s2_0.updated_at,
+        po1_0.status,
+        po1_0.supplier_id,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.contact_name,
+        s1_0.created_at,
+        s1_0.email,
+        s1_0.name,
+        s1_0.notes,
+        s1_0.phone,
+        s1_0.updated_at,
+        po1_0.total_amount,
+        po1_0.updated_at,
+        po1_0.user_id 
+    from
+        purchase_orders po1_0 
+    join
+        suppliers s1_0 
+            on s1_0.id=po1_0.supplier_id 
+    join
+        sites s2_0 
+            on s2_0.id=po1_0.site_id 
+    where
+        po1_0.company_id = ? 
+        and po1_0.company_id=? 
+        and po1_0.status=? 
+    order by
+        po1_0.order_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        f1_0.id,
+        f1_0.category,
+        f1_0.code,
+        f1_0.created_at,
+        f1_0.description,
+        f1_0.enabled,
+        f1_0.name,
+        f1_0.updated_at 
+    from
+        features f1_0 
+    where
+        f1_0.code=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.amount_paid,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.customer_id,
+        s1_0.payment_method,
+        s1_0.reference,
+        s1_0.sale_date,
+        s1_0.sale_type,
+        s1_0.site_id,
+        s1_0.total_amount,
+        s1_0.updated_at,
+        s1_0.user_id 
+    from
+        sales s1_0 
+    where
+        s1_0.company_id = ? 
+        and s1_0.company_id=? 
+        and s1_0.total_amount>s1_0.amount_paid 
+    order by
+        s1_0.sale_date desc 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.email=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at 
+    from
+        companies c1_0 
+    where
+        ? is null 
+        or ?='' 
+        or lower(c1_0.name) like lower(('%'||?||'%')) escape '' 
+        or lower(c1_0.email) like lower(('%'||?||'%')) escape '' 
+        or lower(c1_0.city) like lower(('%'||?||'%')) escape '' 
+    fetch
+        first ? rows only
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.end_date,
+        s1_0.plan_name,
+        s1_0.start_date,
+        s1_0.status,
+        s1_0.updated_at 
+    from
+        subscriptions s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(e1_0.id) 
+    from
+        employees e1_0 
+    where
+        e1_0.company_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.end_date,
+        s1_0.plan_name,
+        s1_0.start_date,
+        s1_0.status,
+        s1_0.updated_at 
+    from
+        subscriptions s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(e1_0.id) 
+    from
+        employees e1_0 
+    where
+        e1_0.company_id=?
+Hibernate: 
+    select
+        s1_0.id,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.end_date,
+        s1_0.plan_name,
+        s1_0.start_date,
+        s1_0.status,
+        s1_0.updated_at 
+    from
+        subscriptions s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(s1_0.id) 
+    from
+        sites s1_0 
+    where
+        s1_0.company_id=?
+Hibernate: 
+    select
+        count(e1_0.id) 
+    from
+        employees e1_0 
+    where
+        e1_0.company_id=?
+Hibernate: 
+    select
+        sp1_0.id,
+        sp1_0.active,
+        sp1_0.code,
+        sp1_0.created_at,
+        sp1_0.description,
+        sp1_0.max_users,
+        sp1_0.monthly_price,
+        sp1_0.name,
+        sp1_0.updated_at 
+    from
+        subscription_plans sp1_0 
+    order by
+        sp1_0.monthly_price
+Hibernate: 
+    select
+        u1_0.id,
+        c1_0.id,
+        c1_0.city,
+        c1_0.created_at,
+        c1_0.email,
+        c1_0.logo_url,
+        c1_0.name,
+        c1_0.phone,
+        c1_0.sector,
+        c1_0.status,
+        c1_0.updated_at,
+        u1_0.email,
+        u1_0.first_name,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.role,
+        s1_0.id,
+        s1_0.active,
+        s1_0.address,
+        s1_0.city,
+        s1_0.company_id,
+        s1_0.created_at,
+        s1_0.name,
+        s1_0.phone,
+        s1_0.type,
+        s1_0.updated_at 
+    from
+        users u1_0 
+    left join
+        companies c1_0 
+            on c1_0.id=u1_0.company_id 
+    left join
+        sites s1_0 
+            on s1_0.id=u1_0.site_id 
+    where
+        u1_0.id=?
