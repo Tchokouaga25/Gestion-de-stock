@@ -8,7 +8,7 @@
         <header class="mb-8"><h1 class="text-2xl font-bold text-gray-900"
             th:text="${employee.id == null} ? 'Nouvel employé' : 'Modifier employé'">Employé</h1></header>
 
-        <form th:action="@{/hr/employees/save}" th:object="${employee}" method="post"
+        <form th:action="@{${formAction != null ? formAction : '/hr/employees/save'}}" th:object="${employee}" method="post"
               class="card p-8 space-y-5">
             <input type="hidden" th:field="*{id}"/>
             <div class="grid grid-cols-2 gap-4">
@@ -31,6 +31,15 @@
                 <div><label class="form-label">Salaire de base</label>
                     <input type="number" step="1" th:field="*{baseSalary}" class="form-input"/></div>
             </div>
+            <div th:if="${lockedSiteId == null}">
+                <label class="form-label">Site d'affectation</label>
+                <select name="siteId" class="form-input">
+                    <option value="">Non affecté</option>
+                    <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}"
+                            th:selected="${employee.site != null and employee.site.id == s.id}">Site</option>
+                </select>
+            </div>
+            <input th:if="${lockedSiteId != null}" type="hidden" name="siteId" th:value="${lockedSiteId}"/>
             <div class="grid grid-cols-2 gap-4">
                 <div><label class="form-label">Téléphone</label>
                     <input type="text" th:field="*{phone}" class="form-input"/></div>
@@ -40,7 +49,7 @@
             <label class="flex items-center gap-2 text-sm text-gray-700"><input type="checkbox" th:field="*{active}"/> Employé actif</label>
             <div class="flex gap-3 pt-2">
                 <button type="submit" class="btn btn-primary">Enregistrer</button>
-                <a th:href="@{/hr/employees}" class="btn btn-secondary">Annuler</a>
+                <a th:href="@{${cancelUrl != null ? cancelUrl : '/hr/employees'}}" class="btn btn-secondary">Annuler</a>
             </div>
         </form>
     </div>

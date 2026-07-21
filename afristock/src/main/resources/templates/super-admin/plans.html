@@ -5,7 +5,7 @@
     <aside th:replace="~{fragments/layout :: sidebarSuperAdmin}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" data-title="Offres — Super Admin" class="max-w-4xl mx-auto">
-        <div th:replace="~{fragments/layout :: topbarSuperAdmin('Offres d\'abonnement', 'Créez et consultez les offres proposées aux entreprises clientes.')}"></div>
+        <div th:replace="~{fragments/layout :: topbar(pageTitle='Offres d\'abonnement', pageSubtitle='Créez et consultez les offres proposées aux entreprises clientes.', searchAction=null, searchValue=null)}"></div>
 
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>

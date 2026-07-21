@@ -18,6 +18,13 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
 
     long countByTenantId(Long tenantId);
 
+    @Query("SELECT COUNT(s) FROM Sale s WHERE s.tenantId = :tenantId AND s.totalAmount > s.amountPaid")
+    long countUnpaidByTenantId(Long tenantId);
+
+    @Query("SELECT s FROM Sale s WHERE s.tenantId = :tenantId AND s.totalAmount > s.amountPaid " +
+            "ORDER BY s.saleDate DESC")
+    List<Sale> findUnpaidByTenantId(Long tenantId, Pageable pageable);
+
     @Query("SELECT s FROM Sale s LEFT JOIN FETCH s.items i LEFT JOIN FETCH i.product " +
             "WHERE s.id = :id AND s.tenantId = :tenantId")
     Optional<Sale> findByIdWithItems(Long id, Long tenantId);

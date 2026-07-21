@@ -31,13 +31,16 @@
                     </p>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <div th:replace="~{fragments/layout :: topbar}"></div>
+            <div class="flex items-center gap-4">
                 <a th:href="@{/sites/edit/{id}(id=${s.id})}" sec:authorize="hasAuthority('SITE_WRITE')" class="btn btn-secondary">
                     <i data-lucide="pencil"></i> Modifier
                 </a>
+                <div th:replace="~{fragments/layout :: topbarControls(null, null)}"></div>
             </div>
         </header>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <!-- KPIs du jour -->
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
@@ -65,12 +68,12 @@
                 <p class="stat-tile__value" th:text="${#numbers.formatDecimal(shop.stockValue(), 0, 0)} + ' F'">0 F</p>
                 <p class="text-12 text-gray-400 mt-1">Aux prix d'achat</p>
             </div>
-            <div class="stat-tile">
+            <a th:href="@{/sites/{id}/personnel(id=${s.id})}" data-spa-link class="stat-tile hover:ring-2 hover:ring-brand-100 transition">
                 <div class="stat-tile__icon bg-purple-50 text-purple-600"><i data-lucide="users"></i></div>
                 <p class="stat-tile__label">Personnel</p>
                 <p class="stat-tile__value" th:text="${#lists.size(shop.staff())}">0</p>
                 <p class="text-12 text-gray-400 mt-1">Affecté à ce site</p>
-            </div>
+            </a>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -144,18 +147,23 @@
 
         <!-- Personnel de la boutique -->
         <div>
-            <h3 class="text-[14px] font-bold text-gray-900 mb-4">Personnel de la boutique</h3>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-[14px] font-bold text-gray-900">Personnel de la boutique</h3>
+                <a th:href="@{/sites/{id}/personnel(id=${s.id})}" data-spa-link class="btn btn-secondary">
+                    <i data-lucide="users"></i> Gérer le personnel
+                </a>
+            </div>
             <div th:if="${shop.staff().isEmpty()}" class="card p-8 text-center text-gray-400 text-12">
                 Aucun employé affecté à ce site.
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" th:if="${!shop.staff().isEmpty()}">
-                <div class="workspace-card p-4 flex items-center gap-3" th:each="emp : ${shop.staff()}">
+                <a th:href="@{/sites/{id}/personnel(id=${s.id})}" data-spa-link class="workspace-card p-4 flex items-center gap-3" th:each="emp : ${shop.staff()}">
                     <span th:replace="~{fragments/layout :: avatarInitials(${emp.fullName}, 'avatar-initials--md')}"></span>
                     <div>
                         <p class="text-12 font-bold text-gray-900" th:text="${emp.fullName}">Nom</p>
                         <p class="text-12 text-gray-400" th:text="${emp.position ?: 'Poste non renseigné'}">Poste</p>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 

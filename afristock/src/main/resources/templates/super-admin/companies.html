@@ -6,15 +6,10 @@
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" data-title="Entreprises — Super Admin" class="max-w-7xl mx-auto">
 
-        <div th:replace="~{fragments/layout :: topbarSuperAdmin('Entreprises', 'Espace Super-Administrateur — gestion des entreprises clientes.')}"></div>
+        <div th:replace="~{fragments/layout :: topbar(pageTitle='Entreprises', pageSubtitle='Espace Super-Administrateur — gestion des entreprises clientes.', searchAction=@{/super-admin/companies}, searchValue=${q})}"></div>
 
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
-
-        <form th:action="@{/super-admin/companies}" method="get" class="flex gap-2 mb-6 max-w-md">
-            <input type="text" name="q" th:value="${q}" placeholder="Rechercher par nom, email ou ville…" class="form-input"/>
-            <button class="btn btn-secondary">Rechercher</button>
-        </form>
 
         <div th:if="${#lists.isEmpty(page.content)}" class="card p-10 text-center text-gray-400">
             Aucune entreprise ne correspond à cette recherche.

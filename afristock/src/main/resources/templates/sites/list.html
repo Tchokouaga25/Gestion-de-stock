@@ -6,19 +6,13 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" data-title="Sites — Afristock" class="max-w-6xl mx-auto">
-        <header class="flex justify-between items-center mb-6">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-900">Sites</h1>
-                <p class="text-12 text-gray-500 mt-1">Boutiques et entrepôts de votre entreprise.</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <div th:replace="~{fragments/layout :: topbar}"></div>
-                <a th:href="@{/sites/add}" sec:authorize="hasAuthority('SITE_WRITE')"
-                   class="btn btn-primary">
-                    <i data-lucide="plus"></i> Nouveau site
-                </a>
-            </div>
-        </header>
+        <div th:replace="~{fragments/layout :: topbar(pageTitle='Sites', pageSubtitle='Boutiques et entrepôts de votre entreprise.', searchAction=null, searchValue=null)}"></div>
+        <div class="flex justify-end mb-6">
+            <a th:href="@{/sites/add}" sec:authorize="hasAuthority('SITE_WRITE')"
+               class="btn btn-primary">
+                <i data-lucide="plus"></i> Nouveau site
+            </a>
+        </div>
 
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>

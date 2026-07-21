@@ -6,7 +6,7 @@
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" data-title="Fonctionnalités — Super Admin" class="max-w-7xl mx-auto">
 
-        <div th:replace="~{fragments/layout :: topbarSuperAdmin('Fonctionnalités', 'Activez, modifiez ou supprimez les fonctionnalités disponibles pour les entreprises clientes.')}"></div>
+        <div th:replace="~{fragments/layout :: topbar(pageTitle='Fonctionnalités', pageSubtitle='Activez, modifiez ou supprimez les fonctionnalités disponibles pour les entreprises clientes.', searchAction=null, searchValue=null)}"></div>
 
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>

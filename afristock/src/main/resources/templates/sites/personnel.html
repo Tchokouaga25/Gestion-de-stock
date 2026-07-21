@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:insert="~{fragments/layout :: pageHead(${site.name} + ' — Personnel — Afristock')}"></head>
+<body class="flex">
+    <aside th:replace="~{fragments/layout :: sidebar}"></aside>
+    <main id="main-content" class="ml-[260px] flex-1 p-10">
+    <div th:fragment="content" th:data-title="${site.name} + ' — Personnel — Afristock'" class="max-w-6xl mx-auto">
+
+        <a th:href="@{/sites/{id}(id=${site.id})}" data-spa-link class="text-12 text-gray-400 hover:text-brand-600 flex items-center gap-1 mb-4">
+            <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Retour à la fiche site
+        </a>
+
+        <header class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+                    <i data-lucide="users" style="width:24px;height:24px;"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900" th:text="'Personnel — ' + ${site.name}">Personnel du site</h1>
+                    <p class="text-12 text-gray-500 mt-1">Employés, congés et pointage de ce site.</p>
+                </div>
+            </div>
+            <div th:replace="~{fragments/layout :: topbarControls(null, null)}"></div>
+        </header>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <!-- Onglets -->
+        <nav class="flex gap-2 border-b border-gray-100 mb-8">
+            <a th:href="@{/sites/{id}/personnel(id=${site.id}, tab='overview')}" data-spa-link
+               th:class="${tab == 'overview'} ? 'tab-link tab-link--active' : 'tab-link'">Vue d'ensemble</a>
+            <a th:href="@{/sites/{id}/personnel(id=${site.id}, tab='employees')}" data-spa-link
+               th:class="${tab == 'employees'} ? 'tab-link tab-link--active' : 'tab-link'">Employés</a>
+            <a th:href="@{/sites/{id}/personnel(id=${site.id}, tab='leaves')}" data-spa-link
+               th:class="${tab == 'leaves'} ? 'tab-link tab-link--active' : 'tab-link'">Congés</a>
+            <a th:href="@{/sites/{id}/personnel(id=${site.id}, tab='attendance')}" data-spa-link
+               th:class="${tab == 'attendance'} ? 'tab-link tab-link--active' : 'tab-link'">Pointage</a>
+        </nav>
+
+        <!-- Vue d'ensemble -->
+        <div th:if="${tab == 'overview'}">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-tile">
+                    <div class="stat-tile__icon bg-blue-50 text-blue-600"><i data-lucide="users"></i></div>
+                    <p class="stat-tile__label">Effectif</p>
+                    <p class="stat-tile__value" th:text="${overview.headcount()}">0</p>
+                </div>
+                <div class="stat-tile">
+                    <div class="stat-tile__icon bg-emerald-50 text-emerald-600"><i data-lucide="check-circle"></i></div>
+                    <p class="stat-tile__label">Présents aujourd'hui</p>
+                    <p class="stat-tile__value" th:text="${overview.presentToday()} + ' / ' + ${overview.headcount()}">0</p>
+                </div>
+                <div class="stat-tile">
+                    <div class="stat-tile__icon bg-amber-50 text-amber-600"><i data-lucide="calendar-days"></i></div>
+                    <p class="stat-tile__label">En congé aujourd'hui</p>
+                    <p class="stat-tile__value" th:text="${overview.onLeaveToday()}">0</p>
+                </div>
+                <div class="stat-tile">
+                    <div class="stat-tile__icon bg-teal-50 text-teal-600"><i data-lucide="trending-up"></i></div>
+                    <p class="stat-tile__label">Taux de présence (30j)</p>
+                    <p class="stat-tile__value" th:text="${#numbers.formatDecimal(overview.attendanceRate30d(), 1, 0)} + ' %'">0 %</p>
+                </div>
+            </div>
+
+            <div class="mb-8" th:if="${!overview.byContractType().isEmpty()}">
+                <h3 class="text-[14px] font-bold text-gray-900 mb-3">Répartition par type de contrat</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="badge badge-info" th:each="entry : ${overview.byContractType()}"
+                          th:text="${entry.key} + ' : ' + ${entry.value}">CDI : 0</span>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-[14px] font-bold text-gray-900">Employés du site</h3>
+                    <a th:href="@{/sites/{id}/personnel/employees/new(id=${site.id})}"
+                       sec:authorize="hasAuthority('HR_WRITE')" class="btn btn-primary">
+                        <i data-lucide="plus"></i> Nouvel employé
+                    </a>
+                </div>
+                <div th:if="${employees.isEmpty()}" class="card p-8 text-center text-gray-400 text-12">
+                    Aucun employé affecté à ce site.
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" th:if="${!employees.isEmpty()}">
+                    <div class="workspace-card p-4 flex items-center gap-3" th:each="emp : ${employees}">
+                        <span th:replace="~{fragments/layout :: avatarInitials(${emp.fullName}, 'avatar-initials--md')}"></span>
+                        <div>
+                            <p class="text-12 font-bold text-gray-900" th:text="${emp.fullName}">Nom</p>
+                            <p class="text-12 text-gray-400" th:text="${emp.position ?: 'Poste non renseigné'}">Poste</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Employés -->
+        <div th:if="${tab == 'employees'}">
+            <div class="flex justify-end mb-4">
+                <a th:href="@{/sites/{id}/personnel/employees/new(id=${site.id})}" data-spa-link
+                   sec:authorize="hasAuthority('HR_WRITE')" class="btn btn-primary">
+                    <i data-lucide="plus"></i> Nouvel employé
+                </a>
+            </div>
+            <div class="table-shell">
+                <table>
+                    <thead>
+                        <tr><th></th><th>Nom</th><th>Email</th><th>Poste</th><th>Contrat</th><th>Téléphone</th><th class="text-right">Salaire</th><th>Taux de présence</th><th class="text-right">Actions</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="row : ${employeeRows}" th:with="e=${row.employee()}">
+                            <td><span th:replace="~{fragments/layout :: avatarInitials(${e.fullName}, 'avatar-initials--sm')}">AB</span></td>
+                            <td class="font-semibold text-gray-900" th:text="${e.fullName}">Nom</td>
+                            <td th:text="${e.email}">email@exemple.com</td>
+                            <td th:text="${e.position}">Poste</td>
+                            <td th:text="${e.contractType}">Contrat</td>
+                            <td th:text="${e.phone}">Téléphone</td>
+                            <td class="text-right" th:text="${e.baseSalary != null ? #numbers.formatDecimal(e.baseSalary, 0, 0) : '—'}">0</td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <div class="perf-bar">
+                                        <div th:class="${row.perfBarFillClass()}"
+                                             th:style="'width:' + ${row.attendanceRate()} + '%'"></div>
+                                    </div>
+                                    <span class="text-12 text-gray-500" th:text="${#numbers.formatDecimal(row.attendanceRate(), 1, 0)} + ' %'">0 %</span>
+                                </div>
+                            </td>
+                            <td class="text-right space-x-2">
+                                <a th:href="@{/sites/{id}/personnel/employees/edit/{empId}(id=${site.id}, empId=${e.id})}"
+                                   sec:authorize="hasAuthority('HR_WRITE')" class="btn-ghost">Modifier</a>
+                                <form th:action="@{/sites/{id}/personnel/employees/delete/{empId}(id=${site.id}, empId=${e.id})}" method="post" class="inline"
+                                      sec:authorize="hasAuthority('HR_WRITE')" onsubmit="return confirm('Supprimer cet employé ?');">
+                                    <button class="btn-ghost-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(employeeRows)}"><td colspan="9" class="table-empty">Aucun employé affecté à ce site.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Congés -->
+        <div th:if="${tab == 'leaves'}">
+            <form th:action="@{/sites/{id}/personnel/leaves(id=${site.id})}" method="post" sec:authorize="hasAuthority('HR_WRITE')"
+                  class="card p-6 mb-6 grid grid-cols-2 md:grid-cols-5 gap-3 items-end">
+                <div>
+                    <label class="form-label">Employé</label>
+                    <select name="employeeId" required class="form-input">
+                        <option th:each="e : ${employees}" th:value="${e.id}" th:text="${e.fullName}">Employé</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Type</label>
+                    <select name="type" class="form-input">
+                        <option th:each="t : ${types}" th:value="${t}" th:text="${t}">Type</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Du</label>
+                    <input type="date" name="startDate" required class="form-input"/>
+                </div>
+                <div>
+                    <label class="form-label">Au</label>
+                    <input type="date" name="endDate" required class="form-input"/>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i data-lucide="send"></i> Demander
+                </button>
+            </form>
+
+            <div class="table-shell">
+                <table>
+                    <thead>
+                        <tr><th>Employé</th><th>Type</th><th>Période</th><th>Statut</th><th class="text-right">Action</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="l : ${leaves}">
+                            <td class="font-semibold text-gray-900" th:text="${l.employee.fullName}">Employé</td>
+                            <td th:text="${l.type}">Type</td>
+                            <td th:text="${#temporals.format(l.startDate,'dd/MM/yyyy')} + ' → ' + ${#temporals.format(l.endDate,'dd/MM/yyyy')}">Période</td>
+                            <td>
+                                <span th:if="${l.status.name() == 'APPROUVE'}" class="badge badge-success">Approuvé</span>
+                                <span th:if="${l.status.name() == 'REFUSE'}" class="badge badge-danger">Refusé</span>
+                                <span th:if="${l.status.name() == 'EN_ATTENTE'}" class="badge badge-warning">En attente</span>
+                            </td>
+                            <td class="text-right space-x-2" sec:authorize="hasAuthority('HR_WRITE')" th:if="${l.status.name() == 'EN_ATTENTE'}">
+                                <form th:action="@{/sites/{id}/personnel/leaves/{leaveId}/status(id=${site.id}, leaveId=${l.id})}" method="post" class="inline">
+                                    <input type="hidden" name="status" value="APPROUVE"/>
+                                    <button class="btn-ghost-info">Approuver</button>
+                                </form>
+                                <form th:action="@{/sites/{id}/personnel/leaves/{leaveId}/status(id=${site.id}, leaveId=${l.id})}" method="post" class="inline">
+                                    <input type="hidden" name="status" value="REFUSE"/>
+                                    <button class="btn-ghost-danger">Refuser</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(leaves)}"><td colspan="5" class="table-empty">Aucune demande pour ce site.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pointage -->
+        <div th:if="${tab == 'attendance'}">
+            <form th:action="@{/sites/{id}/personnel(id=${site.id})}" method="get" class="flex gap-2 items-center justify-end mb-4">
+                <input type="hidden" name="tab" value="attendance"/>
+                <input type="date" name="date" th:value="${date}" class="form-input"/>
+                <button class="btn btn-secondary">Voir</button>
+            </form>
+
+            <div class="table-shell">
+                <table>
+                    <thead>
+                        <tr><th>Employé</th><th>État</th><th class="text-right">Pointer</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="e : ${employees}">
+                            <td class="font-semibold text-gray-900" th:text="${e.fullName}">Employé</td>
+                            <td>
+                                <th:block th:each="a : ${attendances}" th:if="${a.employee.id == e.id}">
+                                    <span th:if="${a.present}" class="badge badge-success">Présent</span>
+                                    <span th:unless="${a.present}" class="badge badge-danger">Absent</span>
+                                </th:block>
+                            </td>
+                            <td class="text-right space-x-2" sec:authorize="hasAuthority('HR_WRITE')">
+                                <form th:action="@{/sites/{id}/personnel/attendance(id=${site.id})}" method="post" class="inline">
+                                    <input type="hidden" name="employeeId" th:value="${e.id}"/>
+                                    <input type="hidden" name="date" th:value="${date}"/>
+                                    <input type="hidden" name="present" value="true"/>
+                                    <button class="btn-ghost-info">Présent</button>
+                                </form>
+                                <form th:action="@{/sites/{id}/personnel/attendance(id=${site.id})}" method="post" class="inline">
+                                    <input type="hidden" name="employeeId" th:value="${e.id}"/>
+                                    <input type="hidden" name="date" th:value="${date}"/>
+                                    <input type="hidden" name="present" value="false"/>
+                                    <button class="btn-ghost-danger">Absent</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(employees)}"><td colspan="3" class="table-empty">Aucun employé affecté à ce site.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    </main>
+</body>
+</html>

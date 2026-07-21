@@ -26,6 +26,7 @@
                         <th>Collaborateur</th>
                         <th>Email</th>
                         <th>Rôle</th>
+                        <th>Site</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,9 +44,18 @@
                         <td>
                             <span class="badge badge-info" th:text="${u.role}">ROLE</span>
                         </td>
+                        <td>
+                            <form th:action="@{/admin/users/{id}/site(id=${u.id})}" method="post" class="flex items-center gap-2">
+                                <select name="siteId" class="form-input" style="min-width: 140px;" onchange="this.form.submit()">
+                                    <option value="">Non affecté</option>
+                                    <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.name}"
+                                            th:selected="${u.site != null and u.site.id == s.id}">Site</option>
+                                </select>
+                            </form>
+                        </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(users)}">
-                        <td colspan="3" class="table-empty">
+                        <td colspan="4" class="table-empty">
                             Aucun collaborateur pour le moment.
                         </td>
                     </tr>

@@ -63,7 +63,7 @@
                         <td>
                             <div class="flex items-center gap-2">
                                 <div class="perf-bar">
-                                    <div th:class="'perf-bar__fill' + (${row.attendanceRate()} >= 80 ? '' : (${row.attendanceRate()} >= 50 ? ' perf-bar__fill--warning' : ' perf-bar__fill--danger'))"
+                                    <div th:class="${row.perfBarFillClass()}"
                                          th:style="'width:' + ${row.attendanceRate()} + '%'"></div>
                                 </div>
                                 <span class="text-12 text-gray-500" th:text="${#numbers.formatDecimal(row.attendanceRate(), 1, 0)} + ' %'">0 %</span>

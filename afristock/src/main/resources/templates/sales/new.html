@@ -4,7 +4,7 @@
 <body class="flex">
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
-    <div th:fragment="content" data-title="Nouvelle vente — Afristock" class="max-w-4xl mx-auto">
+    <div th:fragment="content" data-title="Nouvelle vente — Afristock" class="max-w-6xl mx-auto">
         <header class="flex justify-between items-center mb-8">
             <h1 class="text-2xl font-bold text-gray-900">Nouvelle vente</h1>
             <a th:href="@{/sales}" class="btn btn-secondary">Historique</a>
@@ -13,7 +13,7 @@
         <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
         <form th:action="@{/sales}" method="post" class="space-y-6">
-            <div class="card p-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="card p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                     <label class="form-label">Site</label>
                     <select name="siteId" required class="form-input">
@@ -42,33 +42,44 @@
                 </div>
             </div>
 
-            <div class="card p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="font-bold text-gray-900">Articles</h2>
-                    <button type="button" onclick="addLine()" class="btn-ghost">
-                        <i data-lucide="plus"></i> Ligne
-                    </button>
+            <div class="grid grid-cols-3 gap-6 items-start">
+                <div class="card p-6 col-span-3 md:col-span-2">
+                    <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Sélection de produits</h2>
+                    <div class="relative mb-4">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
+                        <input type="text" id="catalogSearch" placeholder="Rechercher par nom ou SKU…" autocomplete="off"
+                               class="form-input pl-9"/>
+                    </div>
+                    <div id="catalogList" class="divide-y divide-gray-100"></div>
                 </div>
-                <table class="w-full text-sm">
-                    <thead class="text-gray-500 text-left text-xs uppercase tracking-widest">
-                        <tr><th class="py-2">Produit</th><th class="py-2 w-32">Quantité</th><th class="py-2 w-32 text-right">Prix U.</th><th class="py-2 w-8"></th></tr>
-                    </thead>
-                    <tbody id="lines"></tbody>
-                </table>
-                <p class="text-12 text-gray-400 mt-2">Recherchez un produit par nom ou par référence (SKU). Le stock disponible est affiché dans la liste.</p>
-                <div class="text-right mt-4">
-                    <span class="text-sm text-gray-500">Total : </span>
-                    <span id="totalDisplay" class="text-xl font-bold text-gray-900">0</span>
-                    <span class="text-sm text-gray-500"> FCFA</span>
-                </div>
-            </div>
 
-            <div class="card p-6 flex items-end gap-4">
-                <div class="flex-1">
-                    <label class="form-label">Montant encaissé (FCFA)</label>
-                    <input type="number" name="amountPaid" min="0" step="1" id="amountPaid" class="form-input"/>
+                <div class="card p-6 col-span-3 md:col-span-1 sticky top-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Facturation active</h2>
+                        <span class="badge badge-neutral">Brouillon</span>
+                    </div>
+
+                    <div id="cartLines" class="space-y-3 mb-4 min-h-[3rem]"></div>
+                    <div id="hiddenInputs"></div>
+
+                    <div class="border-t border-gray-100 pt-4">
+                        <div class="flex justify-between items-end mb-4">
+                            <span class="text-xs text-gray-400 uppercase tracking-widest">Montant total</span>
+                            <span>
+                                <span id="totalDisplay" class="text-xl font-bold text-gray-900">0</span>
+                                <span class="text-sm text-gray-500"> FCFA</span>
+                            </span>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Montant encaissé</label>
+                            <input type="number" name="amountPaid" min="0" step="1" id="amountPaid" class="form-input"/>
+                        </div>
+                        <div class="flex gap-3">
+                            <a th:href="@{/sales}" class="btn btn-secondary flex-1">Annuler</a>
+                            <button type="submit" class="btn btn-primary flex-1">Générer Facture</button>
+                        </div>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Valider la vente</button>
             </div>
         </form>
 
@@ -78,11 +89,16 @@
     <script th:inline="javascript">
     (function () {
         const products = /*[[${products}]]*/ [];
-        // On extrait id, nom, référence (SKU) et stock des produits injectés par Thymeleaf.
+        // On extrait id, nom, référence (SKU), unité/description, prix, stock et seuil bas
+        // des produits injectés par Thymeleaf.
         const productData = products.map(p => ({
             id: p.id, name: p.name, reference: p.reference || '',
-            price: p.salePrice || 0, stock: p.currentQuantity || 0
+            subtitle: p.description || (p.unit ? p.unit : ''),
+            price: p.salePrice || 0, stock: p.currentQuantity || 0,
+            minThreshold: p.minThreshold != null ? p.minThreshold : 10
         }));
+
+        const cart = [];
 
         function matches(p, q) {
             const needle = q.trim().toLowerCase();
@@ -90,91 +106,105 @@
             return p.name.toLowerCase().includes(needle) || p.reference.toLowerCase().includes(needle);
         }
 
-        function dropdownItemHtml(p) {
-            const stockBadge = p.stock > 0
-                ? `<span class="badge badge-neutral">${p.stock} en stock</span>`
-                : `<span class="badge badge-danger">Rupture</span>`;
-            return `<div class="product-dropdown__item" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}"
-                         data-price="${p.price}" data-stock="${p.stock}">
-                        <span>${p.name} <span class="text-gray-400">${p.reference ? '· ' + p.reference : ''}</span></span>
-                        <span class="flex items-center gap-2">${stockBadge}<span>${p.price.toLocaleString('fr-FR')} FCFA</span></span>
+        function stockBadgeHtml(p) {
+            const low = p.stock <= 0 || p.stock <= p.minThreshold;
+            const cls = low ? 'badge-danger' : 'badge-neutral';
+            return `<span class="badge ${cls}">Stock: ${p.stock}</span>`;
+        }
+
+        function catalogItemHtml(p) {
+            const subtitleParts = [p.subtitle, `${p.price.toLocaleString('fr-FR')} FCFA`].filter(Boolean);
+            return `<div class="catalog-item flex items-center justify-between gap-3 py-3" data-id="${p.id}">
+                        <div class="min-w-0">
+                            <p class="font-bold text-gray-900 uppercase text-sm truncate">${p.name}</p>
+                            <p class="text-xs text-gray-400">${subtitleParts.join(' • ')}</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            ${stockBadgeHtml(p)}
+                            <button type="button" class="btn-ghost catalog-add" data-id="${p.id}" aria-label="Ajouter">
+                                <i data-lucide="plus"></i>
+                            </button>
+                        </div>
                     </div>`;
         }
 
-        function renderDropdown(tr, query) {
-            const dropdown = tr.querySelector('.product-dropdown');
-            const found = productData.filter(p => matches(p, query)).slice(0, 30);
-            dropdown.innerHTML = found.length
-                ? found.map(dropdownItemHtml).join('')
-                : `<div class="product-dropdown__item product-dropdown__empty">Aucun produit trouvé</div>`;
-            dropdown.classList.remove('hidden');
+        function renderCatalog(query) {
+            const list = document.getElementById('catalogList');
+            const found = productData.filter(p => matches(p, query)).slice(0, 50);
+            list.innerHTML = found.length
+                ? found.map(catalogItemHtml).join('')
+                : `<p class="text-sm text-gray-400 py-6 text-center">Aucun produit trouvé</p>`;
+            if (window.lucide) window.lucide.createIcons();
         }
 
-        function selectProduct(tr, item) {
-            tr.querySelector('input[name="productId"]').value = item.dataset.id;
-            tr.dataset.price = item.dataset.price;
-            tr.dataset.stock = item.dataset.stock;
-            const search = tr.querySelector('.product-search');
-            search.value = item.dataset.name;
-            tr.querySelector('.product-dropdown').classList.add('hidden');
-            recompute();
+        function addToCart(id) {
+            const product = productData.find(p => p.id === id);
+            if (!product) return;
+            const existing = cart.find(l => l.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ id: product.id, name: product.name, price: product.price, stock: product.stock, qty: 1 });
+            }
+            renderCart();
         }
 
-        function addLine() {
-            const tr = document.createElement('tr');
-            tr.className = 'border-t border-gray-100';
-            tr.dataset.price = '0';
-            tr.dataset.stock = '0';
-            tr.innerHTML = `
-                <td class="py-2 relative">
-                    <input type="text" class="product-search form-input" placeholder="Rechercher par nom ou référence…" autocomplete="off"/>
-                    <input type="hidden" name="productId" value=""/>
-                    <div class="product-dropdown hidden"></div>
-                    <p class="stock-warning text-red-500 text-xs mt-1 hidden">Quantité supérieure au stock disponible.</p>
-                </td>
-                <td class="py-2"><input type="number" name="quantity" min="1" value="1" oninput="recompute()" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"/></td>
-                <td class="py-2 text-right price-cell text-gray-600">0</td>
-                <td class="py-2 text-right"><button type="button" onclick="this.closest('tr').remove(); recompute();" class="text-red-500">✕</button></td>`;
-            document.getElementById('lines').appendChild(tr);
-
-            const search = tr.querySelector('.product-search');
-            search.addEventListener('input', function () { renderDropdown(tr, this.value); });
-            search.addEventListener('focus', function () { renderDropdown(tr, this.value); });
-            tr.querySelector('.product-dropdown').addEventListener('click', function (e) {
-                const item = e.target.closest('.product-dropdown__item[data-id]');
-                if (item) selectProduct(tr, item);
-            });
-
-            recompute();
+        function removeFromCart(id) {
+            const idx = cart.findIndex(l => l.id === id);
+            if (idx !== -1) cart.splice(idx, 1);
+            renderCart();
         }
 
-        function recompute() {
-            let total = 0;
-            document.querySelectorAll('#lines tr').forEach(tr => {
-                const qty = parseInt(tr.querySelector('input[name="quantity"]').value) || 0;
-                const price = parseFloat(tr.dataset.price) || 0;
-                const stock = parseInt(tr.dataset.stock) || 0;
-                const line = price * qty;
-                tr.querySelector('.price-cell').textContent = line.toLocaleString('fr-FR');
-                tr.querySelector('.stock-warning').classList.toggle('hidden', !(tr.querySelector('input[name="productId"]').value && qty > stock));
-                total += line;
-            });
+        function cartLineHtml(line) {
+            const lineTotal = line.price * line.qty;
+            return `<div class="flex items-center justify-between gap-2 bg-gray-50 rounded-lg px-3 py-2" data-id="${line.id}">
+                        <div class="min-w-0">
+                            <p class="font-bold text-gray-900 text-sm truncate">${line.name}</p>
+                            <p class="text-xs text-gray-400">${line.qty} x ${line.price.toLocaleString('fr-FR')} FCFA</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="font-bold text-gray-900 text-sm">${lineTotal.toLocaleString('fr-FR')} FCFA</span>
+                            <button type="button" class="cart-remove text-gray-400 hover:text-red-500" data-id="${line.id}" aria-label="Retirer">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        </div>
+                    </div>`;
+        }
+
+        function renderCart() {
+            const linesEl = document.getElementById('cartLines');
+            linesEl.innerHTML = cart.length
+                ? cart.map(cartLineHtml).join('')
+                : `<p class="text-sm text-gray-400 text-center py-4">Aucun article sélectionné</p>`;
+            if (window.lucide) window.lucide.createIcons();
+
+            const hiddenEl = document.getElementById('hiddenInputs');
+            hiddenEl.innerHTML = cart.map(l =>
+                `<input type="hidden" name="productId" value="${l.id}"/><input type="hidden" name="quantity" value="${l.qty}"/>`
+            ).join('');
+
+            const total = cart.reduce((sum, l) => sum + l.price * l.qty, 0);
             document.getElementById('totalDisplay').textContent = total.toLocaleString('fr-FR');
             const paid = document.getElementById('amountPaid');
             if (!paid.dataset.touched) paid.value = total;
         }
 
-        // Ferme les dropdowns ouverts au clic en dehors d'une ligne produit.
-        document.addEventListener('click', function (e) {
-            if (e.target.closest('#lines td.relative')) return;
-            document.querySelectorAll('.product-dropdown').forEach(d => d.classList.add('hidden'));
+        document.getElementById('catalogSearch').addEventListener('input', function () { renderCatalog(this.value); });
+        document.getElementById('catalogList').addEventListener('click', function (e) {
+            const btn = e.target.closest('.catalog-add');
+            if (btn) addToCart(Number(btn.dataset.id));
         });
-
-        window.addLine = addLine;
-        window.recompute = recompute;
-
+        document.getElementById('cartLines').addEventListener('click', function (e) {
+            const btn = e.target.closest('.cart-remove');
+            if (btn) removeFromCart(Number(btn.dataset.id));
+        });
         document.getElementById('amountPaid').addEventListener('input', function () { this.dataset.touched = '1'; });
-        addLine(); // première ligne
+
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+
+        renderCatalog('');
+        renderCart();
     })();
     </script>
     </div>

@@ -47,6 +47,7 @@
     <script th:src="@{/js/spa-nav.js}" defer></script>
     <script th:src="@{/js/theme.js}" defer></script>
     <script th:src="@{/js/toast.js}" defer></script>
+    <script th:src="@{/js/notifications.js}" defer></script>
 </th:block>
 
 <th:block th:fragment="sidebar">
@@ -194,17 +195,65 @@
     </aside>
 </th:block>
 
-<th:block th:fragment="topbar" th:if="${companyName != null}">
+<!--
+  Bloc de contrôles de droite de la topbar (recherche + thème + notifications + avatar), réutilisable
+  seul dans les pages à en-tête personnalisé (icône/titre/badges déjà rendus par la page elle-même).
+  searchAction/searchValue sont optionnels : omis => recherche non fonctionnelle (juste visuelle).
+-->
+<th:block th:fragment="topbarControls(searchAction, searchValue)">
     <div class="flex items-center gap-4">
-        <div class="topbar-pill">
-            <span class="topbar-pill__label">Entreprise :</span>
-            <span class="topbar-pill__value" th:text="${companyName}">Nom Compagnie</span>
+        <form th:if="${searchAction != null}" th:action="${searchAction}" method="get" class="topbar-search">
+            <i data-lucide="search"></i>
+            <input type="text" name="q" placeholder="Rechercher des ressources..." th:value="${searchValue}"/>
+        </form>
+        <div th:if="${searchAction == null}" class="topbar-search topbar-search--static">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Rechercher des ressources..."/>
         </div>
+
+        <div class="topbar-divider"></div>
+
         <button id="theme-toggle" type="button" class="topbar-icon-btn" aria-label="Basculer le thème">
             <i data-lucide="sun" class="icon-sun"></i>
             <i data-lucide="moon" class="icon-moon"></i>
         </button>
+
+        <div class="notif-wrapper">
+            <button id="notif-toggle" type="button" class="topbar-bell" aria-label="Notifications">
+                <i data-lucide="bell"></i>
+                <span class="topbar-bell__dot" th:if="${notificationCount != null and notificationCount > 0}"></span>
+            </button>
+            <div id="notif-panel" class="notif-dropdown">
+                <div class="notif-dropdown__header">Notifications</div>
+                <a th:each="n : ${notifications}" th:href="@{${n.link}}" class="notif-item" data-spa-link>
+                    <i th:data-lucide="${n.icon}"></i>
+                    <div>
+                        <div class="notif-item__label" th:text="${n.label}">Libellé</div>
+                        <div class="notif-item__detail" th:text="${n.detail}">Détail</div>
+                    </div>
+                </a>
+                <div class="notif-empty" th:if="${notifications == null or #lists.isEmpty(notifications)}">
+                    Aucune notification
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/layout :: avatarInitials(${user != null ? user.fullName : '?'}, 'avatar-initials--sm')}"></div>
     </div>
+</th:block>
+
+<!--
+  Topbar unifiée (entreprise + Super-Admin) : titre de page + topbarControls. Pour les pages à
+  en-tête personnalisé, utiliser directement topbarControls dans leur propre <header>.
+-->
+<th:block th:fragment="topbar(pageTitle, pageSubtitle, searchAction, searchValue)">
+    <header class="flex justify-between items-center mb-8 gap-6">
+        <div>
+            <h1 class="topbar-title text-2xl font-bold" th:text="${pageTitle}">Titre</h1>
+            <p class="topbar-subtitle text-sm mt-1" th:text="${pageSubtitle}">Sous-titre</p>
+        </div>
+        <div th:replace="~{fragments/layout :: topbarControls(${searchAction}, ${searchValue})}"></div>
+    </header>
 </th:block>
 
 <!--
@@ -281,23 +330,6 @@
     </aside>
 </th:block>
 
-<!-- Topbar dédié au Super-Admin : titre de page + recherche (non fonctionnelle pour l'instant) + icônes statiques. -->
-<th:block th:fragment="topbarSuperAdmin(pageTitle, pageSubtitle)">
-    <header class="flex justify-between items-center mb-8 gap-6">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-900" th:text="${pageTitle}">Titre</h1>
-            <p class="text-sm text-slate-500 mt-1" th:text="${pageSubtitle}">Sous-titre</p>
-        </div>
-        <div class="flex items-center gap-3">
-            <button id="theme-toggle" type="button" class="topbar-icon-btn" aria-label="Basculer le thème">
-                <i data-lucide="sun" class="icon-sun"></i>
-                <i data-lucide="moon" class="icon-moon"></i>
-            </button>
-            <div class="topbar-icon-btn"><i data-lucide="bell"></i></div>
-            <div class="topbar-avatar">SA</div>
-        </div>
-    </header>
-</th:block>
 
 </body>
 </html>

@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN site_id BIGINT REFERENCES sites(id);

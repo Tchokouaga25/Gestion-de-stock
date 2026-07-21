@@ -1,6 +1,8 @@
 package com.afristock.repository;
 
 import com.afristock.model.entity.PurchaseOrder;
+import com.afristock.model.enums.PurchaseStatus;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,6 +16,12 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Lo
     List<PurchaseOrder> findAllForTenant(Long tenantId);
 
     long countByTenantId(Long tenantId);
+
+    long countByTenantIdAndStatus(Long tenantId, PurchaseStatus status);
+
+    @Query("SELECT p FROM PurchaseOrder p JOIN FETCH p.supplier JOIN FETCH p.site " +
+            "WHERE p.tenantId = :tenantId AND p.status = :status ORDER BY p.orderDate DESC")
+    List<PurchaseOrder> findByTenantIdAndStatusOrderByOrderDateDesc(Long tenantId, PurchaseStatus status, Pageable pageable);
 
     @Query("SELECT p FROM PurchaseOrder p JOIN FETCH p.supplier JOIN FETCH p.site " +
             "LEFT JOIN FETCH p.items i LEFT JOIN FETCH i.product " +

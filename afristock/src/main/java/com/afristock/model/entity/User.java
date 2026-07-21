@@ -41,6 +41,12 @@ public class User implements UserDetails {  // pour Spring Security
     @JoinColumn(name = "company_id")
     private Company company;
 
+    // Nullable : seuls les collaborateurs affectés à un site précis (ex: responsable de
+    // boutique) l'ont ; un admin ou un utilisateur non affecté n'a pas de site.
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "site_id")
+    private Site site;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -51,6 +57,11 @@ public class User implements UserDetails {  // pour Spring Security
         // ... ainsi que chaque permission fine, pour hasAuthority('PRODUCT_WRITE'), etc.
         role.getPermissions().forEach(p -> authorities.add(new SimpleGrantedAuthority(p.name())));
         return authorities;
+    }
+
+    @Transient
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     @Override

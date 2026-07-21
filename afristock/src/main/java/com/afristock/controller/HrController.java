@@ -6,6 +6,7 @@ import com.afristock.model.enums.ContractType;
 import com.afristock.model.enums.LeaveStatus;
 import com.afristock.model.enums.LeaveType;
 import com.afristock.service.HrService;
+import com.afristock.service.SiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 public class HrController {
 
     private final HrService hrService;
+    private final SiteService siteService;
 
     // --- Employés ---
 
@@ -38,6 +40,7 @@ public class HrController {
     public String addForm(Model model) {
         model.addAttribute("employee", new Employee());
         model.addAttribute("contractTypes", ContractType.values());
+        model.addAttribute("sites", siteService.getAll());
         return "hr/employee-form";
     }
 
@@ -47,6 +50,7 @@ public class HrController {
         try {
             model.addAttribute("employee", hrService.getEmployee(id));
             model.addAttribute("contractTypes", ContractType.values());
+            model.addAttribute("sites", siteService.getAll());
             return "hr/employee-form";
         } catch (Exception e) {
             ra.addFlashAttribute("error", e.getMessage());
@@ -56,9 +60,9 @@ public class HrController {
 
     @PostMapping("/employees/save")
     @PreAuthorize("hasAuthority('HR_WRITE')")
-    public String saveEmployee(@ModelAttribute Employee employee, RedirectAttributes ra) {
+    public String saveEmployee(@ModelAttribute Employee employee, @RequestParam(required = false) Long siteId, RedirectAttributes ra) {
         try {
-            hrService.saveEmployee(employee);
+            hrService.saveEmployee(employee, siteId);
             ra.addFlashAttribute("success", "Employé enregistré.");
         } catch (Exception e) {
             ra.addFlashAttribute("error", e.getMessage());
