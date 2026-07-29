@@ -33,6 +33,7 @@ public class SpaNavInterceptor implements HandlerInterceptor {
         NAV_PREFIXES.put("/suppliers", "suppliers");
         NAV_PREFIXES.put("/customers", "customers");
         NAV_PREFIXES.put("/products/categories", "admin-categories");
+        NAV_PREFIXES.put("/products/brands", "admin-brands");
         NAV_PREFIXES.put("/products", "products");
         NAV_PREFIXES.put("/sales", "sales");
         NAV_PREFIXES.put("/purchases", "purchases");

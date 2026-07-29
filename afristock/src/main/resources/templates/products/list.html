@@ -20,8 +20,18 @@
             </div>
         </header>
 
+        <nav class="flex gap-2 border-b border-gray-100 mb-6">
+            <a th:href="@{/products(status='all', search=${search})}" data-spa-link
+               th:class="${status == 'all'} ? 'tab-link tab-link--active' : 'tab-link'">Tous</a>
+            <a th:href="@{/products(status='active', search=${search})}" data-spa-link
+               th:class="${status == 'active'} ? 'tab-link tab-link--active' : 'tab-link'">Actifs</a>
+            <a th:href="@{/products(status='inactive', search=${search})}" data-spa-link
+               th:class="${status == 'inactive'} ? 'tab-link tab-link--active' : 'tab-link'">Désactivés</a>
+        </nav>
+
         <form th:action="@{/products}" method="get" class="mb-6">
-            <input type="text" name="search" placeholder="Rechercher un produit..."
+            <input type="hidden" name="status" th:value="${status}"/>
+            <input type="text" name="search" th:value="${search}" placeholder="Rechercher un produit..."
                    class="form-input" style="max-width: 24rem;"/>
         </form>
 
@@ -38,11 +48,12 @@
                         <th>Catégorie</th>
                         <th class="text-right">Prix vente</th>
                         <th class="text-right">Stock</th>
+                        <th>Statut</th>
                         <th class="text-right">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="p : ${products}">
+                    <tr th:each="p : ${products}" th:classappend="${!p.active} ? 'opacity-60' : ''">
                         <td th:text="${p.reference}">REF</td>
                         <td class="font-semibold text-gray-900" th:text="${p.name}">Nom</td>
                         <td th:text="${p.brand != null ? p.brand.name : '—'}">Marque</td>
@@ -51,6 +62,21 @@
                         <td class="text-right">
                             <span th:classappend="${p.minThreshold != null and p.currentQuantity != null and p.currentQuantity <= p.minThreshold} ? 'text-red-600 font-bold' : ''"
                                   th:text="${p.currentQuantity}">0</span>
+                        </td>
+                        <td>
+                            <form th:action="@{/products/{id}/toggle-active(id=${p.id})}" method="post"
+                                  class="flex items-center gap-2" sec:authorize="hasAuthority('PRODUCT_WRITE')">
+                                <label class="switch" th:title="${p.active} ? 'Cliquer pour désactiver' : 'Cliquer pour activer'">
+                                    <input type="checkbox" th:checked="${p.active}" onchange="this.form.submit()"/>
+                                    <span class="switch-track"></span>
+                                </label>
+                                <span th:if="${p.active}" class="badge badge-success">Actif</span>
+                                <span th:unless="${p.active}" class="badge badge-neutral">Inactif</span>
+                            </form>
+                            <span sec:authorize="!hasAuthority('PRODUCT_WRITE')">
+                                <span th:if="${p.active}" class="badge badge-success">Actif</span>
+                                <span th:unless="${p.active}" class="badge badge-neutral">Inactif</span>
+                            </span>
                         </td>
                         <td class="text-right space-x-2">
                             <a th:href="@{/products/{id}/variants(id=${p.id})}" class="btn-ghost-info">Variantes</a>
@@ -64,7 +90,7 @@
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(products)}">
-                        <td colspan="7" class="table-empty">Aucun produit.</td>
+                        <td colspan="8" class="table-empty">Aucun produit.</td>
                     </tr>
                 </tbody>
             </table>

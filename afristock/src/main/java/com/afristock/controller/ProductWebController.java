@@ -23,12 +23,15 @@ public class ProductWebController {
     // --- LISTE DES PRODUITS ---
     @GetMapping
     @PreAuthorize("hasAuthority('PRODUCT_READ')")
-    public String listProducts(Model model, @RequestParam(value = "search", required = false) String search) {
-        if (search != null && !search.isEmpty()) {
-            model.addAttribute("products", productService.searchProducts(search));
-        } else {
-            model.addAttribute("products", productService.getAllProducts());
-        }
+    public String listProducts(Model model,
+                                @RequestParam(value = "search", required = false) String search,
+                                @RequestParam(value = "status", required = false) String status) {
+        Boolean activeFilter = "active".equals(status) ? Boolean.TRUE
+                : "inactive".equals(status) ? Boolean.FALSE
+                : null;
+        model.addAttribute("products", productService.getProducts(search, activeFilter));
+        model.addAttribute("search", search);
+        model.addAttribute("status", status == null ? "all" : status);
         return "products/list";
     }
 
@@ -129,6 +132,18 @@ public class ProductWebController {
         try {
             productService.saveProduct(product, categoryId, brandId);
             ra.addFlashAttribute("success", "Produit enregistré avec succès.");
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/products";
+    }
+
+    @PostMapping("/{id}/toggle-active")
+    @PreAuthorize("hasAuthority('PRODUCT_WRITE')")
+    public String toggleActive(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            Product product = productService.toggleActive(id);
+            ra.addFlashAttribute("success", product.isActive() ? "Produit activé." : "Produit désactivé.");
         } catch (Exception e) {
             ra.addFlashAttribute("error", e.getMessage());
         }

@@ -38,7 +38,7 @@ public class SaleController {
     @GetMapping("/new")
     @PreAuthorize("hasAuthority('SALE_WRITE')")
     public String newSale(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.getActiveProducts());
         model.addAttribute("sites", siteService.getAll());
         model.addAttribute("customers", customerService.getAll());
         model.addAttribute("saleTypes", SaleType.values());

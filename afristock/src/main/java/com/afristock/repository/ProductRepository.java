@@ -9,4 +9,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByReferenceAndTenantId(String reference, Long tenantId);
     List<Product> findByNameContainingIgnoreCaseAndTenantId(String name, Long tenantId);
     List<Product> findByCategoryIdAndTenantId(Long categoryId, Long tenantId);
+    List<Product> findByTenantIdAndActive(Long tenantId, boolean active);
+    List<Product> findByNameContainingIgnoreCaseAndTenantIdAndActive(String name, Long tenantId, boolean active);
 }

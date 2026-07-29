@@ -79,6 +79,27 @@ public class ProductService {
         return productRepository.findByTenantId(TenantContext.getCurrentTenant());
     }
 
+    /** Produits actifs uniquement : utilisé par les sélecteurs de nouvelle vente/nouvel achat. */
+    @Transactional(readOnly = true)
+    public List<Product> getActiveProducts() {
+        return productRepository.findByTenantIdAndActive(TenantContext.getCurrentTenant(), true);
+    }
+
+    /** Liste des produits pour l'écran catalogue : recherche optionnelle croisée avec un filtre de statut optionnel. */
+    @Transactional(readOnly = true)
+    public List<Product> getProducts(String search, Boolean active) {
+        Long tenantId = TenantContext.getCurrentTenant();
+        boolean hasSearch = search != null && !search.isBlank();
+        if (active == null) {
+            return hasSearch
+                    ? productRepository.findByNameContainingIgnoreCaseAndTenantId(search, tenantId)
+                    : productRepository.findByTenantId(tenantId);
+        }
+        return hasSearch
+                ? productRepository.findByNameContainingIgnoreCaseAndTenantIdAndActive(search, tenantId, active)
+                : productRepository.findByTenantIdAndActive(tenantId, active);
+    }
+
     @Transactional(readOnly = true)
     public Product getProduct(Long id) {
         return loadOwnedProduct(id);
@@ -114,17 +135,18 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Product toggleActive(Long id) {
+        Product product = loadOwnedProduct(id);
+        product.setActive(!product.isActive());
+        return productRepository.save(product);
+    }
+
     public void deleteProduct(Long id) {
         Product product = loadOwnedProduct(id);
         if (product.getCurrentQuantity() != null && product.getCurrentQuantity() > 0) {
             throw new IllegalStateException("Impossible de supprimer un produit dont le stock n'est pas à zéro.");
         }
         productRepository.delete(product);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Product> searchProducts(String query) {
-        return productRepository.findByNameContainingIgnoreCaseAndTenantId(query, TenantContext.getCurrentTenant());
     }
 
     // --- GESTION DES VARIANTES ---

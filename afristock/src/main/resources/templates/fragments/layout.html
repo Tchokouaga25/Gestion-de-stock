@@ -135,9 +135,17 @@
                    th:class="${activeNav == 'admin-users'} ? 'sidebar-link active' : 'sidebar-link'">
                     <i data-lucide="user-cog"></i> Collaborateurs
                 </a>
+                <a th:href="@{/products}" data-spa-link data-nav-key="products"
+                   th:class="${activeNav == 'products'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="package"></i> Produits
+                </a>
                 <a th:href="@{/products/categories}" data-spa-link data-nav-key="admin-categories"
                    th:class="${activeNav == 'admin-categories'} ? 'sidebar-link active' : 'sidebar-link'">
                     <i data-lucide="folder"></i> Catégories
+                </a>
+                <a th:href="@{/products/brands}" data-spa-link data-nav-key="admin-brands"
+                   th:class="${activeNav == 'admin-brands'} ? 'sidebar-link active' : 'sidebar-link'">
+                    <i data-lucide="bookmark"></i> Marques
                 </a>
                 <a th:href="@{/subscription}" data-spa-link data-nav-key="subscription"
                    th:class="${activeNav == 'subscription'} ? 'sidebar-link active' : 'sidebar-link'">

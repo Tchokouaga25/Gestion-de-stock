@@ -35,7 +35,7 @@ public class PurchaseController {
     public String newOrder(Model model) {
         model.addAttribute("suppliers", supplierService.getAll());
         model.addAttribute("sites", siteService.getAll());
-        model.addAttribute("products", productService.getAllProducts());
+        model.addAttribute("products", productService.getActiveProducts());
         return "purchases/new";
     }
 

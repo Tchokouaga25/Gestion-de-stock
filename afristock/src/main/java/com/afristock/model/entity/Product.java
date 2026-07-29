@@ -40,6 +40,10 @@ public class Product implements TenantAware {
     /** URL de l'image du produit (stockage local/objet ; voir Phase 10 pour MinIO/S3). */
     private String imageUrl;
 
+    /** Produit actif : visible dans les sélecteurs de nouvelle vente/nouvel achat. */
+    @Column(nullable = false)
+    private boolean active = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
