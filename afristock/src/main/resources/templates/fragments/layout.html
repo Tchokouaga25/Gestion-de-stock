@@ -193,6 +193,40 @@
             </div>
         </nav>
 
+        <!-- Sélecteur de site actif : visible sur toutes les pages (fragment partagé), le choix est
+             mémorisé en session (GlobalControllerAdvice) et redirige vers la page courante. -->
+        <div class="sidebar-site-switcher" th:if="${currentSite != null and sidebarSites.size() > 1}">
+            <div class="sidebar-site-switcher__label">Site actuel</div>
+            <form th:action="@{/sites/switch}" method="post">
+                <div class="sidebar-site-switcher__row">
+                    <i data-lucide="store"></i>
+                    <select name="siteId" onchange="this.form.submit()">
+                        <option th:each="site : ${sidebarSites}"
+                                th:value="${site.id}"
+                                th:selected="${site.id == currentSite.id}"
+                                th:text="${site.name}">Site</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="sidebar-site-switcher" th:if="${currentSite != null and sidebarSites.size() == 1}">
+            <div class="sidebar-site-switcher__label">Site actuel</div>
+            <div class="sidebar-site-switcher__row">
+                <i data-lucide="store"></i>
+                <span style="color:#fff;font-size:12.5px;font-weight:700;" th:text="${currentSite.name}">Site</span>
+            </div>
+        </div>
+
+        <!-- Carte d'abonnement : réservée aux profils ayant accès aux paramètres entreprise, comme
+             le lien "Mon abonnement" déjà présent dans le menu Administration ci-dessus. -->
+        <div class="sidebar-plan-card" th:if="${currentSubscription != null}" sec:authorize="hasAuthority('COMPANY_VIEW_SETTINGS')">
+            <div class="sidebar-plan-card__label">
+                <i data-lucide="credit-card"></i>
+                <span th:text="${currentSubscription.planName}">Offre</span>
+            </div>
+            <a th:href="@{/subscription}" data-spa-link>Voir les détails →</a>
+        </div>
+
         <div class="sidebar-footer">
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="sidebar-link danger" style="width: 100%; border: none; background: none; cursor: pointer;">
@@ -226,6 +260,10 @@
             <i data-lucide="moon" class="icon-moon"></i>
         </button>
 
+        <button type="button" class="topbar-icon-btn" aria-label="Aide" disabled>
+            <i data-lucide="help-circle"></i>
+        </button>
+
         <div class="notif-wrapper">
             <button id="notif-toggle" type="button" class="topbar-bell" aria-label="Notifications">
                 <i data-lucide="bell"></i>
@@ -246,7 +284,13 @@
             </div>
         </div>
 
-        <div th:replace="~{fragments/layout :: avatarInitials(${user != null ? user.fullName : '?'}, 'avatar-initials--sm')}"></div>
+        <div class="topbar-user">
+            <div class="topbar-user__text">
+                <div class="topbar-user__name" th:text="${user != null ? user.fullName : '—'}">Nom</div>
+                <div class="topbar-user__role" th:text="${user != null ? user.role.label : ''}">Rôle</div>
+            </div>
+            <div th:replace="~{fragments/layout :: avatarInitials(${user != null ? user.fullName : '?'}, 'avatar-initials--sm')}"></div>
+        </div>
     </div>
 </th:block>
 

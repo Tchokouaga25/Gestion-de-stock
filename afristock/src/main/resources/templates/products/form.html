@@ -5,6 +5,11 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" th:data-title="${product.id == null} ? 'Nouveau produit — Afristock' : 'Modifier le produit — Afristock'" class="max-w-3xl mx-auto">
+
+        <!-- Barre d'outils globale (recherche, aide, notifications, avatar) -->
+        <div class="flex justify-end mb-6">
+            <div th:replace="~{fragments/layout :: topbarControls(null, null)}"></div>
+        </div>
         <header class="mb-8">
             <h1 class="text-2xl font-bold text-gray-900"
                 th:text="${product.id == null} ? 'Nouveau produit' : 'Modifier le produit'">Produit</h1>

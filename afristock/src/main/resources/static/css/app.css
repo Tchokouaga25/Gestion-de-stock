@@ -19,6 +19,15 @@
     --text-secondary: #334155;
     --text-muted: #94a3b8;
     --text-heading: #334155;
+
+    /* Alerte stock (rupture/seuil bas) : intentionnellement distincte de --badge-warning,
+       qui reste utilisé pour des statuts génériques "en attente" (congés, sites...). */
+    --alert-stock: #A6620E;
+    --alert-stock-bg: #FDF3E8;
+
+    /* Tendances (stat-tile__trend) */
+    --trend-up: #059669;
+    --trend-down: #e11d48;
 }
 
 html.dark {
@@ -33,6 +42,24 @@ html.dark {
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
     --text-heading: #e2e8f0;
+
+    --alert-stock: #f0b866;
+    --alert-stock-bg: #3a2504;
+
+    --trend-up: #6ee7b7;
+    --trend-down: #fda4af;
+}
+
+/* ---------- Échelle typographique ----------
+   Nommage additif : les classes existantes gardent leurs tailles en dur (aucune régression),
+   les nouveaux composants doivent piocher dans cette échelle plutôt qu'inventer une taille. */
+:root {
+    --text-2xs: 10px;
+    --text-xs: 11px;
+    --text-sm: 13px;
+    --text-base: 14px;
+    --text-lg: 16px;
+    --text-xl: 22px;
 }
 
 body {
@@ -135,12 +162,104 @@ html.dark .badge-neutral { background-color: #1e293b; color: #cbd5e1; }
     width: 18px;
     height: 18px;
     flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+
+.sidebar-link:hover .lucide {
+    transform: translateX(2px);
+}
+
+.btn.is-loading {
+    opacity: 0.7;
+    cursor: progress;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sidebar-link .lucide,
+    .btn,
+    .sidebar-link {
+        transition: none;
+    }
 }
 
 .sidebar-footer {
     padding-top: 1rem;
     margin-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Sélecteur de site actif + carte d'abonnement (bas de sidebar) ---------- */
+
+.sidebar-site-switcher {
+    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 0.75rem;
+}
+
+.sidebar-site-switcher__label {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+    margin-bottom: 0.35rem;
+}
+
+.sidebar-site-switcher__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sidebar-site-switcher__row .lucide {
+    width: 15px;
+    height: 15px;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.sidebar-site-switcher select {
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 700;
+    width: 100%;
+    cursor: pointer;
+}
+
+.sidebar-site-switcher select option {
+    color: #0f172a;
+}
+
+.sidebar-plan-card {
+    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    background-color: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    margin-top: 0.75rem;
+}
+
+.sidebar-plan-card__label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.sidebar-plan-card__label .lucide { width: 14px; height: 14px; }
+
+.sidebar-plan-card a {
+    font-size: 11px;
+    color: #93c5fd;
+    font-weight: 600;
+    margin-top: 0.2rem;
+    display: inline-block;
 }
 
 /* ---------- Cartes ---------- */
@@ -217,6 +336,22 @@ html.dark .badge-neutral { background-color: #1e293b; color: #cbd5e1; }
     color: var(--text-primary);
 }
 
+.stat-tile__trend {
+    font-size: var(--text-xs);
+    margin-top: 0.3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.stat-tile__trend .lucide {
+    width: 13px;
+    height: 13px;
+}
+
+.stat-tile__trend--up { color: var(--trend-up); }
+.stat-tile__trend--down { color: var(--trend-down); }
+
 /* ---------- Tables ---------- */
 
 .table-shell {
@@ -266,6 +401,28 @@ html.dark .badge-neutral { background-color: #1e293b; color: #cbd5e1; }
     color: var(--text-muted);
 }
 
+/* État vide illustré (icône + message + CTA), pour les listes qui devraient guider
+   vers une première action plutôt qu'afficher un simple texte gris. */
+.table-empty--action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 3rem 1.5rem;
+}
+
+.table-empty--action .lucide {
+    width: 28px;
+    height: 28px;
+    color: var(--text-muted);
+}
+
+.table-empty--action p {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    margin: 0;
+}
+
 /* ---------- Badges ---------- */
 
 .badge {
@@ -285,6 +442,10 @@ html.dark .badge-neutral { background-color: #1e293b; color: #cbd5e1; }
 .badge-warning { background-color: #fffbeb; color: #d97706; }
 .badge-info    { background-color: #eff6ff; color: #2563eb; }
 .badge-neutral { background-color: #f1f5f9; color: #475569; }
+
+/* Alerte stock bas : accent propre, ne se confond plus avec les statuts "en attente" génériques
+   (congés, sites...) qui utilisent .badge-warning ailleurs dans l'app. */
+.badge-stock-alert { background-color: var(--alert-stock-bg); color: var(--alert-stock); }
 
 /* ---------- Interrupteur (toggle switch actif/inactif) ---------- */
 
@@ -583,6 +744,33 @@ html.dark .switch-track { background-color: #334155; }
     flex-shrink: 0;
 }
 
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.topbar-user__text {
+    display: none;
+    text-align: right;
+    line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+    .topbar-user__text { display: block; }
+}
+
+.topbar-user__name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.topbar-user__role {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
 /* Bascule mode sombre : deux icônes superposées, une seule visible selon la classe sur <html>. */
 #theme-toggle .icon-sun { display: none; }
 #theme-toggle .icon-moon { display: block; }
@@ -803,6 +991,75 @@ html.dark .toast--info { background-color: #0c2a52; color: #93c5fd; border-color
 
 .perf-bar__fill.perf-bar__fill--warning { background-color: #d97706; }
 .perf-bar__fill.perf-bar__fill--danger { background-color: #e11d48; }
+
+/* ---------- Liste d'alertes (dashboard) ---------- */
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--border-subtle);
+    text-decoration: none;
+    color: inherit;
+}
+
+.alert-item:first-child { border-top: none; }
+.alert-item:hover .alert-item__label { color: #2563eb; }
+
+.alert-item__icon {
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.alert-item__icon .lucide { width: 16px; height: 16px; }
+
+.alert-item__label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: color 0.15s;
+}
+
+.alert-item__detail {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.alert-item__chevron {
+    margin-left: auto;
+    align-self: center;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.alert-item__chevron .lucide { width: 16px; height: 16px; }
+
+/* ---------- Légende de répartition (donut du dashboard) ---------- */
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    font-size: 12.5px;
+}
+
+.legend-dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 9999px;
+    flex-shrink: 0;
+}
+
+.legend-row span:first-of-type { color: var(--text-secondary); flex: 1 1 auto; }
+.legend-row span:last-of-type { color: var(--text-primary); font-weight: 700; }
 
 /* ---------- Combobox produit (terminal de vente) ---------- */
 

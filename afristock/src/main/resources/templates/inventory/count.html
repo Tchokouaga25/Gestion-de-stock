@@ -5,6 +5,11 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" data-title="Comptage — Afristock" class="max-w-3xl mx-auto">
+
+        <!-- Barre d'outils globale (recherche, aide, notifications, avatar) -->
+        <div class="flex justify-end mb-6">
+            <div th:replace="~{fragments/layout :: topbarControls(null, null)}"></div>
+        </div>
         <header class="mb-8"><h1 class="text-2xl font-bold text-gray-900" th:text="'Comptage — ' + ${site.name}">Comptage</h1>
             <p class="text-sm text-gray-500 mt-1">Saisissez la quantité réelle comptée. Elle remplacera le stock théorique.</p></header>
 

@@ -6,6 +6,11 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" data-title="Achats — Afristock" class="max-w-6xl mx-auto">
+
+        <!-- Barre d'outils globale (recherche, aide, notifications, avatar) -->
+        <div class="flex justify-end mb-6">
+            <div th:replace="~{fragments/layout :: topbarControls(null, null)}"></div>
+        </div>
         <header class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-2xl font-bold text-gray-900">Achats</h1>
@@ -40,7 +45,15 @@
                         <td class="text-right" th:classappend="${o.balanceDue > 0} ? 'text-red-600 font-bold' : 'text-gray-400'" th:text="${#numbers.formatDecimal(o.balanceDue, 0, 0)}">0</td>
                         <td class="text-right"><a th:href="@{/purchases/{id}(id=${o.id})}" class="btn-ghost-info">Ouvrir</a></td>
                     </tr>
-                    <tr th:if="${#lists.isEmpty(orders)}"><td colspan="7" class="table-empty">Aucune commande.</td></tr>
+                    <tr th:if="${#lists.isEmpty(orders)}">
+                        <td colspan="7" class="table-empty table-empty--action">
+                            <i data-lucide="package-search"></i>
+                            <p>Aucune commande fournisseur pour l'instant</p>
+                            <a th:href="@{/purchases/new}" sec:authorize="hasAuthority('PURCHASE_WRITE')" class="btn btn-primary">
+                                <i data-lucide="plus"></i> Créer une commande
+                            </a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

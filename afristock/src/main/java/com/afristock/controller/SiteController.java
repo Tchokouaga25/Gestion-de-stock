@@ -2,8 +2,12 @@ package com.afristock.controller;
 
 import com.afristock.model.entity.Site;
 import com.afristock.model.enums.SiteType;
+import com.afristock.repository.SiteRepository;
+import com.afristock.security.TenantContext;
 import com.afristock.service.SiteService;
 import com.afristock.service.StockLevelService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,6 +28,7 @@ public class SiteController {
 
     private final SiteService siteService;
     private final StockLevelService stockLevelService;
+    private final SiteRepository siteRepository;
 
     @GetMapping
     @PreAuthorize("hasAuthority('SITE_READ')")
@@ -77,6 +82,27 @@ public class SiteController {
             ra.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/sites";
+    }
+
+    /**
+     * Change le "site actif" affiché dans la sidebar (sélecteur), stocké en session. N'importe quel
+     * collaborateur de l'entreprise peut basculer (c'est son contexte de travail personnel, pas une
+     * action de gestion) — pas de {@code @PreAuthorize} au-delà de l'authentification déjà requise
+     * globalement. Le site choisi est vérifié comme appartenant au tenant courant avant d'être retenu.
+     */
+    @PostMapping("/switch")
+    public String switchSite(@RequestParam Long siteId, HttpSession session, HttpServletRequest request) {
+        Long tenantId = TenantContext.getCurrentTenant();
+        siteRepository.findById(siteId)
+                .filter(s -> s.getTenantId().equals(tenantId) && s.isActive())
+                .ifPresent(s -> session.setAttribute(GlobalControllerAdvice.CURRENT_SITE_SESSION_KEY, s.getId()));
+        // Revient sur la page d'où le changement a été déclenché (sélecteur visible partout dans la
+        // sidebar), en ne faisant confiance qu'à un Referer du même hôte (sinon /dashboard par défaut).
+        String referer = request.getHeader("Referer");
+        if (referer != null && referer.startsWith(request.getRequestURL().toString().replace(request.getRequestURI(), "/"))) {
+            return "redirect:" + referer;
+        }
+        return "redirect:/dashboard";
     }
 
     @PostMapping("/delete/{id}")

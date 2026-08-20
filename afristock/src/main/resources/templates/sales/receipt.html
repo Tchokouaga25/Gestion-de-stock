@@ -5,6 +5,11 @@
     <aside th:replace="~{fragments/layout :: sidebar}"></aside>
     <main id="main-content" class="ml-[260px] flex-1 p-10">
     <div th:fragment="content" th:data-title="'Facture ' + ${sale.reference}" class="max-w-2xl mx-auto">
+
+        <!-- Barre d'outils globale (recherche, aide, notifications, avatar) -->
+        <div class="flex justify-end mb-6 no-print">
+            <div th:replace="~{fragments/layout :: topbarControls(null, null)}"></div>
+        </div>
         <style>
             @media print {
                 .no-print { display: none !important; }

@@ -22,9 +22,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 @Controller
@@ -79,20 +82,41 @@ public class DashboardController {
         double totalRevenue = sales.stream().mapToDouble(Sale::getTotalAmount).sum();
         long invoiceCount = sales.size();
 
+        // CA du jour + tendance vs hier (plus parlant sur un dashboard qu'un cumul all-time figé).
+        LocalDate today = LocalDate.now();
+        double todayRevenue = saleRepository.revenueForPeriod(tenantId, today.atStartOfDay(), today.plusDays(1).atStartOfDay());
+        double yesterdayRevenue = saleRepository.revenueForPeriod(tenantId, today.minusDays(1).atStartOfDay(), today.atStartOfDay());
+        Double revenueTrendPct = yesterdayRevenue > 0
+                ? ((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100
+                : null;
+        String todayLabel = "Aujourd'hui : " + today.format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRENCH));
+
         List<StockLevel> lowStockLevels = stockLevelService.getLowStock();
 
         List<Sale> unpaidSales = sales.stream()
                 .filter(s -> s.getBalanceDue() > 0)
                 .toList();
 
-        List<Sale> recentSales = sales.stream().limit(5).toList();
+        List<Sale> recentSales = sales.stream().limit(9).toList();
 
-        List<Site> activeSites = siteRepository.findByTenantIdOrderByName(tenantId).stream()
+        List<Site> allActiveSites = siteRepository.findByTenantIdOrderByName(tenantId).stream()
                 .filter(Site::isActive)
-                .limit(3)
                 .toList();
+        List<Site> activeSites = allActiveSites.stream().limit(3).toList();
+        long activeSitesCount = allActiveSites.size();
 
         double totalStockValue = stockLevelService.getTotalStockValue();
+
+        // Répartition de la valorisation du stock par site (donut du dashboard) : les 4 sites les
+        // plus valorisés, le reste agrégé sous "Autres sites" pour ne pas surcharger le graphique.
+        List<StockLevelService.SiteStockValue> stockBySiteRaw = stockLevelService.getStockValueBySite().stream()
+                .sorted(Comparator.comparingDouble(StockLevelService.SiteStockValue::value).reversed())
+                .toList();
+        List<StockLevelService.SiteStockValue> stockRepartition = new java.util.ArrayList<>(stockBySiteRaw.stream().limit(4).toList());
+        double otherSitesValue = stockBySiteRaw.stream().skip(4).mapToDouble(StockLevelService.SiteStockValue::value).sum();
+        if (otherSitesValue > 0) {
+            stockRepartition.add(new StockLevelService.SiteStockValue(null, "Autres sites", otherSitesValue));
+        }
 
         List<StockMovement> recentMovements = stockMovementRepository.findByTenantIdOrderByCreatedAtDesc(tenantId)
                 .stream().limit(5).toList();
@@ -118,11 +142,16 @@ public class DashboardController {
         model.addAttribute("ordersEnCours", ordersEnCours);
         model.addAttribute("totalRevenue", totalRevenue);
         model.addAttribute("invoiceCount", invoiceCount);
+        model.addAttribute("todayRevenue", todayRevenue);
+        model.addAttribute("revenueTrendPct", revenueTrendPct);
+        model.addAttribute("todayLabel", todayLabel);
         model.addAttribute("lowStockLevels", lowStockLevels);
         model.addAttribute("unpaidSales", unpaidSales);
         model.addAttribute("recentSales", recentSales);
         model.addAttribute("activeSites", activeSites);
+        model.addAttribute("activeSitesCount", activeSitesCount);
         model.addAttribute("totalStockValue", totalStockValue);
+        model.addAttribute("stockRepartition", stockRepartition);
         model.addAttribute("recentActivity", recentActivity);
         model.addAttribute("welcomeMessage",
                 "Bienvenue sur votre tableau de bord, " + userWithCompany.getFirstName());

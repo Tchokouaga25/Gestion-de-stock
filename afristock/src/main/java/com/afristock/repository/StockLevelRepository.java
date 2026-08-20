@@ -48,4 +48,9 @@ public interface StockLevelRepository extends JpaRepository<StockLevel, Long> {
     @Query("SELECT COALESCE(SUM(sl.quantity * COALESCE(sl.product.purchasePrice, 0)), 0) FROM StockLevel sl " +
             "WHERE sl.tenantId = :tenantId AND sl.site.id = :siteId")
     double sumStockValueBySite(Long tenantId, Long siteId);
+
+    /** Valorisation du stock groupée par site (répartition), pour l'entreprise courante. */
+    @Query("SELECT sl.site.id, sl.site.name, COALESCE(SUM(sl.quantity * COALESCE(sl.product.purchasePrice, 0)), 0) " +
+            "FROM StockLevel sl WHERE sl.tenantId = :tenantId GROUP BY sl.site.id, sl.site.name")
+    List<Object[]> sumStockValueGroupedBySite(Long tenantId);
 }

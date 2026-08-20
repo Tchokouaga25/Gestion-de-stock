@@ -47,6 +47,17 @@ public class StockLevelService {
         return stockLevelRepository.findBySiteIdAndTenantId(siteId, TenantContext.getCurrentTenant());
     }
 
+    /** Valorisation du stock par site, pour un graphique de répartition (ex: dashboard). */
+    @Transactional(readOnly = true)
+    public List<SiteStockValue> getStockValueBySite() {
+        return stockLevelRepository.sumStockValueGroupedBySite(TenantContext.getCurrentTenant()).stream()
+                .map(row -> new SiteStockValue((Long) row[0], (String) row[1], ((Number) row[2]).doubleValue()))
+                .toList();
+    }
+
+    public record SiteStockValue(Long siteId, String siteName, double value) {
+    }
+
     /**
      * Définit (écrase) la quantité d'un produit dans un site. Crée la ligne de stock si absente.
      */

@@ -59,4 +59,13 @@ public enum Role {
     public Set<Permission> getPermissions() {
         return permissions;
     }
+
+    /** Libellé affiché à l'utilisateur (topbar, profil...), ex. "Administrateur". */
+    public String getLabel() {
+        return switch (this) {
+            case SUPER_ADMIN -> "Super Administrateur";
+            case ADMIN_PME -> "Administrateur";
+            case USER_PME -> "Employé";
+        };
+    }
 }
