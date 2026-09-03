@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — Afristock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: {
+                        brand: { 600: '#3341ff', 700: '#252eff' },
+                        surface: '#0B0F19'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F8F9FD; }
+        .text-10 { font-size: 10px; }
+        .text-12 { font-size: 12px; }
+        .sidebar-item { @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-[13px] font-medium text-gray-400 hover:text-white hover:bg-white/5; }
+        .sidebar-item-active { @apply bg-brand-600 text-white shadow-lg shadow-brand-600/20; }
+        .stat-card { @apply bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm transition-transform hover:scale-[1.02]; }
+    </style>
+</head>
+<body class="flex">
+
+    <!-- SIDEBAR -->
+    <aside class="w-[260px] bg-surface text-white flex flex-col fixed inset-y-0 left-0 z-50 p-8">
+        <div class="flex items-center gap-3 mb-10">
+            <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center font-bold text-lg">A</div>
+            <span class="font-bold text-xl tracking-tight">Afristock</span>
+        </div>
+        <nav class="flex-1 space-y-2">
+            <div class="text-gray-500 text-10 font-bold uppercase tracking-widest px-4 mb-4">Menu</div>
+
+            <a th:href="@{/dashboard}" class="sidebar-item sidebar-item-active">
+                <span>📊</span> Dashboard
+            </a>
+
+            <a th:href="@{/products}" class="sidebar-item">
+                <span>📦</span> Inventaire
+            </a>
+
+            <a th:href="@{/movements/new}" class="sidebar-item">
+                <span>🔄</span> Mouvements
+            </a>
+
+            <div class="pt-8">
+                <a th:href="@{/profile}" class="sidebar-item">
+                    <span>👤</span> Mon Profil
+                </a>
+            </div>
+
+            <div sec:authorize="hasAuthority('ADMIN_PME')" class="pt-2">
+                <div class="text-gray-500 text-10 font-bold uppercase tracking-widest px-4 mb-2">Administration</div>
+                <a th:href="@{/admin/users}" class="sidebar-item">
+                    <span>👥</span> Collaborateurs
+                </a>
+                <a th:href="@{/products/categories}" class="sidebar-item">
+                    <span>📂</span> Catégories
+                </a>
+            </div>
+        </nav>
+
+        <div class="pt-4 border-t border-white/5">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="w-full sidebar-item text-red-400 hover:bg-red-400/10">
+                    <span>🚪</span> Déconnexion
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ml-[260px] flex-1 p-10">
+
+        <!-- HEADER -->
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900" th:text="${welcomeMessage}">Bienvenue</h1>
+                <p class="text-12 text-gray-500 mt-1">Gérez votre stock et collaborez avec votre équipe en temps réel.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="bg-white px-4 py-2 rounded-xl border border-gray-100 flex items-center gap-2">
+                    <span class="text-10 font-bold text-gray-400 uppercase tracking-widest">Entreprise :</span>
+                    <span class="text-12 font-bold text-gray-900" th:text="${companyName}">Nom Compagnie</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- STATS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+            <div class="stat-card">
+                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-4">📦</div>
+                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Total Produits</p>
+                <p class="text-2xl font-bold text-gray-900" th:text="${totalProducts}">0</p>
+            </div>
+
+            <div class="stat-card opacity-50">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl mb-4">🔄</div>
+                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Mouvements (24h)</p>
+                <p class="text-2xl font-bold text-gray-900">--</p>
+            </div>
+
+            <div class="stat-card opacity-50">
+                <div class="w-10 h-10 bg-red-50 text-red-600 rounded-xl flex items-center justify-center text-xl mb-4">⚠</div>
+                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Alertes Stock</p>
+                <p class="text-2xl font-bold text-gray-900">--</p>
+            </div>
+
+            <div class="stat-card opacity-50">
+                <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl mb-4">👥</div>
+                <p class="text-10 font-bold text-gray-400 uppercase tracking-widest mb-1">Collaborateurs</p>
+                <p class="text-2xl font-bold text-gray-900">--</p>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="max-w-2xl">
+            <h3 class="text-[14px] font-bold text-gray-900 mb-6">Actions rapides</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a sec:authorize="hasAuthority('ADMIN_PME')" th:href="@{/products/add}" class="flex items-center justify-between p-5 bg-brand-600 text-white rounded-[24px] hover:bg-brand-700 transition-all shadow-lg shadow-brand-600/20">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">✨</span>
+                        <span class="text-12 font-bold">Nouveau Produit</span>
+                    </div>
+                    <span>→</span>
+                </a>
+                <a th:href="@{/movements/new}" class="flex items-center justify-between p-5 bg-white border border-gray-100 text-gray-900 rounded-[24px] hover:border-brand-500 transition-all shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xl">🚛</span>
+                        <span class="text-12 font-bold">Saisir Mouvement</span>
+                    </div>
+                    <span>→</span>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
